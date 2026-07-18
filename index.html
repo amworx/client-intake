@@ -308,6 +308,17 @@ body {
   color: var(--success);
   font-size: 13px; font-weight: 500;
 }
+.otp-code-display {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fef3c7; color: #92400e;
+  border: 1px solid #fbbf24; border-radius: 8px;
+  padding: 6px 14px; font-size: 14px; font-weight: 600;
+  letter-spacing: 2px; font-family: 'Courier New', monospace;
+}
+.dark .otp-code-display {
+  background: #422006; color: #fde68a;
+  border-color: #a16207;
+}
 .btn-otp {
   padding: 8px 16px;
   border: 1px solid var(--accent);
@@ -629,6 +640,7 @@ body {
           <input class="form-input" type="text" id="otpInput" inputmode="numeric" maxlength="6" placeholder="000000" style="width:120px;display:none;">
           <button type="button" class="btn-otp" id="btnVerifyOtp" style="display:none;">Verify</button>
           <span class="otp-verified" id="otpVerified" style="display:none;">&#10003; Verified</span>
+          <span class="otp-code-display" id="otpCodeDisplay" style="display:none;"></span>
         </div>
       </div>
       <div class="form-group">
@@ -669,12 +681,8 @@ body {
           <div class="radio-option"><input type="radio" name="email" id="email_not_sure" value="not-sure" data-price="0"><label for="email_not_sure">Not sure</label></div>
         </div>
         <div class="conditional" id="cond-email_count">
-          <label class="form-label">Number of mailboxes</label>
-          <div class="stepper">
-            <button type="button" id="emailCountMinus" disabled>-</button>
-            <span class="stepper-value" id="emailCountValue">1</span>
-            <button type="button" id="emailCountPlus">+</button>
-          </div>
+          <label class="form-label" for="emailCountInput">Number of mailboxes</label>
+          <input type="number" class="form-input" id="emailCountInput" value="1" min="1" max="100" step="1" style="width:100px;">
         </div>
       </div>
       <div class="form-group">
@@ -1247,13 +1255,25 @@ body {
           return;
         }
         // Call the Edge Function to email the OTP
+        var codeDisplay = document.getElementById('otpCodeDisplay');
         fetch(SUPABASE_EDGE_URL + '/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
           body: JSON.stringify({ email: email, code: code })
+        }).then(function(otpRes) {
+          return otpRes.json().then(function(otpData) {
+            // If SMTP is not enabled, show the code on screen
+            if (otpData.skipped) {
+              codeDisplay.textContent = 'Your code: ' + code;
+              codeDisplay.style.display = 'inline-flex';
+              showToast('Email not configured — code shown below', 'info');
+            }
+          });
         }).catch(function() {
-          // Edge Function failure is non-blocking — OTP is stored in DB
-          console.log('OTP edge function unavailable (SMTP may not be configured)');
+          // Edge Function failure — show code on screen
+          codeDisplay.textContent = 'Your code: ' + code;
+          codeDisplay.style.display = 'inline-flex';
+          showToast('Email not configured — code shown below', 'info');
         });
         showToast('Verification code sent to ' + email, 'success');
         btnSend.textContent = 'Resend Code';
@@ -1431,7 +1451,7 @@ body {
     var emailVal = emailEl ? parseFloat(emailEl.getAttribute('data-price')) || 0 : 0;
     var emailQty = 0;
     if (emailVal > 0) {
-      emailQty = parseInt(document.getElementById('emailCountValue').textContent) || 1;
+      emailQty = parseInt(document.getElementById('emailCountInput').value) || 1;
       var emailTotal = emailVal * emailQty;
       window._priceItems.push({ label: 'Business Email', price: emailVal, qty: emailQty, lineTotal: emailTotal });
       total += emailTotal;
@@ -1589,7 +1609,7 @@ body {
     });
 
     // Email count
-    data.email_count = parseInt(document.getElementById('emailCountValue').textContent) || 1;
+    data.email_count = Math.min(100, Math.max(1, parseInt(document.getElementById('emailCountInput').value) || 1));
 
     // Pages and features as arrays
     data.pages = Array.from(document.querySelectorAll('[name="pages"]:checked')).map(function(cb) { return cb.value; });
@@ -1646,24 +1666,12 @@ body {
       calculate();
     });
 
-    // Email stepper
-    var minusBtn = document.getElementById('emailCountMinus');
-    var plusBtn = document.getElementById('emailCountPlus');
-    var valEl = document.getElementById('emailCountValue');
-    minusBtn.addEventListener('click', function() {
-      var v = parseInt(valEl.textContent) || 1;
-      if (v > 1) {
-        valEl.textContent = v - 1;
-        minusBtn.disabled = (v - 1 <= 1);
-      }
-      calculate();
-    });
-    plusBtn.addEventListener('click', function() {
-      var v = parseInt(valEl.textContent) || 1;
-      if (v < 5) {
-        valEl.textContent = v + 1;
-        minusBtn.disabled = false;
-      }
+    // Email count input validation
+    var emailCountInput = document.getElementById('emailCountInput');
+    emailCountInput.addEventListener('input', function() {
+      var v = parseInt(this.value) || 1;
+      if (v < 1) this.value = 1;
+      if (v > 100) this.value = 100;
       calculate();
     });
 
