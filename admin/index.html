@@ -304,6 +304,7 @@ input[type=number]{-moz-appearance:textfield}
 .spinner-white{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;vertical-align:middle}
 /* Page wrapper */
 .page-wrap{max-width:960px}
+.survey-grid{display:grid;gap:12px;margin-bottom:32px}
 /* Grid card mb */
 .card-mb{margin-bottom:24px}
 /* New badge sidebar */
@@ -317,6 +318,10 @@ input[type=number]{-moz-appearance:textfield}
 /* Table actions */
 .table-actions{display:flex;gap:4px}
 .btn-danger-ghost{color:#ef4444!important}
+.toast-dismiss{background:none;border:none;color:inherit;cursor:pointer;font-size:16px;opacity:.7;padding:0;line-height:1}
+.toast-dismiss:hover{opacity:1}
+.file-link{font-size:13px;display:flex;align-items:center;gap:6px}
+.flex-1-min{flex:1;min-width:0}
 .section-header-text{font-weight:600;font-size:14px}
 .option-row{display:flex;gap:6px;align-items:center;margin-bottom:4px}
 .option-row .input-flex-2{flex:2}.option-row .input-flex-1{flex:1}
@@ -353,7 +358,7 @@ input[type=number]{-moz-appearance:textfield}
 <template x-if="authLoading">
 <div class="login-page" style="position:fixed;inset:0;z-index:200">
   <div class="spinner spinner-lg"></div>
-  <p class="text-sec text-md" style="margin-top:16px">Checking session...</p>
+  <p class="text-sec text-md mt-16">Checking session...</p>
 </div>
 </template>
 
@@ -607,7 +612,7 @@ input[type=number]{-moz-appearance:textfield}
           </div>
         </div>
 
-        <h3 class="settings-subheading">Email Notifications <span class="badge" style="font-size:11px;background:#e2e8f0;color:#64748b;font-weight:500">Optional</span></h3>
+        <h3 class="settings-subheading">Email Notifications <span class="badge" style="background:#e2e8f0;color:#64748b;font-weight:500">Optional</span></h3>
         <div class="section-card card-mb">
           <div class="card-body">
             <div class="flex items-center gap-12 mb-16">
@@ -814,12 +819,12 @@ input[type=number]{-moz-appearance:textfield}
         </div>
         <!-- Survey Sections -->
         <h3 class="settings-heading">Survey Sections</h3>
-        <div style="display:grid;gap:12px;margin-bottom:32px">
+        <div class="survey-grid">
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.contact=!sectionCollapsed.contact">
               <span class="section-header-text">Contact</span>
-              <div style="display:flex;align-items:center;gap:8px">
+              <div class="flex items-center gap-8">
                 <span class="badge" :class="(settingsForm.SECTIONS.contact?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.contact?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.contact && 'open'"></i>
               </div>
@@ -827,10 +832,10 @@ input[type=number]{-moz-appearance:textfield}
             <div class="card-body" x-show="!sectionCollapsed.contact">
               <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.contact.title"></div>
-                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.contact.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.contact.show"><span class="text-base">Visible in intake form</span></label></div>
               </div>
               <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.contact.desc"></textarea></div>
-              <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
+              <div><label class="field-label mb-6">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.contact.options || [])" :key="oi">
                   <div class="option-row"
                     <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
@@ -853,7 +858,7 @@ input[type=number]{-moz-appearance:textfield}
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.domain_hosting=!sectionCollapsed.domain_hosting">
               <span class="section-header-text">Domain &amp; Hosting</span>
-              <div style="display:flex;align-items:center;gap:8px">
+              <div class="flex items-center gap-8">
                 <span class="badge" :class="(settingsForm.SECTIONS.domain_hosting?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.domain_hosting?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.domain_hosting && 'open'"></i>
               </div>
@@ -861,10 +866,10 @@ input[type=number]{-moz-appearance:textfield}
             <div class="card-body" x-show="!sectionCollapsed.domain_hosting">
               <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.domain_hosting.title"></div>
-                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.domain_hosting.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.domain_hosting.show"><span class="text-base">Visible in intake form</span></label></div>
               </div>
               <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.domain_hosting.desc"></textarea></div>
-              <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
+              <div><label class="field-label mb-6">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.domain_hosting.options || [])" :key="oi">
                   <div class="option-row"
                     <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
@@ -887,7 +892,7 @@ input[type=number]{-moz-appearance:textfield}
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.website=!sectionCollapsed.website">
               <span class="section-header-text">Website</span>
-              <div style="display:flex;align-items:center;gap:8px">
+              <div class="flex items-center gap-8">
                 <span class="badge" :class="(settingsForm.SECTIONS.website?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.website?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.website && 'open'"></i>
               </div>
@@ -895,10 +900,10 @@ input[type=number]{-moz-appearance:textfield}
             <div class="card-body" x-show="!sectionCollapsed.website">
               <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.website.title"></div>
-                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.website.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.website.show"><span class="text-base">Visible in intake form</span></label></div>
               </div>
               <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.website.desc"></textarea></div>
-              <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
+              <div><label class="field-label mb-6">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.website.options || [])" :key="oi">
                   <div class="option-row"
                     <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
@@ -921,7 +926,7 @@ input[type=number]{-moz-appearance:textfield}
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.branding=!sectionCollapsed.branding">
               <span class="section-header-text">Branding &amp; Content</span>
-              <div style="display:flex;align-items:center;gap:8px">
+              <div class="flex items-center gap-8">
                 <span class="badge" :class="(settingsForm.SECTIONS.branding?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.branding?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.branding && 'open'"></i>
               </div>
@@ -929,10 +934,10 @@ input[type=number]{-moz-appearance:textfield}
             <div class="card-body" x-show="!sectionCollapsed.branding">
               <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.branding.title"></div>
-                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.branding.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.branding.show"><span class="text-base">Visible in intake form</span></label></div>
               </div>
               <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.branding.desc"></textarea></div>
-              <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
+              <div><label class="field-label mb-6">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.branding.options || [])" :key="oi">
                   <div class="option-row"
                     <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
@@ -955,7 +960,7 @@ input[type=number]{-moz-appearance:textfield}
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.timeline_section=!sectionCollapsed.timeline_section">
               <span class="section-header-text">Timeline</span>
-              <div style="display:flex;align-items:center;gap:8px">
+              <div class="flex items-center gap-8">
                 <span class="badge" :class="(settingsForm.SECTIONS.timeline?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.timeline?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.timeline_section && 'open'"></i>
               </div>
@@ -963,10 +968,10 @@ input[type=number]{-moz-appearance:textfield}
             <div class="card-body" x-show="!sectionCollapsed.timeline_section">
               <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.timeline.title"></div>
-                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.timeline.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.timeline.show"><span class="text-base">Visible in intake form</span></label></div>
               </div>
               <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.timeline.desc"></textarea></div>
-              <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
+              <div><label class="field-label mb-6">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.timeline.options || [])" :key="oi">
                   <div class="option-row"
                     <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
@@ -989,7 +994,7 @@ input[type=number]{-moz-appearance:textfield}
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.maintenance_budget=!sectionCollapsed.maintenance_budget">
               <span class="section-header-text">Maintenance &amp; Budget</span>
-              <div style="display:flex;align-items:center;gap:8px">
+              <div class="flex items-center gap-8">
                 <span class="badge" :class="(settingsForm.SECTIONS.maintenance_budget?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.maintenance_budget?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.maintenance_budget && 'open'"></i>
               </div>
@@ -997,10 +1002,10 @@ input[type=number]{-moz-appearance:textfield}
             <div class="card-body" x-show="!sectionCollapsed.maintenance_budget">
               <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.maintenance_budget.title"></div>
-                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.maintenance_budget.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.maintenance_budget.show"><span class="text-base">Visible in intake form</span></label></div>
               </div>
               <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.maintenance_budget.desc"></textarea></div>
-              <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
+              <div><label class="field-label mb-6">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.maintenance_budget.options || [])" :key="oi">
                   <div class="option-row"
                     <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
@@ -1023,7 +1028,7 @@ input[type=number]{-moz-appearance:textfield}
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.review=!sectionCollapsed.review">
               <span class="section-header-text">Review &amp; Submit</span>
-              <div style="display:flex;align-items:center;gap:8px">
+              <div class="flex items-center gap-8">
                 <span class="badge" :class="(settingsForm.SECTIONS.review?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.review?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.review && 'open'"></i>
               </div>
@@ -1031,10 +1036,10 @@ input[type=number]{-moz-appearance:textfield}
             <div class="card-body" x-show="!sectionCollapsed.review">
               <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.review.title"></div>
-                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.review.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.review.show"><span class="text-base">Visible in intake form</span></label></div>
               </div>
               <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.review.desc"></textarea></div>
-              <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
+              <div><label class="field-label mb-6">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.review.options || [])" :key="oi">
                   <div class="option-row"
                     <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
@@ -1088,12 +1093,12 @@ input[type=number]{-moz-appearance:textfield}
   <div class="flex-col h-100vh">
     <div class="detail-header">
       <div class="detail-avatar" :style="'background:'+avatarColor(detailSubmission.full_name)" x-text="getInitials(detailSubmission.full_name)"></div>
-      <div class="flex-1" style="min-width:0">
+      <div class="flex-1-min">
         <div class="detail-name" x-text="detailSubmission.full_name"></div>
         <div class="detail-sub" x-text="detailSubmission.business_name || ''"></div>
         <div class="detail-meta"><span x-text="formatDate(detailSubmission.created_at, settings.date_style)"></span> . ID: <span x-text="detailSubmission.id"></span></div>
       </div>
-      <button class="btn btn-ghost btn-sm" @click="closeDetail" style="font-size:20px;padding:4px 8px">&times;</button>
+      <button class="btn btn-ghost btn-sm" @click="closeDetail" style="font-size:20px">&times;</button>
     </div>
     <div class="detail-body">
       <div class="mb-16">
@@ -1179,7 +1184,7 @@ input[type=number]{-moz-appearance:textfield}
         <div class="field-label">Files</div>
         <template x-for="f in detailSubmission.file_urls" :key="f.name">
         <div style="padding:4px 0">
-          <a :href="f.url" target="_blank" class="email-link" style="font-size:13px;display:flex;align-items:center;gap:6px">
+          <a :href="f.url" target="_blank" class="email-link file-link">
             <i class="fas fa-paperclip"></i> <span x-text="f.name"></span>
           </a>
         </div>
@@ -1241,7 +1246,7 @@ input[type=number]{-moz-appearance:textfield}
   <div class="toast" :class="'toast-'+t.type" @mouseenter="t.hover=true" @mouseleave="t.hover=false">
     <i class="fas" :class="t.type==='ok'?'fa-check-circle':t.type==='error'?'fa-times-circle':'fa-info-circle'"></i>
     <span style="flex:1" x-text="t.message"></span>
-    <button @click="dismissToast(ti)" style="background:none;border:none;color:inherit;cursor:pointer;font-size:16px;opacity:.7;padding:0;line-height:1">&times;</button>
+    <button class="toast-dismiss" @click="dismissToast(ti)">&times;</button>
   </div>
   </template>
 </div>
