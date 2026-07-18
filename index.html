@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Intake Form — AM Worx</title>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-card: #f8fafc;
+  --bg-card-hover: #f1f5f9;
+  --bg-input: #ffffff;
+  --bg-progress: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --border: #e2e8f0;
+  --border-focus: #6366f1;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-light: #eef2ff;
+  --success: #22c55e;
+  --success-bg: #f0fdf4;
+  --error: #ef4444;
+  --error-bg: #fef2f2;
+  --warning: #f59e0b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --price-bar-bg: #ffffff;
+  --progress-step-bg: #e2e8f0;
+  --progress-step-active: #6366f1;
+  --progress-step-complete: #22c55e;
+  --overlay-bg: rgba(0,0,0,0.5);
+  --toast-bg: #1e293b;
+  --file-zone-border: #cbd5e1;
+}
+html.dark {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #334155;
+  --bg-input: #1e293b;
+  --bg-progress: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+  --border: #334155;
+  --border-focus: #818cf8;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --accent-light: #1e1b4b;
+  --success: #4ade80;
+  --success-bg: #052e16;
+  --error: #f87171;
+  --error-bg: #450a0a;
+  --warning: #fbbf24;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
+  --price-bar-bg: #1e293b;
+  --progress-step-bg: #334155;
+  --progress-step-active: #818cf8;
+  --progress-step-complete: #4ade80;
+  --overlay-bg: rgba(0,0,0,0.7);
+  --toast-bg: #334155;
+  --file-zone-border: #475569;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding-bottom: 80px;
+  transition: background 0.3s, color 0.3s;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--text-light); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Top Bar */
+.top-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 100;
+  transition: background 0.3s, border-color 0.3s;
+}
+.top-bar h1 {
+  font-size: 18px; font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.top-bar-actions { display: flex; align-items: center; gap: 12px; }
+.dark-toggle {
+  background: var(--bg-progress);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: background 0.2s, transform 0.2s;
+}
+.dark-toggle:hover { background: var(--bg-card-hover); transform: scale(1.05); }
+
+/* Progress Tracker */
+.progress-tracker {
+  position: fixed; top: 56px; left: 0; right: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 4px;
+  overflow-x: auto;
+  z-index: 99;
+  transition: background 0.3s, border-color 0.3s;
+}
+.progress-step {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.progress-step:hover { background: var(--bg-card-hover); color: var(--text); }
+.progress-step.active { color: var(--progress-step-active); background: var(--accent-light); }
+.progress-step.complete { color: var(--progress-step-complete); }
+.progress-step .step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg-progress);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600;
+  transition: all 0.2s;
+}
+.progress-step.active .step-num { background: var(--progress-step-active); color: #fff; }
+.progress-step.complete .step-num { background: var(--progress-step-complete); color: #fff; }
+.progress-step .step-check { display: none; font-size: 12px; }
+.progress-step.complete .step-check { display: inline; }
+.progress-arrow { color: var(--text-light); font-size: 10px; flex-shrink: 0; }
+
+/* Main Content */
+.main-content {
+  max-width: 800px;
+  margin: 120px auto 0;
+  padding: 0 20px 40px;
+}
+
+/* Sections */
+.form-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  margin-bottom: 24px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+  scroll-margin-top: 140px;
+}
+.form-section.hidden-section { display: none; }
+.form-section:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.section-title {
+  font-size: 20px; font-weight: 600;
+  margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title .section-icon { font-size: 22px; }
+.section-desc {
+  font-size: 14px; color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.form-group { margin-bottom: 18px; }
+.form-group:last-child { margin-bottom: 0; }
+.form-label {
+  display: block;
+  font-size: 14px; font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.form-label .hint { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.3s;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+.form-input.error, .form-textarea.error { border-color: var(--error); }
+.form-textarea { min-height: 80px; resize: vertical; }
+.form-error {
+  font-size: 12px; color: var(--error);
+  margin-top: 4px;
+  display: none;
+}
+.form-error.visible { display: block; }
+.form-input:disabled, .form-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Radios & Checkboxes */
+.radio-group, .checkbox-group {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.radio-option, .checkbox-option {
+  position: relative;
+}
+.radio-option input, .checkbox-option input {
+  position: absolute; opacity: 0; width: 0; height: 0;
+}
+.radio-option label, .checkbox-option label {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+  user-select: none;
+}
+.radio-option label:hover, .checkbox-option label:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.radio-option input:checked + label, .checkbox-option input:checked + label {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 500;
+}
+.radio-option .price-tag, .checkbox-option .price-tag {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg-progress);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.radio-option input:checked + label .price-tag,
+.checkbox-option input:checked + label .price-tag {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Stepper */
+.stepper {
+  display: flex; align-items: center; gap: 8px;
+}
+.stepper button {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.stepper button:hover { border-color: var(--accent); background: var(--accent-light); }
+.stepper button:disabled { opacity: 0.4; cursor: not-allowed; }
+.stepper .stepper-value {
+  width: 36px; text-align: center;
+  font-size: 16px; font-weight: 600;
+}
+
+/* Conditional */
+.conditional { display: none; margin-top: 12px; }
+.conditional.visible { display: block; }
+
+/* Otp */
+.otp-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.otp-row .form-input { width: 160px; }
+.otp-verified {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--success);
+  font-size: 13px; font-weight: 500;
+}
+.btn-otp {
+  padding: 8px 16px;
+  border: 1px solid var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-otp:hover { background: var(--accent); color: #fff; }
+.btn-otp:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* File Upload */
+.file-zone {
+  border: 2px dashed var(--file-zone-border);
+  border-radius: var(--radius-lg);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.file-zone:hover, .file-zone.dragover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.file-zone-icon { font-size: 36px; margin-bottom: 8px; }
+.file-zone-text { font-size: 14px; color: var(--text-muted); }
+.file-zone-text strong { color: var(--accent); cursor: pointer; }
+.file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.file-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+.file-item .file-icon { font-size: 18px; }
+.file-item .file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-item .file-size { color: var(--text-muted); font-size: 12px; }
+.file-item .file-remove {
+  background: none; border: none; color: var(--error); cursor: pointer;
+  font-size: 16px; padding: 2px;
+}
+
+/* Price Bar */
+.price-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--price-bar-bg);
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 100;
+  transition: background 0.3s, border-color 0.3s;
+}
+.price-bar-total {
+  display: flex; align-items: baseline; gap: 8px;
+}
+.price-bar-total span:first-child {
+  font-size: 14px; color: var(--text-muted);
+}
+.price-bar-total .amount {
+  font-size: 24px; font-weight: 700;
+  color: var(--accent);
+}
+.btn-breakdown {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.btn-breakdown:hover { border-color: var(--accent); color: var(--accent); }
+.btn-submit {
+  padding: 10px 24px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px; font-weight: 600;
+  transition: all 0.2s;
+}
+.btn-submit:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  transition: background 0.3s;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.modal-header h2 { font-size: 18px; font-weight: 600; }
+.modal-close {
+  background: none; border: none; color: var(--text-muted);
+  cursor: pointer; font-size: 20px; padding: 4px;
+}
+.modal-close:hover { color: var(--text); }
+.breakdown-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.breakdown-table th {
+  text-align: left; padding: 8px 10px;
+  border-bottom: 2px solid var(--border);
+  font-weight: 600; color: var(--text-muted);
+  font-size: 11px; text-transform: uppercase;
+}
+.breakdown-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.breakdown-table tr:last-child td { border-bottom: none; }
+.breakdown-table .grand-total td {
+  font-weight: 700; font-size: 15px;
+  border-top: 2px solid var(--border);
+  padding-top: 12px;
+}
+
+/* Toasts */
+.toast-container {
+  position: fixed; top: 72px; right: 20px;
+  z-index: 300;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  font-size: 13px; font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn 0.3s ease;
+  max-width: 360px;
+}
+.toast.success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+.toast.error { background: var(--error-bg); color: var(--error); border: 1px solid var(--error); }
+.toast.info { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* Thank You */
+.thankyou-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 500;
+  display: none;
+  align-items: center; justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+  text-align: center;
+}
+.thankyou-overlay.open { display: flex; }
+.thankyou-check {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--success);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  animation: popIn 0.5s ease;
+}
+.thankyou-check svg { width: 40px; height: 40px; stroke: #fff; stroke-width: 3; fill: none; }
+@keyframes popIn {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.thankyou-overlay h2 { font-size: 28px; margin-bottom: 8px; }
+.thankyou-overlay p { color: var(--text-muted); margin-bottom: 4px; font-size: 15px; }
+.thankyou-overlay .status-row {
+  display: flex; gap: 16px; margin-top: 20px; flex-wrap: wrap; justify-content: center;
+}
+.thankyou-overlay .status-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--success);
+}
+.thankyou-overlay .status-item.pending { color: var(--text-muted); }
+
+/* Loading */
+.loading-spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-screen {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 600;
+  transition: opacity 0.4s;
+}
+.loading-screen.hidden { opacity: 0; pointer-events: none; }
+
+/* Error Banner */
+.error-banner {
+  background: var(--error-bg);
+  border: 1px solid var(--error);
+  color: var(--error);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 13px;
+  display: none;
+}
+.error-banner.visible { display: block; }
+
+/* Draft Restore */
+.draft-banner {
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  font-size: 13px;
+  display: none;
+  align-items: center; justify-content: space-between; gap: 12px;
+}
+.draft-banner.visible { display: flex; }
+.draft-banner-actions { display: flex; gap: 8px; }
+.draft-banner-actions button {
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 12px; font-weight: 500;
+  border: 1px solid var(--accent);
+}
+.draft-banner-actions .btn-restore { background: var(--accent); color: #fff; }
+.draft-banner-actions .btn-dismiss { background: transparent; color: var(--accent); }
+
+/* Stepper inline */
+.stepper-inline { display: flex; align-items: center; gap: 4px; }
+
+@media (max-width: 640px) {
+  .top-bar { padding: 10px 16px; }
+  .top-bar h1 { font-size: 15px; }
+  .progress-tracker { padding: 8px 12px; gap: 2px; }
+  .progress-step { font-size: 10px; padding: 4px 6px; }
+  .progress-step .step-num { width: 18px; height: 18px; font-size: 9px; }
+  .form-section { padding: 20px 16px; }
+  .section-title { font-size: 17px; }
+  .main-content { margin-top: 110px; padding: 0 12px 40px; }
+  .radio-group, .checkbox-group { gap: 6px; }
+  .radio-option label, .checkbox-option label { padding: 6px 10px; font-size: 12px; }
+  .price-bar { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+  .price-bar-total .amount { font-size: 20px; }
+  .btn-submit { padding: 8px 16px; font-size: 13px; }
+  .modal-content { padding: 20px 16px; }
+  .otp-row .form-input { width: 120px; }
+  .draft-banner { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-spinner" style="width:40px;height:40px;border-width:3px"></div>
+  <span style="color:var(--text-muted);font-size:14px">Loading intake form...</span>
+</div>
+
+<div class="top-bar">
+  <h1>AM Worx — Client Intake</h1>
+  <div class="top-bar-actions">
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">&#9790;</button>
+  </div>
+</div>
+
+<div class="progress-tracker" id="progressTracker"></div>
+
+<div class="main-content" id="mainContent">
+  <div id="errorBanner" class="error-banner"></div>
+  <div id="draftBanner" class="draft-banner"></div>
+
+  <form id="intakeForm" novalidate>
+    <!-- Section 1: Contact -->
+    <section class="form-section" data-section="1" id="s-contact">
+      <div class="section-title"><span class="section-icon">&#128100;</span> Contact Information</div>
+      <div class="section-desc">Let us know who you are and how to reach you.</div>
+      <div class="form-group">
+        <label class="form-label" for="full_name">Full Name <span class="hint">*</span></label>
+        <input class="form-input" type="text" id="full_name" name="full_name" required minlength="2" placeholder="John Doe">
+        <div class="form-error" id="err-full_name">Please enter your full name (at least 2 characters).</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="business_name">Business Name</label>
+        <input class="form-input" type="text" id="business_name" name="business_name" placeholder="My Business LLC">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="client_email">Email Address <span class="hint">*</span></label>
+        <input class="form-input" type="email" id="client_email" name="client_email" required placeholder="john@example.com">
+        <div class="form-error" id="err-client_email">Please enter a valid email address.</div>
+        <div class="otp-row" id="otpRow">
+          <button type="button" class="btn-otp" id="btnSendOtp">Send Code</button>
+          <input class="form-input" type="text" id="otpInput" inputmode="numeric" maxlength="6" placeholder="000000" style="width:120px;display:none;">
+          <button type="button" class="btn-otp" id="btnVerifyOtp" style="display:none;">Verify</button>
+          <span class="otp-verified" id="otpVerified" style="display:none;">&#10003; Verified</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="client_phone">Phone Number</label>
+        <input class="form-input" type="tel" id="client_phone" name="client_phone" placeholder="(555) 123-4567">
+      </div>
+    </section>
+
+    <!-- Section 2: Domain & Hosting -->
+    <section class="form-section" data-section="2" id="s-domain">
+      <div class="section-title"><span class="section-icon">&#127760;</span> Domain &amp; Hosting</div>
+      <div class="section-desc">Tell us about your domain and hosting requirements.</div>
+      <div class="form-group">
+        <label class="form-label">Do you need a domain name?</label>
+        <div class="radio-group" id="domain-group">
+          <div class="radio-option"><input type="radio" name="domain" id="domain_need" value="need" data-price="50"><label for="domain_need">Yes, I need one <span class="price-tag">$50</span></label></div>
+          <div class="radio-option"><input type="radio" name="domain" id="domain_no_need" value="no-need" data-price="0"><label for="domain_no_need">No, I have one</label></div>
+          <div class="radio-option"><input type="radio" name="domain" id="domain_not_sure" value="not-sure" data-price="0"><label for="domain_not_sure">Not sure</label></div>
+        </div>
+        <div class="conditional" id="cond-domain_idea">
+          <label class="form-label" for="domain_idea">Domain Idea (if you have one)</label>
+          <input class="form-input" type="text" id="domain_idea" name="domain_idea" placeholder="mybusiness.com">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Do you need web hosting?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="hosting" id="hosting_need" value="need" data-price="100"><label for="hosting_need">Yes, I need hosting <span class="price-tag">$100</span></label></div>
+          <div class="radio-option"><input type="radio" name="hosting" id="hosting_no_need" value="no-need" data-price="0"><label for="hosting_no_need">No, I have hosting</label></div>
+          <div class="radio-option"><input type="radio" name="hosting" id="hosting_not_sure" value="not-sure" data-price="0"><label for="hosting_not_sure">Not sure</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Do you need business email?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="email" id="email_need" value="need" data-price="30"><label for="email_need">Yes, I need email <span class="price-tag">$30/ mailbox</span></label></div>
+          <div class="radio-option"><input type="radio" name="email" id="email_no_need" value="no-need" data-price="0"><label for="email_no_need">No, I have email</label></div>
+          <div class="radio-option"><input type="radio" name="email" id="email_not_sure" value="not-sure" data-price="0"><label for="email_not_sure">Not sure</label></div>
+        </div>
+        <div class="conditional" id="cond-email_count">
+          <label class="form-label">Number of mailboxes</label>
+          <div class="stepper">
+            <button type="button" id="emailCountMinus" disabled>-</button>
+            <span class="stepper-value" id="emailCountValue">1</span>
+            <button type="button" id="emailCountPlus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Do you need help setting everything up?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="setup_help" id="setup_help_yes" value="yes" data-price="50"><label for="setup_help_yes">Yes, please help <span class="price-tag">$50</span></label></div>
+          <div class="radio-option"><input type="radio" name="setup_help" id="setup_help_no" value="no" data-price="0"><label for="setup_help_no">No, I'll handle it</label></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Website -->
+    <section class="form-section" data-section="3" id="s-website">
+      <div class="section-title"><span class="section-icon">&#127754;</span> Website Details</div>
+      <div class="section-desc">Describe your website vision and requirements.</div>
+      <div class="form-group">
+        <label class="form-label" for="business_desc">Describe your business and website goals</label>
+        <textarea class="form-textarea" id="business_desc" name="business_desc" placeholder="Tell us about your business, what you do, and what you want your website to achieve..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">What type of website do you need?</label>
+        <div class="radio-group" id="website_type_group">
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_simple" value="simple" data-price="300"><label for="wt_simple">Simple (1-3 pages) <span class="price-tag">$300</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_business" value="business" data-price="500"><label for="wt_business">Business <span class="price-tag">$500</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_portfolio" value="portfolio" data-price="400"><label for="wt_portfolio">Portfolio <span class="price-tag">$400</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_blog" value="blog" data-price="350"><label for="wt_blog">Blog <span class="price-tag">$350</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_eco_small" value="ecommerce-small" data-price="800"><label for="wt_eco_small">Ecommerce (Small) <span class="price-tag">$800</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_eco_large" value="ecommerce-large" data-price="1500"><label for="wt_eco_large">Ecommerce (Large) <span class="price-tag">$1,500</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_booking" value="booking" data-price="700"><label for="wt_booking">Booking System <span class="price-tag">$700</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_membership" value="membership" data-price="1000"><label for="wt_membership">Membership <span class="price-tag">$1,000</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_directory" value="directory" data-price="600"><label for="wt_directory">Directory <span class="price-tag">$600</span></label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pages needed <span class="hint">(select all that apply)</span></label>
+        <div class="checkbox-group" id="pages-group">
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_home" value="home" data-price="100"><label for="page_home">Home <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_about" value="about" data-price="80"><label for="page_about">About <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_services" value="services" data-price="80"><label for="page_services">Services <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_portfolio" value="portfolio" data-price="80"><label for="page_portfolio">Portfolio <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_blog" value="blog" data-price="80"><label for="page_blog">Blog <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_contact" value="contact" data-price="50"><label for="page_contact">Contact <span class="price-tag">$50</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_gallery" value="gallery" data-price="80"><label for="page_gallery">Gallery <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_faq" value="faq" data-price="60"><label for="page_faq">FAQ <span class="price-tag">$60</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_testimonials" value="testimonials" data-price="60"><label for="page_testimonials">Testimonials <span class="price-tag">$60</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_pricing" value="pricing" data-price="80"><label for="page_pricing">Pricing <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_careers" value="careers" data-price="100"><label for="page_careers">Careers <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="pages" id="page_custom" value="custom-page" data-price="100"><label for="page_custom">Custom Page <span class="price-tag">$100</span></label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="other_pages">Other pages not listed</label>
+        <input class="form-input" type="text" id="other_pages" name="other_pages" placeholder="e.g., Team, Partners, Resource Library">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Features needed <span class="hint">(select all that apply)</span></label>
+        <div class="checkbox-group" id="features-group">
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_contact_form" value="contact-form" data-price="80"><label for="feat_contact_form">Contact Form <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_live_chat" value="live-chat" data-price="150"><label for="feat_live_chat">Live Chat <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_newsletter" value="newsletter" data-price="100"><label for="feat_newsletter">Newsletter Signup <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_social_media" value="social-media" data-price="50"><label for="feat_social_media">Social Media Integration <span class="price-tag">$50</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_seo_basic" value="seo-basic" data-price="200"><label for="feat_seo_basic">SEO (Basic) <span class="price-tag">$200</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_seo_advanced" value="seo-advanced" data-price="400"><label for="feat_seo_advanced">SEO (Advanced) <span class="price-tag">$400</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_analytics" value="analytics" data-price="150"><label for="feat_analytics">Analytics Setup <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_google_maps" value="google-maps" data-price="50"><label for="feat_google_maps">Google Maps <span class="price-tag">$50</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_booking_system" value="booking-system" data-price="300"><label for="feat_booking_system">Booking System <span class="price-tag">$300</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_membership_area" value="membership-area" data-price="400"><label for="feat_membership_area">Membership Area <span class="price-tag">$400</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_ecommerce" value="ecommerce" data-price="500"><label for="feat_ecommerce">Ecommerce Functionality <span class="price-tag">$500</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_payment_gateway" value="payment-gateway" data-price="200"><label for="feat_payment_gateway">Payment Gateway <span class="price-tag">$200</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_multi_language" value="multi-language" data-price="300"><label for="feat_multi_language">Multi-Language <span class="price-tag">$300</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_search" value="search" data-price="150"><label for="feat_search">Site Search <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_image_optimization" value="image-optimization" data-price="100"><label for="feat_image_optimization">Image Optimization <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_speed_optimization" value="speed-optimization" data-price="150"><label for="feat_speed_optimization">Speed Optimization <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_cms" value="cms" data-price="250"><label for="feat_cms">CMS Integration <span class="price-tag">$250</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_backup" value="backup" data-price="100"><label for="feat_backup">Backup Solution <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_ssl" value="ssl" data-price="80"><label for="feat_ssl">SSL Certificate <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_custom_feature" value="custom-feature" data-price="200"><label for="feat_custom_feature">Custom Feature <span class="price-tag">$200</span></label></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Branding & Content -->
+    <section class="form-section" data-section="4" id="s-branding">
+      <div class="section-title"><span class="section-icon">&#127912;</span> Branding &amp; Content</div>
+      <div class="section-desc">Share your brand assets and content preferences.</div>
+      <div class="form-group">
+        <label class="form-label">Do you have a logo?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="logo" id="logo_yes" value="yes" data-price="200"><label for="logo_yes">I need a logo designed <span class="price-tag">$200</span></label></div>
+          <div class="radio-option"><input type="radio" name="logo" id="logo_have" value="have" data-price="0"><label for="logo_have">I have a logo</label></div>
+          <div class="radio-option"><input type="radio" name="logo" id="logo_later" value="later" data-price="0"><label for="logo_later">I'll decide later</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Website text content</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="content_text" id="ct_self" value="self" data-price="0"><label for="ct_self">I'll provide it</label></div>
+          <div class="radio-option"><input type="radio" name="content_text" id="ct_need_help" value="need-help" data-price="200"><label for="ct_need_help">I need help writing content <span class="price-tag">$200</span></label></div>
+          <div class="radio-option"><input type="radio" name="content_text" id="ct_ready" value="ready" data-price="0"><label for="ct_ready">Already written and ready</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Photos / imagery</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="content_photos" id="cp_my_own" value="my-own" data-price="0"><label for="cp_my_own">I have my own photos</label></div>
+          <div class="radio-option"><input type="radio" name="content_photos" id="cp_free_stock" value="free-stock" data-price="50"><label for="cp_free_stock">I need stock photos <span class="price-tag">$50</span></label></div>
+          <div class="radio-option"><input type="radio" name="content_photos" id="cp_not_sure" value="not-sure" data-price="0"><label for="cp_not_sure">Not sure yet</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="brand_colors">Brand colors (hex codes, comma separated)</label>
+        <input class="form-input" type="text" id="brand_colors" name="brand_colors" placeholder="#6366f1, #ec4899, #0f172a">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="inspiration_links">Inspiration / reference websites</label>
+        <input class="form-input" type="text" id="inspiration_links" name="inspiration_links" placeholder="https://example.com, https://reference.com">
+      </div>
+    </section>
+
+    <!-- Section 5: Timeline -->
+    <section class="form-section" data-section="5" id="s-timeline">
+      <div class="section-title"><span class="section-icon">&#128197;</span> Timeline</div>
+      <div class="section-desc">When are you looking to launch?</div>
+      <div class="form-group">
+        <label class="form-label">Desired timeline</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="timeline" id="tl_1week" value="1-week" data-price="200"><label for="tl_1week">1 Week (Rush) <span class="price-tag">$200</span></label></div>
+          <div class="radio-option"><input type="radio" name="timeline" id="tl_2weeks" value="2-weeks" data-price="100"><label for="tl_2weeks">2 Weeks <span class="price-tag">$100</span></label></div>
+          <div class="radio-option"><input type="radio" name="timeline" id="tl_1month" value="1-month" data-price="0"><label for="tl_1month">1 Month</label></div>
+          <div class="radio-option"><input type="radio" name="timeline" id="tl_flexible" value="flexible" data-price="0"><label for="tl_flexible">Flexible / No Rush</label></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Maintenance & Budget -->
+    <section class="form-section" data-section="6" id="s-maintenance">
+      <div class="section-title"><span class="section-icon">&#128295;</span> Maintenance &amp; Budget</div>
+      <div class="section-desc">Tell us about ongoing maintenance needs and your budget.</div>
+      <div class="form-group">
+        <label class="form-label">Monthly maintenance plan</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="maintenance" id="maint_no" value="no" data-price="0"><label for="maint_no">None <span class="hint">(no maintenance)</span></label></div>
+          <div class="radio-option"><input type="radio" name="maintenance" id="maint_basic" value="basic" data-price="50"><label for="maint_basic">Basic <span class="price-tag">$50/mo</span></label></div>
+          <div class="radio-option"><input type="radio" name="maintenance" id="maint_standard" value="standard" data-price="100"><label for="maint_standard">Standard <span class="price-tag">$100/mo</span></label></div>
+          <div class="radio-option"><input type="radio" name="maintenance" id="maint_premium" value="premium" data-price="200"><label for="maint_premium">Premium <span class="price-tag">$200/mo</span></label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estimated budget range</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="budget" id="budget_500" value="under-1000"><label for="budget_500">Under $1,000</label></div>
+          <div class="radio-option"><input type="radio" name="budget" id="budget_1k" value="1000-2500"><label for="budget_1k">$1,000 - $2,500</label></div>
+          <div class="radio-option"><input type="radio" name="budget" id="budget_25k" value="2500-5000"><label for="budget_25k">$2,500 - $5,000</label></div>
+          <div class="radio-option"><input type="radio" name="budget" id="budget_5k" value="5000-10000"><label for="budget_5k">$5,000 - $10,000</label></div>
+          <div class="radio-option"><input type="radio" name="budget" id="budget_10k" value="over-10000"><label for="budget_10k">$10,000+</label></div>
+          <div class="radio-option"><input type="radio" name="budget" id="budget_not_sure" value="not-sure"><label for="budget_not_sure">Not sure</label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="extra_notes">Extra notes or questions</label>
+        <textarea class="form-textarea" id="extra_notes" name="extra_notes" placeholder="Anything else you'd like us to know..."></textarea>
+      </div>
+    </section>
+
+    <!-- Section 7: Review & Submit -->
+    <section class="form-section" data-section="7" id="s-review">
+      <div class="section-title"><span class="section-icon">&#128203;</span> Review &amp; Submit</div>
+      <div class="section-desc">Please review your selections before submitting.</div>
+      <div class="form-group">
+        <label class="form-label">Files <span class="hint">(optional, max 25MB total)</span></label>
+        <div class="file-zone" id="fileZone">
+          <div class="file-zone-icon">&#128206;</div>
+          <div class="file-zone-text">Drag &amp; drop files here or <strong>click to browse</strong></div>
+          <input type="file" id="fileInput" multiple style="display:none" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.svg,.zip,.ai,.psd,.xd,.fig">
+        </div>
+        <div class="file-list" id="fileList"></div>
+      </div>
+      <div class="form-group" id="reviewSummary">
+        <label class="form-label">Summary of Selections</label>
+        <div style="font-size:13px;color:var(--text-muted)">Complete the form above to see a summary here.</div>
+      </div>
+      <div class="form-group" style="margin-top:16px">
+        <div class="form-error" id="err-submit" style="display:block"></div>
+      </div>
+    </section>
+  </form>
+</div>
+
+<!-- Price Bar -->
+<div class="price-bar" id="priceBar">
+  <div class="price-bar-total">
+    <span>Estimated Total:</span>
+    <span class="amount" id="totalAmount">$0</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="btn-breakdown" id="btnBreakdown">View Breakdown</button>
+    <button class="btn-submit" id="btnSubmit" disabled>Submit Request</button>
+  </div>
+</div>
+
+<!-- Price Breakdown Modal -->
+<div class="modal-overlay" id="breakdownModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Price Breakdown</h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <table class="breakdown-table">
+      <thead>
+        <tr><th>Item</th><th>Qty</th><th>Price</th><th>Line Total</th></tr>
+      </thead>
+      <tbody id="breakdownBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Thank You Screen -->
+<div class="thankyou-overlay" id="thankyouOverlay">
+  <div class="thankyou-check">
+    <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg>
+  </div>
+  <h2 id="thankyouName">Thank You!</h2>
+  <p>Your website request has been submitted successfully.</p>
+  <p style="font-size:13px;color:var(--text-muted)">We'll review your information and get back to you within 1-2 business days.</p>
+  <div class="status-row">
+    <div class="status-item" id="statusFiles">&#10003; Files uploaded</div>
+    <div class="status-item" id="statusPdf">&#10003; PDF generated</div>
+    <div class="status-item" id="statusDb">&#10003; Record saved</div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  const SUPABASE_URL = 'https://jyqjkkcenuapssmstmze.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5cWpra2NlbnVhcHNzbXN0bXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODk4ODMsImV4cCI6MjA5OTk2NTg4M30.tuPesgd2yCsize4z3jdLAWbxmbQQ_Sv8ChV6lNISaFg';
+  const { createClient } = supabase;
+  const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  window._selectedFiles = [];
+  window._emailVerified = false;
+  window._priceItems = [];
+  window._settingsOverrides = null;
+  window._submitting = false;
+
+  const SECTIONS_CONFIG = [
+    { id: 'contact', icon: '\u{1F464}', title: 'Contact', short: 'Contact' },
+    { id: 'domain', icon: '\u{1F310}', title: 'Domain & Hosting', short: 'Domain' },
+    { id: 'website', icon: '\u{1F6A7}', title: 'Website Details', short: 'Website' },
+    { id: 'branding', icon: '\u{1F3A8}', title: 'Branding & Content', short: 'Branding' },
+    { id: 'timeline', icon: '\u{1F4C5}', title: 'Timeline', short: 'Timeline' },
+    { id: 'maintenance', icon: '\u{1F527}', title: 'Maintenance & Budget', short: 'Maint' },
+    { id: 'review', icon: '\u{1F4CB}', title: 'Review & Submit', short: 'Review' }
+  ];
+
+  // ---- Init ----
+  document.addEventListener('DOMContentLoaded', function() {
+    initApp();
+  });
+
+  function initApp() {
+    setupDarkMode();
+    setupProgressTracker();
+    buildSections();
+    setupOtp();
+    setupFileUpload();
+    setupDraftAutoSave();
+    setupBreakdownModal();
+    setupFormListeners();
+    loadOverrides();
+  }
+
+  // ---- Dark Mode ----
+  function setupDarkMode() {
+    const toggle = document.getElementById('darkToggle');
+    const saved = localStorage.getItem('darkMode');
+    if (saved === 'true') {
+      document.documentElement.classList.add('dark');
+    }
+    toggle.addEventListener('click', function() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDark);
+    });
+  }
+
+  // ---- Progress Tracker ----
+  function setupProgressTracker() {
+    const container = document.getElementById('progressTracker');
+    let html = '';
+    SECTIONS_CONFIG.forEach(function(s, i) {
+      if (i > 0) {
+        html += '<span class="progress-arrow">\u27A1</span>';
+      }
+      html += '<button class="progress-step" data-section="' + (i + 1) + '">';
+      html += '<span class="step-num" id="stepNum' + (i + 1) + '">' + (i + 1) + '</span>';
+      html += '<span class="step-check">\u2713</span>';
+      html += '<span>' + s.short + '</span>';
+      html += '</button>';
+    });
+    container.innerHTML = html;
+
+    container.addEventListener('click', function(e) {
+      var btn = e.target.closest('.progress-step');
+      if (!btn) return;
+      var sec = btn.getAttribute('data-section');
+      var el = document.getElementById('s-' + SECTIONS_CONFIG[parseInt(sec) - 1].id);
+      if (el) {
+        var offset = 140;
+        var top = el.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+
+    var sectionEls = document.querySelectorAll('.form-section');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        var sec = entry.target.getAttribute('data-section');
+        document.querySelectorAll('.progress-step').forEach(function(s) {
+          s.classList.remove('active');
+          if (s.getAttribute('data-section') === sec) {
+            s.classList.add('active');
+          }
+        });
+        markCompleteSteps(sec);
+      });
+    }, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
+
+    sectionEls.forEach(function(el) { observer.observe(el); });
+  }
+
+  function markCompleteSteps(currentSec) {
+    var current = parseInt(currentSec);
+    document.querySelectorAll('.progress-step').forEach(function(s) {
+      var sec = parseInt(s.getAttribute('data-section'));
+      if (sec < current) {
+        s.classList.add('complete');
+      } else {
+        s.classList.remove('complete');
+      }
+    });
+  }
+
+  // ---- Build Section Overrides (dynamic options from settings) ----
+  function buildSections() {
+    // Sections already in HTML, but we need to handle dynamic options injection
+    // This is handled in loadOverrides
+  }
+
+  // ---- Load Overrides ----
+  function loadOverrides() {
+    supabaseClient.from('settings').select('*').eq('id', 1).single().then(function(res) {
+      if (res.error) {
+        console.warn('Settings load failed:', res.error.message);
+        hideLoading();
+        return;
+      }
+      if (res.data) {
+        window._settingsOverrides = res.data;
+        applyOverrides(res.data);
+      }
+      hideLoading();
+    }).catch(function(err) {
+      console.warn('Settings load error:', err);
+      hideLoading();
+    });
+  }
+
+  function applyOverrides(settings) {
+    if (settings.sections && typeof settings.sections === 'object') {
+      Object.keys(settings.sections).forEach(function(key) {
+        var override = settings.sections[key];
+        var section = document.getElementById('s-' + key);
+        if (!section) return;
+        if (override.title) {
+          var titleEl = section.querySelector('.section-title');
+          if (titleEl) {
+            var iconSpan = titleEl.querySelector('.section-icon');
+            titleEl.innerHTML = '';
+            if (iconSpan) titleEl.appendChild(iconSpan);
+            titleEl.appendChild(document.createTextNode(' ' + override.title));
+          }
+        }
+        if (override.description) {
+          var descEl = section.querySelector('.section-desc');
+          if (descEl) descEl.textContent = override.description;
+        }
+        if (override.visible === false) {
+          section.classList.add('hidden-section');
+          var stepIdx = SECTIONS_CONFIG.findIndex(function(s) { return s.id === key; });
+          if (stepIdx !== -1) {
+            var steps = document.querySelectorAll('.progress-step');
+            if (steps[stepIdx]) steps[stepIdx].style.display = 'none';
+          }
+        }
+        if (override.options && override.options.constructor === Object) {
+          Object.keys(override.options).forEach(function(field) {
+            injectCustomOptions(key, field, override.options[field]);
+          });
+        }
+      });
+    }
+    if (settings.prices && typeof settings.prices === 'object') {
+      Object.keys(settings.prices).forEach(function(selector) {
+        var overrideVal = settings.prices[selector];
+        var els = document.querySelectorAll('[data-price]');
+        els.forEach(function(el) {
+          if (el.value === selector || el.id === selector || el.name === selector) {
+            el.setAttribute('data-price', overrideVal);
+            var priceTag = el.closest('.radio-option, .checkbox-option')?.querySelector('.price-tag');
+            if (priceTag) {
+              priceTag.textContent = '$' + parseInt(overrideVal).toLocaleString();
+            }
+          }
+        });
+      });
+    }
+  }
+
+  function injectCustomOptions(sectionId, fieldName, options) {
+    var section = document.getElementById('s-' + sectionId);
+    if (!section) return;
+    var group = section.querySelector('[id$="-group"], [id="' + fieldName + '-group"]');
+    if (!group) group = section.querySelector('.radio-group, .checkbox-group');
+    if (!group || !Array.isArray(options)) return;
+    options.forEach(function(opt) {
+      var wrapper = document.createElement('div');
+      var inputType = group.classList.contains('checkbox-group') ? 'checkbox' : 'radio';
+      var name = fieldName;
+      var val = opt.value || opt.label.toLowerCase().replace(/\s+/g, '-');
+      var price = opt.price || 0;
+      wrapper.className = group.classList.contains('checkbox-group') ? 'checkbox-option' : 'radio-option';
+      wrapper.innerHTML = '<input type="' + inputType + '" name="' + name + '" id="custom_' + name + '_' + val + '" value="' + val + '" data-price="' + price + '">' +
+        '<label for="custom_' + name + '_' + val + '">' + opt.label +
+        (price > 0 ? ' <span class="price-tag">$' + price + '</span>' : '') +
+        '</label>';
+      group.appendChild(wrapper);
+    });
+  }
+
+  function hideLoading() {
+    var ls = document.getElementById('loadingScreen');
+    ls.classList.add('hidden');
+    setTimeout(function() { ls.style.display = 'none'; }, 500);
+    checkDraft();
+  }
+
+  // ---- Draft Auto Save ----
+  function setupDraftAutoSave() {
+    var form = document.getElementById('intakeForm');
+    var debounceTimer;
+    form.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(saveDraft, 800);
+    });
+    form.addEventListener('change', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(saveDraft, 800);
+    });
+  }
+
+  function saveDraft() {
+    try {
+      var data = collectFormData();
+      data._files = window._selectedFiles.map(function(f) {
+        return { name: f.name, size: f.size, type: f.type };
+      });
+      data._emailVerified = window._emailVerified;
+      localStorage.setItem('intake_draft', JSON.stringify(data));
+    } catch (e) {
+      // silent
+    }
+  }
+
+  function checkDraft() {
+    var draft = localStorage.getItem('intake_draft');
+    if (!draft) return;
+    try {
+      var data = JSON.parse(draft);
+      if (!data || !data.full_name) return;
+      var banner = document.getElementById('draftBanner');
+      banner.classList.add('visible');
+      banner.innerHTML = '<span>You have a saved draft from a previous session.</span>' +
+        '<div class="draft-banner-actions">' +
+        '<button class="btn-restore" id="restoreDraft">Restore</button>' +
+        '<button class="btn-dismiss" id="dismissDraft">Dismiss</button>' +
+        '</div>';
+      document.getElementById('restoreDraft').addEventListener('click', function() {
+        restoreDraft(data);
+        banner.classList.remove('visible');
+      });
+      document.getElementById('dismissDraft').addEventListener('click', function() {
+        localStorage.removeItem('intake_draft');
+        banner.classList.remove('visible');
+      });
+    } catch (e) {
+      localStorage.removeItem('intake_draft');
+    }
+  }
+
+  function restoreDraft(data) {
+    Object.keys(data).forEach(function(key) {
+      if (key.startsWith('_')) return;
+      var el = document.getElementById(key) || document.querySelector('[name="' + key + '"]');
+      if (!el) return;
+      if (el.type === 'radio') {
+        var radios = document.querySelectorAll('[name="' + key + '"]');
+        radios.forEach(function(r) {
+          if (r.value === data[key]) r.checked = true;
+        });
+      } else if (el.type === 'checkbox') {
+        if (Array.isArray(data[key])) {
+          data[key].forEach(function(v) {
+            var cb = document.querySelector('[name="' + key + '"][value="' + v + '"]');
+            if (cb) cb.checked = true;
+          });
+        }
+      } else {
+        el.value = data[key] || '';
+      }
+    });
+    if (data._emailVerified) {
+      window._emailVerified = true;
+      document.getElementById('otpVerified').style.display = 'inline';
+      document.getElementById('btnSendOtp').style.display = 'none';
+      document.getElementById('otpInput').style.display = 'none';
+      document.getElementById('btnVerifyOtp').style.display = 'none';
+      document.getElementById('client_email').readOnly = true;
+    }
+    if (data._files && data._files.length > 0) {
+      window._selectedFiles = [];
+      data._files.forEach(function(f) {
+        window._selectedFiles.push(f);
+      });
+      renderFileList();
+    }
+    calculate();
+  }
+
+  // ---- OTP ----
+  function setupOtp() {
+    var btnSend = document.getElementById('btnSendOtp');
+    var btnVerify = document.getElementById('btnVerifyOtp');
+    var otpInput = document.getElementById('otpInput');
+    var otpVerified = document.getElementById('otpVerified');
+    var emailInput = document.getElementById('client_email');
+
+    btnSend.addEventListener('click', function() {
+      var email = emailInput.value.trim();
+      if (!email || !isValidEmail(email)) {
+        showToast('Please enter a valid email first.', 'error');
+        return;
+      }
+      var code = String(Math.floor(100000 + Math.random() * 900000));
+      console.log('OTP code for ' + email + ': ' + code);
+      var expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+      supabaseClient.from('otp_codes').insert({
+        email: email,
+        code: code,
+        expires_at: expiresAt,
+        used: false
+      }).then(function(res) {
+        if (res.error) {
+          showToast('Failed to send code: ' + res.error.message, 'error');
+          return;
+        }
+        showToast('Verification code sent to ' + email, 'success');
+        btnSend.textContent = 'Resend Code';
+        otpInput.style.display = 'inline-block';
+        btnVerify.style.display = 'inline-block';
+        otpInput.focus();
+      }).catch(function(err) {
+        showToast('Failed to send code.', 'error');
+      });
+    });
+
+    btnVerify.addEventListener('click', function() {
+      var code = otpInput.value.trim();
+      var email = emailInput.value.trim();
+      if (!code || code.length !== 6) {
+        showToast('Please enter the 6-digit code.', 'error');
+        return;
+      }
+      var now = new Date().toISOString();
+      supabaseClient.from('otp_codes')
+        .select('*')
+        .eq('email', email)
+        .eq('code', code)
+        .eq('used', false)
+        .gte('expires_at', now)
+        .single()
+        .then(function(res) {
+          if (res.error) {
+            showToast('Invalid or expired code. Please try again.', 'error');
+            return;
+          }
+          if (res.data) {
+            supabaseClient.from('otp_codes')
+              .update({ used: true })
+              .eq('id', res.data.id)
+              .then(function() {
+                window._emailVerified = true;
+                otpVerified.style.display = 'inline';
+                btnSend.style.display = 'none';
+                otpInput.style.display = 'none';
+                btnVerify.style.display = 'none';
+                emailInput.readOnly = true;
+                showToast('Email verified!', 'success');
+              });
+          } else {
+            showToast('Invalid or expired code.', 'error');
+          }
+        }).catch(function(err) {
+          showToast('Verification failed.', 'error');
+        });
+    });
+
+    otpInput.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    });
+  }
+
+  // ---- File Upload ----
+  function setupFileUpload() {
+    var zone = document.getElementById('fileZone');
+    var input = document.getElementById('fileInput');
+    var list = document.getElementById('fileList');
+
+    zone.addEventListener('click', function() { input.click(); });
+
+    input.addEventListener('change', function() {
+      addFiles(this.files);
+      this.value = '';
+    });
+
+    zone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+
+    zone.addEventListener('dragleave', function() {
+      zone.classList.remove('dragover');
+    });
+
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      addFiles(e.dataTransfer.files);
+    });
+  }
+
+  function addFiles(fileList) {
+    var totalSize = window._selectedFiles.reduce(function(sum, f) { return sum + (f.size || 0); }, 0);
+    var newTotal = totalSize;
+    var toAdd = [];
+    for (var i = 0; i < fileList.length; i++) {
+      newTotal += fileList[i].size;
+      toAdd.push(fileList[i]);
+    }
+    if (newTotal > 25 * 1024 * 1024) {
+      showToast('Total file size exceeds 25MB limit.', 'error');
+      return;
+    }
+    for (var j = 0; j < toAdd.length; j++) {
+      window._selectedFiles.push(toAdd[j]);
+    }
+    renderFileList();
+    saveDraft();
+  }
+
+  function renderFileList() {
+    var list = document.getElementById('fileList');
+    if (window._selectedFiles.length === 0) {
+      list.innerHTML = '';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < window._selectedFiles.length; i++) {
+      var f = window._selectedFiles[i];
+      var icon = getFileIcon(f.type || f.name);
+      var size = formatSize(f.size);
+      html += '<div class="file-item" data-index="' + i + '">';
+      html += '<span class="file-icon">' + icon + '</span>';
+      html += '<span class="file-name">' + escapeHtml(f.name) + '</span>';
+      html += '<span class="file-size">' + size + '</span>';
+      html += '<button class="file-remove" data-index="' + i + '" type="button">&times;</button>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+    list.querySelectorAll('.file-remove').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-index'));
+        window._selectedFiles.splice(idx, 1);
+        renderFileList();
+        saveDraft();
+      });
+    });
+  }
+
+  function getFileIcon(typeOrName) {
+    var t = typeOrName.toLowerCase();
+    if (t.includes('pdf')) return '\u{1F4C4}';
+    if (t.includes('image') || t.includes('jpg') || t.includes('jpeg') || t.includes('png') || t.includes('gif') || t.includes('svg') || t.includes('webp')) return '\u{1F5BC}';
+    if (t.includes('zip') || t.includes('rar') || t.includes('7z')) return '\u{1F4E6}';
+    if (t.includes('psd') || t.includes('ai') || t.includes('xd') || t.includes('fig')) return '\u{1F3A8}';
+    if (t.includes('doc') || t.includes('docx')) return '\u{1F4DD}';
+    return '\u{1F4CE}';
+  }
+
+  function formatSize(bytes) {
+    if (!bytes) return '0 B';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  // ---- Price Calculation ----
+  function calculate() {
+    window._priceItems = [];
+    var total = 0;
+
+    // Domain
+    var domainEl = document.querySelector('[name="domain"]:checked');
+    var domainVal = domainEl ? parseFloat(domainEl.getAttribute('data-price')) || 0 : 0;
+    if (domainVal > 0) {
+      window._priceItems.push({ label: 'Domain Name', price: domainVal, qty: 1, lineTotal: domainVal });
+      total += domainVal;
+    }
+
+    // Hosting
+    var hostingEl = document.querySelector('[name="hosting"]:checked');
+    var hostingVal = hostingEl ? parseFloat(hostingEl.getAttribute('data-price')) || 0 : 0;
+    if (hostingVal > 0) {
+      window._priceItems.push({ label: 'Web Hosting', price: hostingVal, qty: 1, lineTotal: hostingVal });
+      total += hostingVal;
+    }
+
+    // Email
+    var emailEl = document.querySelector('[name="email"]:checked');
+    var emailVal = emailEl ? parseFloat(emailEl.getAttribute('data-price')) || 0 : 0;
+    var emailQty = 0;
+    if (emailVal > 0) {
+      emailQty = parseInt(document.getElementById('emailCountValue').textContent) || 1;
+      var emailTotal = emailVal * emailQty;
+      window._priceItems.push({ label: 'Business Email', price: emailVal, qty: emailQty, lineTotal: emailTotal });
+      total += emailTotal;
+    }
+
+    // Setup Help
+    var setupEl = document.querySelector('[name="setup_help"]:checked');
+    var setupVal = setupEl ? parseFloat(setupEl.getAttribute('data-price')) || 0 : 0;
+    if (setupVal > 0) {
+      window._priceItems.push({ label: 'Setup Assistance', price: setupVal, qty: 1, lineTotal: setupVal });
+      total += setupVal;
+    }
+
+    // Website Type
+    var wtEl = document.querySelector('[name="website_type"]:checked');
+    var wtVal = wtEl ? parseFloat(wtEl.getAttribute('data-price')) || 0 : 0;
+    if (wtVal > 0) {
+      window._priceItems.push({ label: 'Website Type (' + (wtEl ? wtEl.value : '') + ')', price: wtVal, qty: 1, lineTotal: wtVal });
+      total += wtVal;
+    }
+
+    // Pages (checkboxes)
+    var pageCbs = document.querySelectorAll('[name="pages"]:checked');
+    pageCbs.forEach(function(cb) {
+      var p = parseFloat(cb.getAttribute('data-price')) || 0;
+      if (p > 0) {
+        var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
+        window._priceItems.push({ label: 'Page: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
+        total += p;
+      }
+    });
+
+    // Features (checkboxes)
+    var featCbs = document.querySelectorAll('[name="features"]:checked');
+    featCbs.forEach(function(cb) {
+      var p = parseFloat(cb.getAttribute('data-price')) || 0;
+      if (p > 0) {
+        var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
+        window._priceItems.push({ label: 'Feature: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
+        total += p;
+      }
+    });
+
+    // Logo
+    var logoEl = document.querySelector('[name="logo"]:checked');
+    var logoVal = logoEl ? parseFloat(logoEl.getAttribute('data-price')) || 0 : 0;
+    if (logoVal > 0) {
+      window._priceItems.push({ label: 'Logo Design', price: logoVal, qty: 1, lineTotal: logoVal });
+      total += logoVal;
+    }
+
+    // Content Text
+    var ctEl = document.querySelector('[name="content_text"]:checked');
+    var ctVal = ctEl ? parseFloat(ctEl.getAttribute('data-price')) || 0 : 0;
+    if (ctVal > 0) {
+      window._priceItems.push({ label: 'Content Writing', price: ctVal, qty: 1, lineTotal: ctVal });
+      total += ctVal;
+    }
+
+    // Content Photos
+    var cpEl = document.querySelector('[name="content_photos"]:checked');
+    var cpVal = cpEl ? parseFloat(cpEl.getAttribute('data-price')) || 0 : 0;
+    if (cpVal > 0) {
+      window._priceItems.push({ label: 'Stock Photos', price: cpVal, qty: 1, lineTotal: cpVal });
+      total += cpVal;
+    }
+
+    // Timeline
+    var tlEl = document.querySelector('[name="timeline"]:checked');
+    var tlVal = tlEl ? parseFloat(tlEl.getAttribute('data-price')) || 0 : 0;
+    if (tlVal > 0) {
+      window._priceItems.push({ label: 'Rush Timeline (' + (tlEl ? tlEl.value : '') + ')', price: tlVal, qty: 1, lineTotal: tlVal });
+      total += tlVal;
+    }
+
+    // Maintenance
+    var maintEl = document.querySelector('[name="maintenance"]:checked');
+    var maintVal = maintEl ? parseFloat(maintEl.getAttribute('data-price')) || 0 : 0;
+    if (maintVal > 0) {
+      window._priceItems.push({ label: 'Monthly Maintenance (' + (maintEl ? maintEl.value : '') + ')', price: maintVal, qty: 1, lineTotal: maintVal });
+      total += maintVal;
+    }
+
+    // Apply overrides
+    if (window._settingsOverrides && window._settingsOverrides.prices) {
+      // already applied via data-price attributes
+    }
+
+    document.getElementById('totalAmount').textContent = '$' + total.toLocaleString();
+
+    // Enable/disable submit
+    var btn = document.getElementById('btnSubmit');
+    var hasContent = window._priceItems.length > 0 && window._emailVerified;
+    btn.disabled = !hasContent;
+
+    updateReviewSummary();
+    saveDraft();
+  }
+
+  function updateReviewSummary() {
+    var container = document.getElementById('reviewSummary');
+    var data = collectFormData();
+    var html = '<label class="form-label">Summary of Selections</label>';
+    var hasData = false;
+
+    if (data.full_name) {
+      hasData = true;
+      html += '<div style="padding:12px 0;border-bottom:1px solid var(--border)">';
+      html += '<table style="width:100%;font-size:13px;border-collapse:collapse">';
+      html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted);width:140px">Name</td><td style="padding:3px 0">' + escapeHtml(data.full_name) + '</td></tr>';
+      if (data.business_name) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Business</td><td style="padding:3px 0">' + escapeHtml(data.business_name) + '</td></tr>';
+      if (data.client_email) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Email</td><td style="padding:3px 0">' + escapeHtml(data.client_email) + '</td></tr>';
+      html += '</table></div>';
+    }
+
+    var items = window._priceItems;
+    if (items.length > 0) {
+      hasData = true;
+      html += '<div style="padding:12px 0;font-size:13px">';
+      html += '<div style="font-weight:600;margin-bottom:6px">Price Breakdown</div>';
+      items.forEach(function(item) {
+        if (item.qty > 1) {
+          html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + ' x' + item.qty + '</span><span>$' + item.lineTotal.toLocaleString() + '</span></div>';
+        } else {
+          html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + '</span><span>$' + item.price.toLocaleString() + '</span></div>';
+        }
+      });
+      html += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border);padding-top:8px;margin-top:6px"><span>Estimated Total</span><span>$' + items.reduce(function(s, i) { return s + i.lineTotal; }, 0).toLocaleString() + '</span></div>';
+      html += '</div>';
+    }
+
+    if (!hasData) {
+      html += '<div style="font-size:13px;color:var(--text-muted)">Complete the form above to see a summary here.</div>';
+    }
+    container.innerHTML = html;
+  }
+
+  // ---- Collect Form Data ----
+  function collectFormData() {
+    var data = {};
+    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'domain', 'domain_idea', 'hosting', 'email', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'extra_notes'];
+
+    fields.forEach(function(f) {
+      var el = document.querySelector('[name="' + f + '"]');
+      if (!el) return;
+      if (el.type === 'radio') {
+        var checked = document.querySelector('[name="' + f + '"]:checked');
+        data[f] = checked ? checked.value : '';
+      } else if (el.type === 'checkbox') {
+        var checkedAll = document.querySelectorAll('[name="' + f + '"]:checked');
+        data[f] = Array.from(checkedAll).map(function(cb) { return cb.value; });
+      } else {
+        data[f] = el.value;
+      }
+    });
+
+    // Email count
+    data.email_count = parseInt(document.getElementById('emailCountValue').textContent) || 1;
+
+    // Pages and features as arrays
+    data.pages = Array.from(document.querySelectorAll('[name="pages"]:checked')).map(function(cb) { return cb.value; });
+    data.features = Array.from(document.querySelectorAll('[name="features"]:checked')).map(function(cb) { return cb.value; });
+
+    return data;
+  }
+
+  // ---- Breakdown Modal ----
+  function setupBreakdownModal() {
+    var modal = document.getElementById('breakdownModal');
+    document.getElementById('btnBreakdown').addEventListener('click', function() { showBreakdown(); });
+    document.getElementById('modalClose').addEventListener('click', function() { modal.classList.remove('open'); });
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+  }
+
+  function showBreakdown() {
+    var tbody = document.getElementById('breakdownBody');
+    var items = window._priceItems;
+    var html = '';
+    var total = 0;
+    items.forEach(function(item) {
+      html += '<tr><td>' + escapeHtml(item.label) + '</td><td>' + item.qty + '</td><td>$' + item.price.toLocaleString() + '</td><td>$' + item.lineTotal.toLocaleString() + '</td></tr>';
+      total += item.lineTotal;
+    });
+    if (items.length === 0) {
+      html += '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px">No items selected yet.</td></tr>';
+    }
+    html += '<tr class="grand-total"><td colspan="3">Estimated Total</td><td>$' + total.toLocaleString() + '</td></tr>';
+    tbody.innerHTML = html;
+    document.getElementById('breakdownModal').classList.add('open');
+  }
+
+  // ---- Form Listeners ----
+  function setupFormListeners() {
+    var form = document.getElementById('intakeForm');
+    form.addEventListener('change', function(e) {
+      var target = e.target;
+      // Domain conditional
+      if (target.name === 'domain') {
+        var cond = document.getElementById('cond-domain_idea');
+        cond.classList.toggle('visible', target.value === 'need');
+      }
+      // Email count conditional
+      if (target.name === 'email') {
+        var cond = document.getElementById('cond-email_count');
+        cond.classList.toggle('visible', target.value === 'need');
+      }
+      calculate();
+    });
+    form.addEventListener('input', function() {
+      calculate();
+    });
+
+    // Email stepper
+    var minusBtn = document.getElementById('emailCountMinus');
+    var plusBtn = document.getElementById('emailCountPlus');
+    var valEl = document.getElementById('emailCountValue');
+    minusBtn.addEventListener('click', function() {
+      var v = parseInt(valEl.textContent) || 1;
+      if (v > 1) {
+        valEl.textContent = v - 1;
+        minusBtn.disabled = (v - 1 <= 1);
+      }
+      calculate();
+    });
+    plusBtn.addEventListener('click', function() {
+      var v = parseInt(valEl.textContent) || 1;
+      if (v < 5) {
+        valEl.textContent = v + 1;
+        minusBtn.disabled = false;
+      }
+      calculate();
+    });
+
+    // Submit
+    document.getElementById('btnSubmit').addEventListener('click', function() {
+      if (!validate()) {
+        document.getElementById('s-review').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      submitForm();
+    });
+  }
+
+  // ---- Validation ----
+  function validate() {
+    var valid = true;
+    var errors = [];
+
+    // Full name
+    var name = document.getElementById('full_name');
+    var nameErr = document.getElementById('err-full_name');
+    if (!name.value || name.value.trim().length < 2) {
+      name.classList.add('error');
+      nameErr.classList.add('visible');
+      errors.push('Full name is required (min 2 characters).');
+      valid = false;
+    } else {
+      name.classList.remove('error');
+      nameErr.classList.remove('visible');
+    }
+
+    // Email
+    var email = document.getElementById('client_email');
+    var emailErr = document.getElementById('err-client_email');
+    if (!email.value || !isValidEmail(email.value.trim())) {
+      email.classList.add('error');
+      emailErr.classList.add('visible');
+      errors.push('Please enter a valid email address.');
+      valid = false;
+    } else {
+      email.classList.remove('error');
+      emailErr.classList.remove('visible');
+    }
+
+    // OTP verified
+    if (!window._emailVerified) {
+      errors.push('Please verify your email with the code sent.');
+      valid = false;
+    }
+
+    // At least some selections
+    if (window._priceItems.length === 0) {
+      errors.push('Please make at least one selection in the form.');
+      valid = false;
+    }
+
+    var submitErr = document.getElementById('err-submit');
+    if (errors.length > 0) {
+      submitErr.innerHTML = errors.map(function(e) { return '\u26A0 ' + escapeHtml(e); }).join('<br>');
+      submitErr.style.display = 'block';
+    } else {
+      submitErr.style.display = 'none';
+    }
+
+    return valid;
+  }
+
+  function isValidEmail(str) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
+  }
+
+  // ---- Submit ----
+  function submitForm() {
+    if (window._submitting) return;
+    window._submitting = true;
+    var btn = document.getElementById('btnSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    var data = collectFormData();
+    var total = window._priceItems.reduce(function(s, i) { return s + i.lineTotal; }, 0);
+    var timestamp = Date.now();
+    var fileUrls = [];
+
+    var uploadPromises = [];
+
+    // Upload files
+    window._selectedFiles.forEach(function(file, idx) {
+      if (file instanceof File) {
+        var path = 'submissions/' + timestamp + '_' + file.name;
+        var promise = supabaseClient.storage.from('submissions').upload(path, file, {
+          cacheControl: '3600',
+          upsert: false
+        }).then(function(res) {
+          if (res.error) throw res.error;
+          var url = SUPABASE_URL + '/storage/v1/object/public/submissions/' + path;
+          fileUrls.push(url);
+        });
+        uploadPromises.push(promise);
+      }
+    });
+
+    var pdfBlob = null;
+    var pdfUrl = null;
+
+    generatePdf(data, total).then(function(blob) {
+      pdfBlob = blob;
+      var pdfPath = 'submissions/' + timestamp + '_intake.pdf';
+      return supabaseClient.storage.from('submissions').upload(pdfPath, blob, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: 'application/pdf'
+      });
+    }).then(function(pdfRes) {
+      if (pdfRes.error) throw pdfRes.error;
+      var path = 'submissions/' + timestamp + '_intake.pdf';
+      pdfUrl = SUPABASE_URL + '/storage/v1/object/public/submissions/' + path;
+      return Promise.all(uploadPromises);
+    }).then(function() {
+      var submissionData = {
+        full_name: data.full_name,
+        business_name: data.business_name || null,
+        client_email: data.client_email,
+        client_phone: data.client_phone || null,
+        domain: data.domain || null,
+        domain_idea: data.domain_idea || null,
+        hosting: data.hosting || null,
+        email: data.email || null,
+        email_count: data.email === 'need' ? data.email_count : null,
+        setup_help: data.setup_help || null,
+        business_desc: data.business_desc || null,
+        website_type: data.website_type || null,
+        pages: data.pages || [],
+        other_pages: data.other_pages || null,
+        features: data.features || [],
+        logo: data.logo || null,
+        content_text: data.content_text || null,
+        content_photos: data.content_photos || null,
+        brand_colors: data.brand_colors || null,
+        inspiration_links: data.inspiration_links || null,
+        timeline: data.timeline || null,
+        maintenance: data.maintenance || null,
+        budget: data.budget || null,
+        extra_notes: data.extra_notes || null,
+        price_breakdown: window._priceItems,
+        estimated_total: total,
+        file_urls: fileUrls,
+        pdf_url: pdfUrl,
+        submitted_at: new Date().toISOString()
+      };
+
+      return supabaseClient.from('submissions').insert(submissionData);
+    }).then(function(subRes) {
+      if (subRes.error) throw subRes.error;
+      localStorage.removeItem('intake_draft');
+      showThankYou(data.full_name);
+    }).catch(function(err) {
+      console.error('Submit error:', err);
+      showToast('Submission failed: ' + (err.message || 'Unknown error'), 'error');
+      window._submitting = false;
+      btn.disabled = false;
+      btn.textContent = 'Submit Request';
+    });
+  }
+
+  // ---- PDF Generation ----
+  function generatePdf(data, total) {
+    return new Promise(function(resolve, reject) {
+      try {
+        var doc = new jspdf.jsPDF('p', 'mm', 'a4');
+        var pageWidth = doc.internal.pageSize.getWidth();
+        var margin = 20;
+        var y = 25;
+
+        // Title
+        doc.setFontSize(22);
+        doc.setTextColor(99, 102, 241);
+        doc.text('AM Worx — Client Intake Form', margin, y);
+        y += 10;
+
+        // Line
+        doc.setDrawColor(99, 102, 241);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 10;
+
+        // Helper
+        function section(title) {
+          if (y > 260) { doc.addPage(); y = 25; }
+          doc.setFontSize(14);
+          doc.setTextColor(30, 41, 59);
+          doc.setFont(undefined, 'bold');
+          doc.text(title, margin, y);
+          y += 7;
+          doc.setFont(undefined, 'normal');
+        }
+        function field(label, value) {
+          if (y > 275) { doc.addPage(); y = 25; }
+          doc.setFontSize(10);
+          doc.setTextColor(100, 116, 139);
+          doc.text(label + ':', margin, y);
+          doc.setTextColor(15, 23, 42);
+          doc.text(String(value || '—'), margin + 45, y);
+          y += 6;
+        }
+
+        section('Contact Information');
+        field('Full Name', data.full_name);
+        field('Business', data.business_name);
+        field('Email', data.client_email);
+        field('Phone', data.client_phone);
+        y += 4;
+
+        section('Domain & Hosting');
+        field('Domain', data.domain ? { 'need': 'Need one', 'no-need': 'Have one', 'not-sure': 'Not sure' }[data.domain] : '');
+        if (data.domain === 'need' && data.domain_idea) field('Domain Idea', data.domain_idea);
+        field('Hosting', data.hosting ? { 'need': 'Need hosting', 'no-need': 'Have hosting', 'not-sure': 'Not sure' }[data.hosting] : '');
+        field('Business Email', data.email ? { 'need': 'Need (' + (data.email_count || 1) + ' mailboxes)', 'no-need': 'Have email', 'not-sure': 'Not sure' }[data.email] : '');
+        field('Setup Help', data.setup_help === 'yes' ? 'Yes' : 'No');
+        y += 4;
+
+        section('Website');
+        field('Description', data.business_desc);
+        var typeLabels = {
+          'simple': 'Simple (1-3 pages)', 'business': 'Business', 'portfolio': 'Portfolio',
+          'blog': 'Blog', 'ecommerce-small': 'Ecommerce (Small)', 'ecommerce-large': 'Ecommerce (Large)',
+          'booking': 'Booking System', 'membership': 'Membership', 'directory': 'Directory'
+        };
+        field('Type', typeLabels[data.website_type] || data.website_type);
+        if (data.pages && data.pages.length) field('Pages', data.pages.join(', '));
+        if (data.features && data.features.length) field('Features', data.features.join(', '));
+        y += 4;
+
+        section('Branding & Content');
+        field('Logo', data.logo === 'yes' ? 'Need design' : data.logo === 'have' ? 'Have logo' : 'Decide later');
+        field('Content', data.content_text === 'need-help' ? 'Need help' : data.content_text === 'self' ? 'Will provide' : 'Ready');
+        field('Photos', data.content_photos === 'free-stock' ? 'Need stock photos' : data.content_photos === 'my-own' ? 'Have photos' : 'Not sure');
+        if (data.brand_colors) field('Brand Colors', data.brand_colors);
+        if (data.inspiration_links) field('Inspiration', data.inspiration_links);
+        y += 4;
+
+        section('Timeline');
+        field('Timeline', data.timeline || '');
+        y += 4;
+
+        section('Maintenance & Budget');
+        field('Maintenance', data.maintenance || 'None');
+        field('Budget Range', data.budget || 'Not sure');
+        if (data.extra_notes) field('Extra Notes', data.extra_notes);
+        y += 8;
+
+        // Price Breakdown
+        if (y > 250) { doc.addPage(); y = 25; }
+        section('Price Breakdown');
+        doc.setFontSize(9);
+        doc.setTextColor(100, 116, 139);
+
+        var colItem = margin;
+        var colQty = pageWidth - margin - 70;
+        var colPrice = pageWidth - margin - 45;
+        var colTotal = pageWidth - margin - 22;
+
+        doc.setFont(undefined, 'bold');
+        doc.text('Item', colItem, y);
+        doc.text('Qty', colQty, y);
+        doc.text('Price', colPrice, y);
+        doc.text('Total', colTotal, y);
+        y += 2;
+        doc.setDrawColor(200, 200, 200);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 5;
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(15, 23, 42);
+
+        var items = window._priceItems;
+        items.forEach(function(item) {
+          if (y > 275) { doc.addPage(); y = 25; }
+          doc.text(String(item.label).slice(0, 35), colItem, y);
+          doc.text(String(item.qty), colQty, y);
+          doc.text('$' + item.price.toLocaleString(), colPrice, y);
+          doc.text('$' + item.lineTotal.toLocaleString(), colTotal, y);
+          y += 6;
+        });
+
+        y += 3;
+        doc.setDrawColor(99, 102, 241);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 6;
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(99, 102, 241);
+        doc.text('Estimated Total: $' + total.toLocaleString(), margin, y);
+
+        // Footer
+        var blob = doc.output('blob');
+        resolve(blob);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  // ---- Thank You ----
+  function showThankYou(name) {
+    document.getElementById('thankyouName').textContent = 'Thank You, ' + escapeHtml(name) + '!';
+    document.getElementById('thankyouOverlay').classList.add('open');
+
+    // Animate status
+    setTimeout(function() {
+      document.getElementById('statusFiles').classList.remove('pending');
+    }, 500);
+    setTimeout(function() {
+      document.getElementById('statusPdf').classList.remove('pending');
+    }, 1000);
+    setTimeout(function() {
+      document.getElementById('statusDb').classList.remove('pending');
+    }, 1500);
+  }
+
+  // ---- Toast ----
+  function showToast(msg, type) {
+    var container = document.getElementById('toastContainer');
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + (type || 'info');
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s';
+      setTimeout(function() { toast.remove(); }, 300);
+    }, 4000);
+  }
+
+  // ---- Utils ----
+  function escapeHtml(str) {
+    if (!str) return '';
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+})();
+</script>
+</body>
+</html>
