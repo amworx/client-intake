@@ -137,6 +137,7 @@ select.input{cursor:pointer}
 .login-card .btn-primary{width:100%;padding:12px;font-size:14px;justify-content:center;border-radius:var(--radius)}
 .login-card .error-msg{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:#fca5a5;padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;text-align:center}
 .login-card .field{margin-bottom:16px}
+.login-card .field.mb-24{margin-bottom:24px}
 .login-card label{display:block;font-size:12px;font-weight:600;color:#9ca3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 /* Stepper (settings) */
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
@@ -189,9 +190,143 @@ input[type=number]{-moz-appearance:textfield}
 /* Filter select */
 .filter-select{padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--bg-card);color:var(--text);cursor:pointer;outline:none;transition:border-color .15s}
 .filter-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-subtle)}
+/* ===== UTILITY CLASSES ===== */
+.flex{display:flex}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}
+.flex-1{flex:1}.flex-shrink-0{flex-shrink:0}.items-center{align-items:center}
+.justify-between{justify-content:space-between}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}
+.gap-4{gap:4px}.gap-6{gap:6px}.gap-8{gap:8px}.gap-10{gap:10px}.gap-12{gap:12px}.gap-14{gap:14px}.gap-16{gap:16px}
+.text-center{text-align:center}.text-right{text-align:right}
+.fw-500{font-weight:500}.fw-600{font-weight:600}.fw-700{font-weight:700}
+.text-sm{font-size:12px}.text-base{font-size:13px}.text-md{font-size:14px}.text-lg{font-size:15px}
+.text-sec{color:var(--text-sec)}.text-tert{color:var(--text-tert)}.text-accent{color:var(--accent)}
+.mb-4{margin-bottom:4px}.mb-6{margin-bottom:6px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-20{margin-bottom:20px}.mb-24{margin-bottom:24px}.mb-32{margin-bottom:32px}
+.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+.p-12{padding:12px}.p-16{padding:16px}.p-20{padding:20px}
+.px-16{padding-left:16px;padding-right:16px}.px-20{padding-left:20px;padding-right:20px}
+.py-12{padding-top:12px;padding-bottom:12px}
+.w-full{width:100%}.w-auto{width:auto}
+.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.border-bottom{border-bottom:1px solid var(--border)}
+.bg-card{background:var(--bg-card)}
+.overflow-hidden{overflow:hidden}.overflow-auto{overflow:auto}
+.sticky{position:sticky;top:0;z-index:5}
+.nowrap{white-space:nowrap}
+.pointer{cursor:pointer}
+.nav-icon{width:18px;text-align:center;font-size:14px}
+/* Header */
+.header-title{font-size:18px;font-weight:700;letter-spacing:-.02em}
+.new-badge{position:relative;display:inline-flex;align-items:center;gap:4px;background:var(--accent-subtle);color:var(--accent);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600}
+/* Stat icons */
+.stat-icon-total{background:var(--accent-subtle);color:var(--accent)}
+.bg-icon-pending{background:#dbeafe;color:#2563eb}
+.bg-icon-reviewed{background:#dcfce7;color:#16a34a}
+.bg-icon-revenue{background:#fef3c7;color:#d97706}
+.val-pending{color:#2563eb}.val-reviewed{color:#16a34a}.val-revenue{color:#d97706}
+/* Error banner */
+.error-banner{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;padding:12px 16px;border-radius:10px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.dark .error-banner{background:#450a0a;border-color:#991b1b;color:#fca5a5}
+.error-banner .dismiss{background:none;border:none;cursor:pointer;font-size:18px;color:inherit;flex-shrink:0;line-height:1;padding:0}
+/* Table title */
+.table-title{padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px;font-weight:600}
+/* Detail panel */
+.detail-header{padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;position:sticky;top:0;background:var(--bg-card);z-index:5}
+.detail-body{flex:1;overflow-y:auto;padding:20px}
+.detail-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg-card);flex-shrink:0}
+.detail-section{margin-bottom:16px}
+.detail-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;flex-shrink:0}
+.detail-name{font-weight:700;font-size:16px}
+.detail-sub{font-size:13px;color:var(--text-sec)}
+.detail-meta{font-size:12px;color:var(--text-sec)}
+.detail-status-btn{border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.detail-estimate{font-size:20px;font-weight:700;color:#f59e0b}
+.field-row .field-label{min-width:80px;display:inline-block;color:var(--text-sec)}
+.field-row .field-label-wide{min-width:100px;display:inline-block;color:var(--text-sec)}
+.field-row .field-label-block{display:block;margin-bottom:2px;color:var(--text-sec)}
+/* Modal */
+.modal-icon-box{width:32px;height:32px;background:#fef2f2;color:#ef4444;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.modal-title{font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.modal-desc{font-size:14px;color:var(--text-sec);margin-bottom:24px;padding-left:42px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+/* Settings */
+.settings-heading{font-size:18px;font-weight:700;margin-bottom:16px}
+.settings-subheading{font-size:18px;font-weight:700;margin-bottom:16px;margin-top:32px}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px}
+.section-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.section-card.danger{border-color:#fca5a5;margin-bottom:24px}
+.section-card.danger .card-header span{color:#ef4444}
+/* User area */
+.sidebar-user{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sidebar-text)}
+.sidebar-text{color:var(--sidebar-text)}
+.user-email{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-logout{margin-top:8px;width:100%;justify-content:center;color:#ef4444;border-color:transparent;background:rgba(239,68,68,.1)}
+.btn-logout:hover:not(:disabled){background:rgba(239,68,68,.2);color:#ef4444}
+/* Width utility for sidebar nav */
+.sidebar-section{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+/* Connected indicator */
+.conn-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.conn-dot.on{background:#22c55e}
+.conn-dot.off{background:#ef4444}
+.conn-status{font-size:12px}
+/* Spinner in button */
+.spinner-btn{display:inline-block;width:14px;height:14px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:#fff;margin-right:4px;vertical-align:middle}
+/* SMTP grid */
+.smtp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding-top:12px;border-top:1px solid var(--border)}
+.smtp-note{grid-column:1/-1;font-size:12px;color:var(--text-sec);padding:8px 12px;background:var(--bg-card);border-radius:8px}
+/* Password field */
+.pass-wrap{position:relative}
+.pass-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-sec);font-size:14px}
+.pass-input{padding-right:36px}
+.h-100vh{height:100vh}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+/* Submissions table responsive */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-scroll table{min-width:600px}
+/* Header actions flex */
+.header-actions{display:flex;align-items:center;gap:10px}
+/* Pricing card header text */
+.price-header-text{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.price-icon-box{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
+.price-label{font-size:13px}
+.price-body-scroll{max-height:400px;overflow-y:auto}
+/* Toggle switch */
+.toggle-wrap{position:relative;display:inline-block;width:44px;height:24px;cursor:pointer}
+.toggle-wrap input{opacity:0;width:0;height:0}
+.toggle-track{position:absolute;inset:0;background:var(--border);border-radius:12px;transition:.3s}
+.toggle-track.on{background:#22c55e!important}
+.toggle-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s}
+.toggle-knob.on{transform:translateX(20px)!important}
+/* SMTP text */
+.smtp-label{font-weight:600;font-size:14px}
+.smtp-hint{font-size:12px;color:var(--text-sec)}
+/* Button spinner white */
+.spinner-white{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;vertical-align:middle}
+/* Page wrapper */
+.page-wrap{max-width:960px}
+/* Grid card mb */
+.card-mb{margin-bottom:24px}
+/* New badge sidebar */
+.nav-new-badge{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;background:#ef4444;color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;min-width:20px;text-align:center}
+/* Table row clickable */
+.row-clickable{cursor:pointer}
+.row-clickable:hover td{background:var(--hover)}
+/* Email link */
+.email-link{color:var(--accent);text-decoration:none}
+.email-link:hover{text-decoration:underline}
+/* Table actions */
+.table-actions{display:flex;gap:4px}
+.btn-danger-ghost{color:#ef4444!important}
+.section-header-text{font-weight:600;font-size:14px}
+.option-row{display:flex;gap:6px;align-items:center;margin-bottom:4px}
+.option-row .input-flex-2{flex:2}.option-row .input-flex-1{flex:1}
+.opt-stepper{width:52px}
+.textarea-v-resize{resize:vertical}
+.flex-checkbox{display:flex;align-items:center;gap:8px;margin-top:4px}
+.flex-checkbox span{font-size:13px}
 </style>
 </head>
-<body><div x-data="dashboardApp" x-init="init" class="flex" style="height:100vh">
+<body><div x-data="dashboardApp" x-init="init" class="flex h-100vh">
 
 <!-- LOGIN SCREEN -->
 <template x-if="!authenticated && !authLoading">
@@ -203,10 +338,10 @@ input[type=number]{-moz-appearance:textfield}
     <div x-show="loginError" x-transition class="error-msg" x-text="loginError"></div>
     <form @submit.prevent="handleLogin">
       <div class="field"><label>Email</label><input class="input" type="email" x-model="loginEmail" placeholder="admin@example.com" required autocomplete="email"></div>
-      <div class="field" style="margin-bottom:24px"><label>Password</label><input class="input" type="password" x-model="loginPassword" placeholder="Enter your password" required autocomplete="current-password"></div>
+      <div class="field mb-24"><label>Password</label><input class="input" type="password" x-model="loginPassword" placeholder="Enter your password" required autocomplete="current-password"></div>
       <button class="btn btn-primary" type="submit" :disabled="loginLoading">
         <i class="fas fa-unlock" x-show="!loginLoading"></i>
-        <span x-show="loginLoading"><span class="spinner" style="display:inline-block;width:16px;height:16px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:#fff;margin-right:6px;vertical-align:middle"></span></span>
+        <span x-show="loginLoading"><span class="spinner-white"></span></span>
         <span x-text="loginLoading ? 'Signing in...' : 'Unlock Dashboard'"></span>
       </button>
     </form>
@@ -216,9 +351,9 @@ input[type=number]{-moz-appearance:textfield}
 
 <!-- AUTH LOADING -->
 <template x-if="authLoading">
-<div style="position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+<div class="login-page" style="position:fixed;inset:0;z-index:200">
   <div class="spinner spinner-lg"></div>
-  <p style="color:var(--text-sec);font-size:14px">Checking session...</p>
+  <p class="text-sec text-md" style="margin-top:16px">Checking session...</p>
 </div>
 </template>
 
@@ -235,34 +370,34 @@ input[type=number]{-moz-appearance:textfield}
         <div class="sidebar-brand-sub">Admin Dashboard</div>
       </div>
     </div>
-    <nav style="flex:1;padding:12px 0;overflow-y:auto">
+    <nav class="sidebar-nav">
       <div class="nav-item" :class="view === 'dashboard' && 'active'" @click="view='dashboard';sidebarOpen=false">
-        <i class="fas fa-chart-pie" style="width:18px;text-align:center"></i><span>Dashboard</span>
+        <i class="fas fa-chart-pie nav-icon"></i><span>Dashboard</span>
       </div>
       <div class="nav-item" :class="view === 'submissions' && 'active'" @click="view='submissions';sidebarOpen=false">
-        <i class="fas fa-inbox" style="width:18px;text-align:center"></i><span>Submissions</span>
-        <span x-show="newCount" style="margin-left:auto;background:#ef4444;color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;min-width:20px;text-align:center" x-text="newCount"></span>
+        <i class="fas fa-inbox nav-icon"></i><span>Submissions</span>
+        <span x-show="newCount" class="nav-new-badge" x-text="newCount"></span>
       </div>
       <div class="nav-item" :class="view === 'settings' && 'active'" @click="view='settings';sidebarOpen=false">
-        <i class="fas fa-cog" style="width:18px;text-align:center"></i><span>Settings</span>
+        <i class="fas fa-cog nav-icon"></i><span>Settings</span>
       </div>
       <div class="nav-item" @click="openFormUrl">
-        <i class="fas fa-external-link-alt" style="width:18px;text-align:center"></i><span>View Form</span>
+        <i class="fas fa-external-link-alt nav-icon"></i><span>View Form</span>
       </div>
     </nav>
-    <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="display:flex;align-items:center;gap:6px;font-size:12px">
-          <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;" x-show="connected"></span>
-          <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;" x-show="!connected"></span>
-          <span x-text="connected ? 'Connected' : 'Disconnected'" style="color:var(--sidebar-text)"></span>
+    <div class="sidebar-section">
+      <div class="flex items-center gap-10 mb-12">
+        <div class="flex items-center gap-6 conn-status">
+          <span class="conn-dot on" x-show="connected"></span>
+          <span class="conn-dot off" x-show="!connected"></span>
+          <span x-text="connected ? 'Connected' : 'Disconnected'" class="sidebar-text"></span>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sidebar-text)">
+      <div class="sidebar-user">
         <i class="fas fa-user-circle"></i>
-        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="user?.email"></span>
+        <span class="user-email" x-text="user?.email"></span>
       </div>
-      <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;justify-content:center;color:#ef4444;border-color:transparent;background:rgba(239,68,68,.1)" @click="handleLogout">
+      <button class="btn btn-ghost btn-sm btn-logout" @click="handleLogout">
         <i class="fas fa-sign-out-alt"></i> Log Out
       </button>
     </div>
@@ -275,12 +410,12 @@ input[type=number]{-moz-appearance:textfield}
   <div class="main">
     <!-- Header -->
     <header class="header">
-      <div style="display:flex;align-items:center;gap:10px">
+      <div class="flex items-center gap-10">
         <button class="hamburger" @click="sidebarOpen=!sidebarOpen"><i class="fas fa-bars"></i></button>
-        <h2 style="font-size:18px;font-weight:700;letter-spacing:-.02em" x-text="pageTitle"></h2>
+        <h2 class="header-title" x-text="pageTitle"></h2>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span x-show="newCount" class="pulse" style="position:relative;display:inline-flex;align-items:center;gap:4px;background:var(--accent-subtle);color:var(--accent);padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600">
+      <div class="flex items-center gap-10">
+        <span x-show="newCount" class="new-badge pulse">
           <i class="fas fa-bell"></i> <span x-text="newCount"></span> new
         </span>
         <button class="btn btn-ghost btn-sm" @click="toggleDark" title="Toggle dark mode">
@@ -299,10 +434,10 @@ input[type=number]{-moz-appearance:textfield}
       <!-- DASHBOARD VIEW -->
       <template x-if="view === 'dashboard'">
       <div>
-        <div x-show="error" x-transition style="background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;padding:12px 16px;border-radius:10px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+        <div x-show="error" x-transition class="error-banner">
           <i class="fas fa-exclamation-triangle"></i>
-          <span style="flex:1" x-text="error"></span>
-          <button @click="error=''" style="background:none;border:none;cursor:pointer;font-size:18px;color:#991b1b">&times;</button>
+          <span class="flex-1" x-text="error"></span>
+          <button class="dismiss" @click="error=''">&times;</button>
         </div>
         <template x-if="loading && submissions.length === 0">
         <div>
@@ -328,36 +463,28 @@ input[type=number]{-moz-appearance:textfield}
         <div>
           <div class="stat-row">
             <div class="stat-card">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div class="stat-icon" style="background:var(--accent-subtle);color:var(--accent)"><i class="fas fa-file-alt"></i></div>
-              </div>
+              <div class="stat-icon stat-icon-total"><i class="fas fa-file-alt"></i></div>
               <div class="stat-value" x-text="submissions.length"></div>
               <div class="stat-label">Total submissions</div>
             </div>
             <div class="stat-card">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div class="stat-icon" style="background:#dbeafe;color:#2563eb"><i class="fas fa-clock"></i></div>
-              </div>
-              <div class="stat-value" style="color:#2563eb" x-text="submissions.filter(s=>s.status==='New').length"></div>
+              <div class="stat-icon bg-icon-pending"><i class="fas fa-clock"></i></div>
+              <div class="stat-value val-pending" x-text="submissions.filter(s=>s.status==='New').length"></div>
               <div class="stat-label">Awaiting review</div>
             </div>
             <div class="stat-card">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div class="stat-icon" style="background:#dcfce7;color:#16a34a"><i class="fas fa-check-circle"></i></div>
-              </div>
-              <div class="stat-value" style="color:#16a34a" x-text="submissions.filter(s=>s.status==='Reviewed').length"></div>
+              <div class="stat-icon bg-icon-reviewed"><i class="fas fa-check-circle"></i></div>
+              <div class="stat-value val-reviewed" x-text="submissions.filter(s=>s.status==='Reviewed').length"></div>
               <div class="stat-label">Reviewed</div>
             </div>
             <div class="stat-card">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div class="stat-icon" style="background:#fef3c7;color:#d97706"><i class="fas fa-dollar-sign"></i></div>
-              </div>
-              <div class="stat-value" style="color:#d97706" x-text="formatCurrency(submissions.reduce((sum,s)=>sum+(parseFloat(s.estimated_total)||0),0))"></div>
+              <div class="stat-icon bg-icon-revenue"><i class="fas fa-dollar-sign"></i></div>
+              <div class="stat-value val-revenue" x-text="formatCurrency(submissions.reduce((sum,s)=>sum+(parseFloat(s.estimated_total)||0),0))"></div>
               <div class="stat-label">Combined estimate</div>
             </div>
           </div>
           <div class="table-wrap">
-            <div style="padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px;font-weight:600">Recent Submissions</div>
+            <div class="table-title">Recent Submissions</div>
             <template x-if="submissions.length === 0">
             <div class="empty-state">
               <i class="fas fa-inbox"></i>
@@ -370,10 +497,12 @@ input[type=number]{-moz-appearance:textfield}
               <thead><tr><th>Name</th><th>Business</th><th>Date</th><th>Estimate</th><th>Status</th></tr></thead>
               <tbody>
                 <template x-for="s in submissions.slice(0,5)" :key="s.id">
-                <tr class="striped" style="cursor:pointer" @click="openDetail(s)">
-                  <td style="display:flex;align-items:center;gap:10px">
-                    <div class="avatar-circle" :style="`background:${avatarColor(s.full_name)}`" x-text="getInitials(s.full_name)"></div>
-                    <span x-text="s.full_name"></span>
+                <tr class="striped row-clickable" @click="openDetail(s)">
+                  <td>
+                    <div class="flex items-center gap-10">
+                      <div class="avatar-circle" :style="`background:${avatarColor(s.full_name)}`" x-text="getInitials(s.full_name)"></div>
+                      <span x-text="s.full_name"></span>
+                    </div>
                   </td>
                   <td x-text="s.business_name || '—'"></td>
                   <td x-text="formatDate(s.created_at, settings.date_style)"></td>
@@ -385,7 +514,7 @@ input[type=number]{-moz-appearance:textfield}
             </table>
             </template>
           </div>
-          <div style="margin-top:16px;text-align:right">
+          <div class="mt-16 text-right">
             <button class="btn btn-ghost btn-sm" @click="view='submissions'">View all submissions <i class="fas fa-arrow-right"></i></button>
           </div>
         </div>
@@ -402,13 +531,13 @@ input[type=number]{-moz-appearance:textfield}
             <input class="search-input" type="text" x-model="search" placeholder="Search by name, business, or email...">
             <button class="search-clear" x-show="search" @click="search=''">&times;</button>
           </div>
-          <span style="font-size:13px;color:var(--text-sec);white-space:nowrap"><span x-text="filteredSubmissions.length"></span> of <span x-text="submissions.length"></span></span>
+          <span class="text-base text-sec nowrap"><span x-text="filteredSubmissions.length"></span> of <span x-text="submissions.length"></span></span>
         </div>
         <div class="table-wrap">
           <template x-if="filteredSubmissions.length === 0">
           <div class="empty-state">
             <i class="fas fa-search"></i>
-            <h3 style="font-size:18px;font-weight:600;margin-bottom:4px;color:var(--text)" x-text="submissions.length === 0 ? 'No submissions yet' : 'No results found'"></h3>
+            <h3 x-text="submissions.length === 0 ? 'No submissions yet' : 'No results found'"></h3>
             <p x-text="submissions.length === 0 ? 'When clients submit the intake form, their submissions will appear here.' : 'Try adjusting your search query.'"></p>
           </div>
           </template>
@@ -417,21 +546,23 @@ input[type=number]{-moz-appearance:textfield}
             <thead><tr><th>Name</th><th>Business</th><th>Email</th><th>Date</th><th>Estimate</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
               <template x-for="s in filteredSubmissions" :key="s.id">
-              <tr class="striped" style="cursor:pointer" @click="openDetail(s)">
-                <td style="display:flex;align-items:center;gap:10px">
-                  <div class="avatar-circle" :style="`background:${avatarColor(s.full_name)}`" x-text="getInitials(s.full_name)"></div>
-                  <span x-text="s.full_name"></span>
+              <tr class="striped row-clickable" @click="openDetail(s)">
+                <td>
+                  <div class="flex items-center gap-10">
+                    <div class="avatar-circle" :style="`background:${avatarColor(s.full_name)}`" x-text="getInitials(s.full_name)"></div>
+                    <span x-text="s.full_name"></span>
+                  </div>
                 </td>
                 <td x-text="s.business_name || '—'"></td>
-                <td><a :href="'mailto:'+s.client_email" @click.stop style="color:var(--accent);text-decoration:none" x-text="s.client_email"></a></td>
-                <td x-text="formatDate(s.created_at, settings.date_style)" style="white-space:nowrap"></td>
-                <td x-text="formatCurrency(s.estimated_total)" style="font-weight:600"></td>
-                <td><span class="badge" :class="s.status === 'New' ? 'badge-new' : 'badge-reviewed'"><span x-show="s.status === 'New'" class="pulse" style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block"></span><span x-text="s.status"></span></span></td>
+                <td><a :href="'mailto:'+s.client_email" @click.stop class="email-link" x-text="s.client_email"></a></td>
+                <td x-text="formatDate(s.created_at, settings.date_style)" class="nowrap"></td>
+                <td x-text="formatCurrency(s.estimated_total)" class="fw-600"></td>
+                <td><span class="badge" :class="s.status === 'New' ? 'badge-new' : 'badge-reviewed'"><span x-show="s.status === 'New'" class="pulse" style="width:6px;height:6px;border-radius:50%;display:inline-block;background:var(--accent)"></span><span x-text="s.status"></span></span></td>
                 <td>
-                  <div style="display:flex;gap:4px" @click.stop>
+                  <div class="table-actions" @click.stop>
                     <button class="btn btn-ghost btn-sm" @click="openDetail(s)" title="View"><i class="fas fa-eye"></i></button>
                     <button class="btn btn-ghost btn-sm" @click="toggleStatus(s)" title="Toggle status"><i class="fas fa-exchange-alt" :class="s._loading && 'fa-spin'"></i></button>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="confirmDelete(s)" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="confirmDelete(s)" title="Delete"><i class="fas fa-trash-alt"></i></button>
                   </div>
                 </td>
               </tr>
@@ -445,18 +576,18 @@ input[type=number]{-moz-appearance:textfield}
 
       <!-- SETTINGS VIEW -->
       <template x-if="view === 'settings'">
-      <div style="max-width:960px">
+      <div class="page-wrap">
 
-        <div x-show="settingsError" x-transition style="background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;padding:12px 16px;border-radius:10px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+        <div x-show="settingsError" x-transition class="error-banner">
           <i class="fas fa-exclamation-triangle"></i>
-          <span style="flex:1" x-text="settingsError"></span>
-          <button @click="settingsError=''" style="background:none;border:none;cursor:pointer;font-size:18px;color:#991b1b">&times;</button>
+          <span class="flex-1" x-text="settingsError"></span>
+          <button class="dismiss" @click="settingsError=''">&times;</button>
         </div>
 
-        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">General Settings</h3>
-        <div class="section-card" style="margin-bottom:24px">
+        <h3 class="settings-heading">General Settings</h3>
+        <div class="section-card card-mb">
           <div class="card-body">
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+            <div class="settings-grid">
               <div><label class="field-label">Studio Name</label><input class="input" type="text" x-model="settingsForm.studio_name"></div>
               <div><label class="field-label">Studio Email</label><input class="input" type="email" x-model="settingsForm.studio_email"></div>
               <div><label class="field-label">Form URL</label><input class="input" type="url" x-model="settingsForm.form_url" placeholder="https://..."></div>
@@ -476,33 +607,33 @@ input[type=number]{-moz-appearance:textfield}
           </div>
         </div>
 
-        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;margin-top:32px">Email Notifications <span class="badge" style="font-size:11px;background:#e2e8f0;color:#64748b;font-weight:500">Optional</span></h3>
-        <div class="section-card" style="margin-bottom:24px">
+        <h3 class="settings-subheading">Email Notifications <span class="badge" style="font-size:11px;background:#e2e8f0;color:#64748b;font-weight:500">Optional</span></h3>
+        <div class="section-card card-mb">
           <div class="card-body">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-              <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer">
-                <input type="checkbox" x-model="settingsForm.smtp_enabled" style="opacity:0;width:0;height:0">
-                <span style="position:absolute;inset:0;background:var(--border);border-radius:12px;transition:.3s" :style="settingsForm.smtp_enabled && 'background:#22c55e'">
-                  <span style="position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:.3s" :style="settingsForm.smtp_enabled && 'transform:translateX(20px)'"></span>
+            <div class="flex items-center gap-12 mb-16">
+              <label class="toggle-wrap">
+                <input type="checkbox" x-model="settingsForm.smtp_enabled">
+                <span class="toggle-track" :class="settingsForm.smtp_enabled && 'on'">
+                  <span class="toggle-knob" :class="settingsForm.smtp_enabled && 'on'"></span>
                 </span>
               </label>
               <div>
-                <div style="font-weight:600;font-size:14px">Gmail SMTP Notifications</div>
-                <div style="font-size:12px;color:var(--text-sec)">Receive email when a new intake submission arrives</div>
+                <div class="smtp-label">Gmail SMTP Notifications</div>
+                <div class="smtp-hint">Receive email when a new intake submission arrives</div>
               </div>
             </div>
             <template x-if="settingsForm.smtp_enabled">
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding-top:12px;border-top:1px solid var(--border)">
+            <div class="smtp-grid">
               <div><label class="field-label">SMTP Email</label><input class="input" type="email" x-model="settingsForm.smtp_email" placeholder="amworxx@gmail.com"></div>
-              <div><label class="field-label">SMTP Password <span style="font-size:11px;color:var(--text-sec)">(Gmail App Password)</span></label>
-                <div style="position:relative">
-                  <input class="input" :type="smtpPassVisible ? 'text' : 'password'" x-model="settingsForm.smtp_password" placeholder="16-char app password" style="padding-right:36px">
-                  <button @click="smtpPassVisible=!smtpPassVisible" type="button" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-sec);font-size:14px">
+              <div><label class="field-label">SMTP Password <span class="text-sm text-sec">(Gmail App Password)</span></label>
+                <div class="pass-wrap">
+                  <input class="input pass-input" :type="smtpPassVisible ? 'text' : 'password'" x-model="settingsForm.smtp_password" placeholder="16-char app password">
+                  <button @click="smtpPassVisible=!smtpPassVisible" type="button" class="pass-toggle">
                     <i :class="smtpPassVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                   </button>
                 </div>
               </div>
-              <div style="grid-column:1/-1;font-size:12px;color:var(--text-sec);padding:8px 12px;background:var(--bg-card);border-radius:8px">
+              <div class="smtp-note">
                 <i class="fas fa-info-circle mr-2"></i>
                 To send emails you need a Gmail App Password:
                 Enable <strong>2FA</strong> on your Gmail account → 
@@ -514,204 +645,204 @@ input[type=number]{-moz-appearance:textfield}
           </div>
         </div>
 
-        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">Pricing Management</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:24px">
+        <h3 class="settings-heading">Pricing Management</h3>
+        <div class="pricing-grid">
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.domain=!pricingCollapsed.domain">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:var(--accent-subtle);color:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-globe"></i></span>Domain</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:var(--accent-subtle);color:var(--accent)"><i class="fas fa-globe"></i></span>Domain</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.domain && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.domain">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Need domain</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('domain_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.domain_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('domain_need',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">No domain needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('domain_no_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.domain_no_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('domain_no_need',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Need domain</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('domain_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.domain_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('domain_need',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">No domain needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('domain_no_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.domain_no_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('domain_no_need',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.hosting=!pricingCollapsed.hosting">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#dcfce7;color:#22c55e;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-server"></i></span>Hosting</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#dcfce7;color:#22c55e"><i class="fas fa-server"></i></span>Hosting</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.hosting && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.hosting">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Need hosting</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('hosting_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.hosting_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('hosting_need',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">No hosting needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('hosting_no_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.hosting_no_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('hosting_no_need',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Need hosting</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('hosting_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.hosting_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('hosting_need',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">No hosting needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('hosting_no_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.hosting_no_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('hosting_no_need',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.email=!pricingCollapsed.email">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#fef3c7;color:#f59e0b;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-envelope"></i></span>Business Email</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#fef3c7;color:#f59e0b"><i class="fas fa-envelope"></i></span>Business Email</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.email && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.email">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Need email</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('email_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.email_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('email_need',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">No email needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('email_no_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.email_no_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('email_no_need',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Need email</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('email_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.email_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('email_need',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">No email needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('email_no_need',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.email_no_need" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('email_no_need',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.setup=!pricingCollapsed.setup">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#f3e8ff;color:#a855f7;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-hands-helping"></i></span>Setup Help</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#f3e8ff;color:#a855f7"><i class="fas fa-hands-helping"></i></span>Setup Help</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.setup && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.setup">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Setup help yes</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('setup_help_yes',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.setup_help_yes" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('setup_help_yes',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Setup help yes</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('setup_help_yes',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.setup_help_yes" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('setup_help_yes',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.websiteType=!pricingCollapsed.websiteType">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:var(--accent-subtle);color:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-code"></i></span>Website Type</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:var(--accent-subtle);color:var(--accent)"><i class="fas fa-code"></i></span>Website Type</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.websiteType && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.websiteType">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Simple</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('simple',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.simple" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('simple',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Business</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('business',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.business" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('business',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Portfolio</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('portfolio',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.portfolio" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('portfolio',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Blog</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('blog',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.blog" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('blog',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Ecommerce Small</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ecommerce_small',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ecommerce_small" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ecommerce_small',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Ecommerce Large</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ecommerce_large',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ecommerce_large" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ecommerce_large',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Booking</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('booking',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.booking" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('booking',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Membership</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('membership',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.membership" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('membership',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Directory</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('directory',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.directory" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('directory',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Simple</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('simple',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.simple" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('simple',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Business</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('business',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.business" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('business',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Portfolio</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('portfolio',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.portfolio" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('portfolio',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Blog</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('blog',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.blog" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('blog',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Ecommerce Small</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ecommerce_small',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ecommerce_small" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ecommerce_small',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Ecommerce Large</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ecommerce_large',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ecommerce_large" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ecommerce_large',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Booking</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('booking',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.booking" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('booking',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Membership</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('membership',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.membership" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('membership',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Directory</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('directory',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.directory" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('directory',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.pages=!pricingCollapsed.pages">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#dcfce7;color:#22c55e;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-file"></i></span>Pages</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#dcfce7;color:#22c55e"><i class="fas fa-file"></i></span>Pages</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.pages && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.pages">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Home</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('home',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.home" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('home',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">About</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('about',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.about" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('about',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Services</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('services',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.services" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('services',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Portfolio</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('portfolio_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.portfolio_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('portfolio_page',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Blog</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('blog_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.blog_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('blog_page',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Contact</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('contact_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.contact_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('contact_page',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Gallery</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('gallery',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.gallery" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('gallery',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">FAQ</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('faq',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.faq" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('faq',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Testimonials</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('testimonials',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.testimonials" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('testimonials',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Pricing</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('pricing_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.pricing_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('pricing_page',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Careers</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('careers',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.careers" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('careers',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Custom Page</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('custom_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.custom_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('custom_page',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Home</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('home',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.home" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('home',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">About</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('about',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.about" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('about',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Services</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('services',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.services" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('services',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Portfolio</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('portfolio_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.portfolio_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('portfolio_page',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Blog</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('blog_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.blog_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('blog_page',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Contact</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('contact_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.contact_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('contact_page',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Gallery</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('gallery',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.gallery" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('gallery',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">FAQ</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('faq',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.faq" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('faq',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Testimonials</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('testimonials',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.testimonials" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('testimonials',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Pricing</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('pricing_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.pricing_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('pricing_page',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Careers</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('careers',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.careers" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('careers',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Custom Page</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('custom_page',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.custom_page" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('custom_page',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.features=!pricingCollapsed.features">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#fef3c7;color:#f59e0b;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-puzzle-piece"></i></span>Features</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#fef3c7;color:#f59e0b"><i class="fas fa-puzzle-piece"></i></span>Features</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.features && 'open'"></i>
             </div>
-            <div class="card-body" x-show="!pricingCollapsed.features" style="max-height:400px;overflow-y:auto">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Contact Form</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('contact_form',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.contact_form" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('contact_form',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Live Chat</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('live_chat',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.live_chat" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('live_chat',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Newsletter</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('newsletter',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.newsletter" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('newsletter',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Social Media</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('social_media',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.social_media" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('social_media',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">SEO Basic</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('seo_basic',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.seo_basic" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('seo_basic',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">SEO Advanced</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('seo_advanced',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.seo_advanced" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('seo_advanced',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Analytics</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('analytics',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.analytics" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('analytics',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Google Maps</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('google_maps',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.google_maps" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('google_maps',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Booking System</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('booking_system',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.booking_system" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('booking_system',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Membership Area</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('membership_area',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.membership_area" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('membership_area',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Ecommerce</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ecommerce_feature',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ecommerce_feature" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ecommerce_feature',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Payment Gateway</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('payment_gateway',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.payment_gateway" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('payment_gateway',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Multi Language</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('multi_language',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.multi_language" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('multi_language',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Site Search</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('search_feature',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.search_feature" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('search_feature',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Image Optimization</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('image_optimization',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.image_optimization" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('image_optimization',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Speed Optimization</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('speed_optimization',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.speed_optimization" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('speed_optimization',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">CMS</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('cms',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.cms" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('cms',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Backup</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('backup',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.backup" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('backup',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">SSL</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ssl',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ssl" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ssl',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Custom Feature</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('custom_feature',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.custom_feature" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('custom_feature',1)">+</button></div></div>
+            <div class="card-body price-body-scroll" x-show="!pricingCollapsed.features">
+              <div class="price-row"><span class="price-label">Contact Form</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('contact_form',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.contact_form" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('contact_form',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Live Chat</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('live_chat',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.live_chat" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('live_chat',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Newsletter</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('newsletter',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.newsletter" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('newsletter',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Social Media</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('social_media',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.social_media" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('social_media',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">SEO Basic</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('seo_basic',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.seo_basic" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('seo_basic',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">SEO Advanced</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('seo_advanced',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.seo_advanced" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('seo_advanced',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Analytics</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('analytics',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.analytics" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('analytics',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Google Maps</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('google_maps',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.google_maps" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('google_maps',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Booking System</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('booking_system',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.booking_system" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('booking_system',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Membership Area</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('membership_area',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.membership_area" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('membership_area',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Ecommerce</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ecommerce_feature',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ecommerce_feature" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ecommerce_feature',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Payment Gateway</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('payment_gateway',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.payment_gateway" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('payment_gateway',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Multi Language</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('multi_language',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.multi_language" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('multi_language',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Site Search</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('search_feature',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.search_feature" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('search_feature',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Image Optimization</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('image_optimization',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.image_optimization" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('image_optimization',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Speed Optimization</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('speed_optimization',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.speed_optimization" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('speed_optimization',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">CMS</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('cms',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.cms" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('cms',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Backup</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('backup',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.backup" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('backup',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">SSL</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('ssl',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.ssl" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('ssl',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Custom Feature</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('custom_feature',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.custom_feature" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('custom_feature',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.logo=!pricingCollapsed.logo">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#f3e8ff;color:#a855f7;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-paint-brush"></i></span>Logo</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#f3e8ff;color:#a855f7"><i class="fas fa-paint-brush"></i></span>Logo</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.logo && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.logo">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Logo design needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('logo_yes',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.logo_yes" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('logo_yes',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Logo design needed</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('logo_yes',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.logo_yes" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('logo_yes',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.textContent=!pricingCollapsed.textContent">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:var(--accent-subtle);color:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-file-alt"></i></span>Text Content</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:var(--accent-subtle);color:var(--accent)"><i class="fas fa-file-alt"></i></span>Text Content</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.textContent && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.textContent">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Need content help</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('content_need_help',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.content_need_help" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('content_need_help',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Need content help</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('content_need_help',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.content_need_help" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('content_need_help',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.photos=!pricingCollapsed.photos">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#dcfce7;color:#22c55e;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-camera"></i></span>Photos</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#dcfce7;color:#22c55e"><i class="fas fa-camera"></i></span>Photos</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.photos && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.photos">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Free stock photos</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('photos_free_stock',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.photos_free_stock" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('photos_free_stock',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Free stock photos</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('photos_free_stock',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.photos_free_stock" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('photos_free_stock',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.timeline=!pricingCollapsed.timeline">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#fef3c7;color:#f59e0b;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-clock"></i></span>Timeline</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#fef3c7;color:#f59e0b"><i class="fas fa-clock"></i></span>Timeline</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.timeline && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.timeline">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">1 week timeline</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('timeline_1_week',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.timeline_1_week" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('timeline_1_week',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">1 week timeline</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('timeline_1_week',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.timeline_1_week" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('timeline_1_week',1)">+</button></div></div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="card-header" @click="pricingCollapsed.maintenance=!pricingCollapsed.maintenance">
-              <span style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px"><span style="width:20px;height:20px;background:#f3e8ff;color:#a855f7;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fas fa-wrench"></i></span>Maintenance</span>
+              <span class="price-header-text"><span class="price-icon-box" style="background:#f3e8ff;color:#a855f7"><i class="fas fa-wrench"></i></span>Maintenance</span>
               <i class="fas fa-chevron-right collapse-icon" :class="!pricingCollapsed.maintenance && 'open'"></i>
             </div>
             <div class="card-body" x-show="!pricingCollapsed.maintenance">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Basic</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('maintenance_basic',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.maintenance_basic" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('maintenance_basic',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Standard</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('maintenance_standard',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.maintenance_standard" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('maintenance_standard',1)">+</button></div></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:13px">Premium</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('maintenance_premium',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.maintenance_premium" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('maintenance_premium',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Basic</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('maintenance_basic',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.maintenance_basic" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('maintenance_basic',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Standard</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('maintenance_standard',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.maintenance_standard" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('maintenance_standard',1)">+</button></div></div>
+              <div class="price-row"><span class="price-label">Premium</span><div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjPrice('maintenance_premium',-1)">−</button><input class="stepper-input" type="number" x-model="settingsForm.PRICES.maintenance_premium" min="0"><button class="stepper-btn stepper-inc" @click="adjPrice('maintenance_premium',1)">+</button></div></div>
             </div>
           </div>
 
         </div>
         <!-- Survey Sections -->
-        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">Survey Sections</h3>
-        <div style="display:grid;gap:12px;margin-bottom:24px">
+        <h3 class="settings-heading">Survey Sections</h3>
+        <div style="display:grid;gap:12px;margin-bottom:32px">
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.contact=!sectionCollapsed.contact">
-              <span style="font-weight:600;font-size:14px">Contact</span>
+              <span class="section-header-text">Contact</span>
               <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge" :class="(settingsForm.SECTIONS.contact?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.contact?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.contact && 'open'"></i>
               </div>
             </div>
             <div class="card-body" x-show="!sectionCollapsed.contact">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.contact.title"></div>
-                <div><label class="field-label">Show Section</label><label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" x-model="settingsForm.SECTIONS.contact.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.contact.show"><span style="font-size:13px">Visible in intake form</span></label></div>
               </div>
-              <div style="margin-bottom:12px"><label class="field-label">Description</label><textarea class="input" rows="2" x-model="settingsForm.SECTIONS.contact.desc" style="resize:vertical"></textarea></div>
+              <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.contact.desc"></textarea></div>
               <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.contact.options || [])" :key="oi">
-                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
-                    <input class="input" style="flex:2" type="text" x-model="opt.label" placeholder="Label">
-                    <input class="input" style="flex:1" type="text" x-model="opt.value" placeholder="Value">
-                    <select class="input" style="flex:1" x-model="opt.group">
+                  <div class="option-row"
+                    <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
+                    <input class="input input-flex-1" type="text" x-model="opt.value" placeholder="Value">
+                    <select class="input input-flex-1" x-model="opt.group">
                       <option value="">No group</option>
                       <template x-for="g in sectionGroupsFor('contact')" :key="g.value">
                         <option :value="g.value" x-text="g.label"></option>
                       </template>
                     </select>
-                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input" type="number" x-model="opt.price" min="0" style="width:52px"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="rmOption('contact',oi)"><i class="fas fa-times"></i></button>
+                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input opt-stepper" type="number" x-model="opt.price" min="0"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="rmOption('contact',oi)"><i class="fas fa-times"></i></button>
                   </div>
                 </template>
                 <button class="btn btn-ghost btn-sm" @click="addOption('contact')"><i class="fas fa-plus"></i> Add Option</button>
@@ -721,31 +852,31 @@ input[type=number]{-moz-appearance:textfield}
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.domain_hosting=!sectionCollapsed.domain_hosting">
-              <span style="font-weight:600;font-size:14px">Domain &amp; Hosting</span>
+              <span class="section-header-text">Domain &amp; Hosting</span>
               <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge" :class="(settingsForm.SECTIONS.domain_hosting?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.domain_hosting?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.domain_hosting && 'open'"></i>
               </div>
             </div>
             <div class="card-body" x-show="!sectionCollapsed.domain_hosting">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.domain_hosting.title"></div>
-                <div><label class="field-label">Show Section</label><label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" x-model="settingsForm.SECTIONS.domain_hosting.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.domain_hosting.show"><span style="font-size:13px">Visible in intake form</span></label></div>
               </div>
-              <div style="margin-bottom:12px"><label class="field-label">Description</label><textarea class="input" rows="2" x-model="settingsForm.SECTIONS.domain_hosting.desc" style="resize:vertical"></textarea></div>
+              <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.domain_hosting.desc"></textarea></div>
               <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.domain_hosting.options || [])" :key="oi">
-                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
-                    <input class="input" style="flex:2" type="text" x-model="opt.label" placeholder="Label">
-                    <input class="input" style="flex:1" type="text" x-model="opt.value" placeholder="Value">
-                    <select class="input" style="flex:1" x-model="opt.group">
+                  <div class="option-row"
+                    <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
+                    <input class="input input-flex-1" type="text" x-model="opt.value" placeholder="Value">
+                    <select class="input input-flex-1" x-model="opt.group">
                       <option value="">No group</option>
                       <template x-for="g in sectionGroupsFor('domain_hosting')" :key="g.value">
                         <option :value="g.value" x-text="g.label"></option>
                       </template>
                     </select>
-                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input" type="number" x-model="opt.price" min="0" style="width:52px"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="rmOption('domain_hosting',oi)"><i class="fas fa-times"></i></button>
+                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input opt-stepper" type="number" x-model="opt.price" min="0"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="rmOption('domain_hosting',oi)"><i class="fas fa-times"></i></button>
                   </div>
                 </template>
                 <button class="btn btn-ghost btn-sm" @click="addOption('domain_hosting')"><i class="fas fa-plus"></i> Add Option</button>
@@ -755,31 +886,31 @@ input[type=number]{-moz-appearance:textfield}
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.website=!sectionCollapsed.website">
-              <span style="font-weight:600;font-size:14px">Website</span>
+              <span class="section-header-text">Website</span>
               <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge" :class="(settingsForm.SECTIONS.website?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.website?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.website && 'open'"></i>
               </div>
             </div>
             <div class="card-body" x-show="!sectionCollapsed.website">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.website.title"></div>
-                <div><label class="field-label">Show Section</label><label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" x-model="settingsForm.SECTIONS.website.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.website.show"><span style="font-size:13px">Visible in intake form</span></label></div>
               </div>
-              <div style="margin-bottom:12px"><label class="field-label">Description</label><textarea class="input" rows="2" x-model="settingsForm.SECTIONS.website.desc" style="resize:vertical"></textarea></div>
+              <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.website.desc"></textarea></div>
               <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.website.options || [])" :key="oi">
-                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
-                    <input class="input" style="flex:2" type="text" x-model="opt.label" placeholder="Label">
-                    <input class="input" style="flex:1" type="text" x-model="opt.value" placeholder="Value">
-                    <select class="input" style="flex:1" x-model="opt.group">
+                  <div class="option-row"
+                    <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
+                    <input class="input input-flex-1" type="text" x-model="opt.value" placeholder="Value">
+                    <select class="input input-flex-1" x-model="opt.group">
                       <option value="">No group</option>
                       <template x-for="g in sectionGroupsFor('website')" :key="g.value">
                         <option :value="g.value" x-text="g.label"></option>
                       </template>
                     </select>
-                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input" type="number" x-model="opt.price" min="0" style="width:52px"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="rmOption('website',oi)"><i class="fas fa-times"></i></button>
+                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input opt-stepper" type="number" x-model="opt.price" min="0"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="rmOption('website',oi)"><i class="fas fa-times"></i></button>
                   </div>
                 </template>
                 <button class="btn btn-ghost btn-sm" @click="addOption('website')"><i class="fas fa-plus"></i> Add Option</button>
@@ -789,31 +920,31 @@ input[type=number]{-moz-appearance:textfield}
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.branding=!sectionCollapsed.branding">
-              <span style="font-weight:600;font-size:14px">Branding &amp; Content</span>
+              <span class="section-header-text">Branding &amp; Content</span>
               <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge" :class="(settingsForm.SECTIONS.branding?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.branding?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.branding && 'open'"></i>
               </div>
             </div>
             <div class="card-body" x-show="!sectionCollapsed.branding">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.branding.title"></div>
-                <div><label class="field-label">Show Section</label><label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" x-model="settingsForm.SECTIONS.branding.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.branding.show"><span style="font-size:13px">Visible in intake form</span></label></div>
               </div>
-              <div style="margin-bottom:12px"><label class="field-label">Description</label><textarea class="input" rows="2" x-model="settingsForm.SECTIONS.branding.desc" style="resize:vertical"></textarea></div>
+              <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.branding.desc"></textarea></div>
               <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.branding.options || [])" :key="oi">
-                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
-                    <input class="input" style="flex:2" type="text" x-model="opt.label" placeholder="Label">
-                    <input class="input" style="flex:1" type="text" x-model="opt.value" placeholder="Value">
-                    <select class="input" style="flex:1" x-model="opt.group">
+                  <div class="option-row"
+                    <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
+                    <input class="input input-flex-1" type="text" x-model="opt.value" placeholder="Value">
+                    <select class="input input-flex-1" x-model="opt.group">
                       <option value="">No group</option>
                       <template x-for="g in sectionGroupsFor('branding')" :key="g.value">
                         <option :value="g.value" x-text="g.label"></option>
                       </template>
                     </select>
-                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input" type="number" x-model="opt.price" min="0" style="width:52px"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="rmOption('branding',oi)"><i class="fas fa-times"></i></button>
+                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input opt-stepper" type="number" x-model="opt.price" min="0"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="rmOption('branding',oi)"><i class="fas fa-times"></i></button>
                   </div>
                 </template>
                 <button class="btn btn-ghost btn-sm" @click="addOption('branding')"><i class="fas fa-plus"></i> Add Option</button>
@@ -823,31 +954,31 @@ input[type=number]{-moz-appearance:textfield}
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.timeline_section=!sectionCollapsed.timeline_section">
-              <span style="font-weight:600;font-size:14px">Timeline</span>
+              <span class="section-header-text">Timeline</span>
               <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge" :class="(settingsForm.SECTIONS.timeline?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.timeline?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.timeline_section && 'open'"></i>
               </div>
             </div>
             <div class="card-body" x-show="!sectionCollapsed.timeline_section">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.timeline.title"></div>
-                <div><label class="field-label">Show Section</label><label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" x-model="settingsForm.SECTIONS.timeline.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.timeline.show"><span style="font-size:13px">Visible in intake form</span></label></div>
               </div>
-              <div style="margin-bottom:12px"><label class="field-label">Description</label><textarea class="input" rows="2" x-model="settingsForm.SECTIONS.timeline.desc" style="resize:vertical"></textarea></div>
+              <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.timeline.desc"></textarea></div>
               <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.timeline.options || [])" :key="oi">
-                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
-                    <input class="input" style="flex:2" type="text" x-model="opt.label" placeholder="Label">
-                    <input class="input" style="flex:1" type="text" x-model="opt.value" placeholder="Value">
-                    <select class="input" style="flex:1" x-model="opt.group">
+                  <div class="option-row"
+                    <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
+                    <input class="input input-flex-1" type="text" x-model="opt.value" placeholder="Value">
+                    <select class="input input-flex-1" x-model="opt.group">
                       <option value="">No group</option>
                       <template x-for="g in sectionGroupsFor('timeline')" :key="g.value">
                         <option :value="g.value" x-text="g.label"></option>
                       </template>
                     </select>
-                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input" type="number" x-model="opt.price" min="0" style="width:52px"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="rmOption('timeline',oi)"><i class="fas fa-times"></i></button>
+                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input opt-stepper" type="number" x-model="opt.price" min="0"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="rmOption('timeline',oi)"><i class="fas fa-times"></i></button>
                   </div>
                 </template>
                 <button class="btn btn-ghost btn-sm" @click="addOption('timeline')"><i class="fas fa-plus"></i> Add Option</button>
@@ -857,31 +988,31 @@ input[type=number]{-moz-appearance:textfield}
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.maintenance_budget=!sectionCollapsed.maintenance_budget">
-              <span style="font-weight:600;font-size:14px">Maintenance &amp; Budget</span>
+              <span class="section-header-text">Maintenance &amp; Budget</span>
               <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge" :class="(settingsForm.SECTIONS.maintenance_budget?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.maintenance_budget?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.maintenance_budget && 'open'"></i>
               </div>
             </div>
             <div class="card-body" x-show="!sectionCollapsed.maintenance_budget">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.maintenance_budget.title"></div>
-                <div><label class="field-label">Show Section</label><label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" x-model="settingsForm.SECTIONS.maintenance_budget.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.maintenance_budget.show"><span style="font-size:13px">Visible in intake form</span></label></div>
               </div>
-              <div style="margin-bottom:12px"><label class="field-label">Description</label><textarea class="input" rows="2" x-model="settingsForm.SECTIONS.maintenance_budget.desc" style="resize:vertical"></textarea></div>
+              <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.maintenance_budget.desc"></textarea></div>
               <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.maintenance_budget.options || [])" :key="oi">
-                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
-                    <input class="input" style="flex:2" type="text" x-model="opt.label" placeholder="Label">
-                    <input class="input" style="flex:1" type="text" x-model="opt.value" placeholder="Value">
-                    <select class="input" style="flex:1" x-model="opt.group">
+                  <div class="option-row"
+                    <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
+                    <input class="input input-flex-1" type="text" x-model="opt.value" placeholder="Value">
+                    <select class="input input-flex-1" x-model="opt.group">
                       <option value="">No group</option>
                       <template x-for="g in sectionGroupsFor('maintenance')" :key="g.value">
                         <option :value="g.value" x-text="g.label"></option>
                       </template>
                     </select>
-                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input" type="number" x-model="opt.price" min="0" style="width:52px"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="rmOption('maintenance_budget',oi)"><i class="fas fa-times"></i></button>
+                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input opt-stepper" type="number" x-model="opt.price" min="0"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="rmOption('maintenance_budget',oi)"><i class="fas fa-times"></i></button>
                   </div>
                 </template>
                 <button class="btn btn-ghost btn-sm" @click="addOption('maintenance_budget')"><i class="fas fa-plus"></i> Add Option</button>
@@ -891,31 +1022,31 @@ input[type=number]{-moz-appearance:textfield}
 
           <div class="section-card">
             <div class="card-header" @click="sectionCollapsed.review=!sectionCollapsed.review">
-              <span style="font-weight:600;font-size:14px">Review &amp; Submit</span>
+              <span class="section-header-text">Review &amp; Submit</span>
               <div style="display:flex;align-items:center;gap:8px">
                 <span class="badge" :class="(settingsForm.SECTIONS.review?.show ?? true) ? 'badge-reviewed' : 'badge-new'"><span x-text="(settingsForm.SECTIONS.review?.show ?? true) ? 'Visible' : 'Hidden'"></span></span>
                 <i class="fas fa-chevron-right collapse-icon" :class="!sectionCollapsed.review && 'open'"></i>
               </div>
             </div>
             <div class="card-body" x-show="!sectionCollapsed.review">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div class="section-grid-2">
                 <div><label class="field-label">Section Title</label><input class="input" type="text" x-model="settingsForm.SECTIONS.review.title"></div>
-                <div><label class="field-label">Show Section</label><label style="display:flex;align-items:center;gap:8px;margin-top:4px"><input type="checkbox" x-model="settingsForm.SECTIONS.review.show"><span style="font-size:13px">Visible in intake form</span></label></div>
+                <div><label class="field-label">Show Section</label><label class="flex-checkbox"><input type="checkbox" x-model="settingsForm.SECTIONS.review.show"><span style="font-size:13px">Visible in intake form</span></label></div>
               </div>
-              <div style="margin-bottom:12px"><label class="field-label">Description</label><textarea class="input" rows="2" x-model="settingsForm.SECTIONS.review.desc" style="resize:vertical"></textarea></div>
+              <div class="mb-12"><label class="field-label">Description</label><textarea class="input textarea-v-resize" rows="2" x-model="settingsForm.SECTIONS.review.desc"></textarea></div>
               <div><label class="field-label" style="margin-bottom:6px">Custom Options</label>
                 <template x-for="(opt, oi) in (settingsForm.SECTIONS.review.options || [])" :key="oi">
-                  <div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
-                    <input class="input" style="flex:2" type="text" x-model="opt.label" placeholder="Label">
-                    <input class="input" style="flex:1" type="text" x-model="opt.value" placeholder="Value">
-                    <select class="input" style="flex:1" x-model="opt.group">
+                  <div class="option-row"
+                    <input class="input input-flex-2" type="text" x-model="opt.label" placeholder="Label">
+                    <input class="input input-flex-1" type="text" x-model="opt.value" placeholder="Value">
+                    <select class="input input-flex-1" x-model="opt.group">
                       <option value="">No group</option>
                       <template x-for="g in sectionGroupsFor('review')" :key="g.value">
                         <option :value="g.value" x-text="g.label"></option>
                       </template>
                     </select>
-                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input" type="number" x-model="opt.price" min="0" style="width:52px"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
-                    <button class="btn btn-ghost btn-sm" style="color:#ef4444" @click="rmOption('review',oi)"><i class="fas fa-times"></i></button>
+                    <div class="number-stepper"><button class="stepper-btn stepper-dec" @click="adjOptPrice(opt,-1)">-</button><input class="stepper-input opt-stepper" type="number" x-model="opt.price" min="0"><button class="stepper-btn stepper-inc" @click="adjOptPrice(opt,1)">+</button></div>
+                    <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="rmOption('review',oi)"><i class="fas fa-times"></i></button>
                   </div>
                 </template>
                 <button class="btn btn-ghost btn-sm" @click="addOption('review')"><i class="fas fa-plus"></i> Add Option</button>
@@ -926,21 +1057,21 @@ input[type=number]{-moz-appearance:textfield}
         </div>
 
         <!-- Danger Zone -->
-        <div class="section-card" style="border-color:#fca5a5;margin-bottom:24px">
+        <div class="section-card danger">
           <div class="card-header">
-            <span style="font-weight:600;font-size:14px;color:#ef4444"><i class="fas fa-exclamation-triangle mr-2"></i>Danger Zone</span>
+            <span class="section-header-text" style="color:#ef4444"><i class="fas fa-exclamation-triangle mr-2"></i>Danger Zone</span>
           </div>
           <div class="card-body">
-            <p style="font-size:13px;color:var(--text-sec);margin-bottom:12px">Reset all prices and section settings to empty defaults. This cannot be undone.</p>
+            <p class="text-base text-sec mb-12">Reset all prices and section settings to empty defaults. This cannot be undone.</p>
             <button class="btn btn-danger btn-sm" @click="resetModalOpen=true">Reset to Defaults</button>
           </div>
         </div>
 
         <!-- Save Button -->
-        <div style="text-align:right;margin-bottom:32px">
+        <div class="text-right mb-32">
           <button class="btn btn-primary" @click="saveSettings" :disabled="saving">
             <i class="fas fa-save" x-show="!saving"></i>
-            <span x-show="saving"><span class="spinner" style="display:inline-block;width:14px;height:14px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:#fff;margin-right:4px;vertical-align:middle"></span></span>
+            <span x-show="saving"><span class="spinner-btn"></span></span>
             <span x-text="saving ? 'Saving...' : 'Save Settings'"></span>
           </button>
         </div>
@@ -954,88 +1085,88 @@ input[type=number]{-moz-appearance:textfield}
 <!-- DETAIL PANEL -->
 <div class="detail-panel" :class="detailOpen && 'open'">
   <template x-if="detailSubmission">
-  <div style="display:flex;flex-direction:column;height:100%">
-    <div style="padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;position:sticky;top:0;background:var(--bg-card);z-index:5">
-      <div class="avatar-circle" style="width:44px;height:44px;font-size:18px" :style="'background:'+avatarColor(detailSubmission.full_name)" x-text="getInitials(detailSubmission.full_name)"></div>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:700;font-size:16px" x-text="detailSubmission.full_name"></div>
-        <div style="font-size:13px;color:var(--text-sec)" x-text="detailSubmission.business_name || ''"></div>
-        <div style="font-size:12px;color:var(--text-sec)"><span x-text="formatDate(detailSubmission.created_at, settings.date_style)"></span> . ID: <span x-text="detailSubmission.id"></span></div>
+  <div class="flex-col h-100vh">
+    <div class="detail-header">
+      <div class="detail-avatar" :style="'background:'+avatarColor(detailSubmission.full_name)" x-text="getInitials(detailSubmission.full_name)"></div>
+      <div class="flex-1" style="min-width:0">
+        <div class="detail-name" x-text="detailSubmission.full_name"></div>
+        <div class="detail-sub" x-text="detailSubmission.business_name || ''"></div>
+        <div class="detail-meta"><span x-text="formatDate(detailSubmission.created_at, settings.date_style)"></span> . ID: <span x-text="detailSubmission.id"></span></div>
       </div>
       <button class="btn btn-ghost btn-sm" @click="closeDetail" style="font-size:20px;padding:4px 8px">&times;</button>
     </div>
-    <div style="flex:1;overflow-y:auto;padding:20px">
-      <div style="margin-bottom:16px">
-        <button class="btn btn-sm" :class="detailSubmission.status === 'New' ? 'badge-new' : 'badge-reviewed'" @click="toggleStatus(detailSubmission)" :disabled="detailSubmission._loading" style="border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
+    <div class="detail-body">
+      <div class="mb-16">
+        <button class="detail-status-btn btn-sm" :class="detailSubmission.status === 'New' ? 'badge-new' : 'badge-reviewed'" @click="toggleStatus(detailSubmission)" :disabled="detailSubmission._loading">
           <i class="fas fa-exchange-alt" :class="detailSubmission._loading && 'fa-spin'"></i>
           <span x-text="detailSubmission.status"></span>
         </button>
       </div>
       <template x-if="detailSubmission.full_name || detailSubmission.business_name || detailSubmission.client_email || detailSubmission.client_phone">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Contact Info</div>
-        <template x-if="detailSubmission.full_name"><div class="field-value"><span style="color:var(--text-sec);min-width:80px;display:inline-block">Name</span> <span x-text="detailSubmission.full_name"></span></div></template>
-        <template x-if="detailSubmission.business_name"><div class="field-value"><span style="color:var(--text-sec);min-width:80px;display:inline-block">Business</span> <span x-text="detailSubmission.business_name"></span></div></template>
-        <template x-if="detailSubmission.client_email"><div class="field-value"><span style="color:var(--text-sec);min-width:80px;display:inline-block">Email</span> <a :href="'mailto:'+detailSubmission.client_email" style="color:var(--accent)" x-text="detailSubmission.client_email"></a></div></template>
-        <template x-if="detailSubmission.client_phone"><div class="field-value"><span style="color:var(--text-sec);min-width:80px;display:inline-block">Phone</span> <span x-text="detailSubmission.client_phone"></span></div></template>
+        <template x-if="detailSubmission.full_name"><div class="field-value"><span class="field-label">Name</span> <span x-text="detailSubmission.full_name"></span></div></template>
+        <template x-if="detailSubmission.business_name"><div class="field-value"><span class="field-label">Business</span> <span x-text="detailSubmission.business_name"></span></div></template>
+        <template x-if="detailSubmission.client_email"><div class="field-value"><span class="field-label">Email</span> <a :href="'mailto:'+detailSubmission.client_email" class="email-link" x-text="detailSubmission.client_email"></a></div></template>
+        <template x-if="detailSubmission.client_phone"><div class="field-value"><span class="field-label">Phone</span> <span x-text="detailSubmission.client_phone"></span></div></template>
       </div>
       </template>
       <template x-if="detailSubmission.domain || detailSubmission.domain_idea || detailSubmission.hosting || detailSubmission.email || detailSubmission.email_count || detailSubmission.setup_help">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Domain &amp; Hosting</div>
-        <template x-if="detailSubmission.domain"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Domain</span> <span x-text="detailSubmission.domain"></span></div></template>
-        <template x-if="detailSubmission.domain_idea"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Domain Idea</span> <span x-text="detailSubmission.domain_idea"></span></div></template>
-        <template x-if="detailSubmission.hosting"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Hosting</span> <span x-text="detailSubmission.hosting"></span></div></template>
-        <template x-if="detailSubmission.email"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Email</span> <span x-text="detailSubmission.email"></span></div></template>
-        <template x-if="detailSubmission.email_count"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Email Count</span> <span x-text="detailSubmission.email_count"></span></div></template>
-        <template x-if="detailSubmission.setup_help"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Setup Help</span> <span x-text="detailSubmission.setup_help"></span></div></template>
+        <template x-if="detailSubmission.domain"><div class="field-value"><span class="field-label-wide">Domain</span> <span x-text="detailSubmission.domain"></span></div></template>
+        <template x-if="detailSubmission.domain_idea"><div class="field-value"><span class="field-label-wide">Domain Idea</span> <span x-text="detailSubmission.domain_idea"></span></div></template>
+        <template x-if="detailSubmission.hosting"><div class="field-value"><span class="field-label-wide">Hosting</span> <span x-text="detailSubmission.hosting"></span></div></template>
+        <template x-if="detailSubmission.email"><div class="field-value"><span class="field-label-wide">Email</span> <span x-text="detailSubmission.email"></span></div></template>
+        <template x-if="detailSubmission.email_count"><div class="field-value"><span class="field-label-wide">Email Count</span> <span x-text="detailSubmission.email_count"></span></div></template>
+        <template x-if="detailSubmission.setup_help"><div class="field-value"><span class="field-label-wide">Setup Help</span> <span x-text="detailSubmission.setup_help"></span></div></template>
       </div>
       </template>
       <template x-if="detailSubmission.business_desc || detailSubmission.website_type || detailSubmission.pages || detailSubmission.other_pages || detailSubmission.features">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Website</div>
-        <template x-if="detailSubmission.business_desc"><div class="field-value"><span style="color:var(--text-sec);display:block;margin-bottom:2px">Description</span> <span x-text="detailSubmission.business_desc"></span></div></template>
-        <template x-if="detailSubmission.website_type"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Type</span> <span x-text="detailSubmission.website_type"></span></div></template>
+        <template x-if="detailSubmission.business_desc"><div class="field-value"><span class="field-label-block">Description</span> <span x-text="detailSubmission.business_desc"></span></div></template>
+        <template x-if="detailSubmission.website_type"><div class="field-value"><span class="field-label-wide">Type</span> <span x-text="detailSubmission.website_type"></span></div></template>
         <template x-if="detailSubmission.pages && detailSubmission.pages.length">
-        <div class="field-value"><span style="color:var(--text-sec);display:block;margin-bottom:2px">Pages</span> <span x-text="detailSubmission.pages.join(', ')+''"></span></div>
+        <div class="field-value"><span class="field-label-block">Pages</span> <span x-text="detailSubmission.pages.join(', ')+''"></span></div>
         </template>
-        <template x-if="detailSubmission.other_pages"><div class="field-value"><span style="color:var(--text-sec);display:block;margin-bottom:2px">Other Pages</span> <span x-text="detailSubmission.other_pages"></span></div></template>
+        <template x-if="detailSubmission.other_pages"><div class="field-value"><span class="field-label-block">Other Pages</span> <span x-text="detailSubmission.other_pages"></span></div></template>
         <template x-if="detailSubmission.features && detailSubmission.features.length">
-        <div class="field-value"><span style="color:var(--text-sec);display:block;margin-bottom:2px">Features</span> <span x-text="detailSubmission.features.join(', ')+''"></span></div>
+        <div class="field-value"><span class="field-label-block">Features</span> <span x-text="detailSubmission.features.join(', ')+''"></span></div>
         </template>
       </div>
       </template>
       <template x-if="detailSubmission.logo || detailSubmission.content_text || detailSubmission.content_photos || detailSubmission.brand_colors || detailSubmission.inspiration_links">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Branding &amp; Content</div>
-        <template x-if="detailSubmission.logo"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Logo</span> <span x-text="detailSubmission.logo"></span></div></template>
-        <template x-if="detailSubmission.content_text"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Text Content</span> <span x-text="detailSubmission.content_text"></span></div></template>
-        <template x-if="detailSubmission.content_photos"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Photos</span> <span x-text="detailSubmission.content_photos"></span></div></template>
-        <template x-if="detailSubmission.brand_colors"><div class="field-value"><span style="color:var(--text-sec);display:block;margin-bottom:2px">Brand Colors</span> <span x-text="detailSubmission.brand_colors"></span></div></template>
-        <template x-if="detailSubmission.inspiration_links"><div class="field-value"><span style="color:var(--text-sec);display:block;margin-bottom:2px">Inspiration</span> <span x-text="detailSubmission.inspiration_links"></span></div></template>
+        <template x-if="detailSubmission.logo"><div class="field-value"><span class="field-label-wide">Logo</span> <span x-text="detailSubmission.logo"></span></div></template>
+        <template x-if="detailSubmission.content_text"><div class="field-value"><span class="field-label-wide">Text Content</span> <span x-text="detailSubmission.content_text"></span></div></template>
+        <template x-if="detailSubmission.content_photos"><div class="field-value"><span class="field-label-wide">Photos</span> <span x-text="detailSubmission.content_photos"></span></div></template>
+        <template x-if="detailSubmission.brand_colors"><div class="field-value"><span class="field-label-block">Brand Colors</span> <span x-text="detailSubmission.brand_colors"></span></div></template>
+        <template x-if="detailSubmission.inspiration_links"><div class="field-value"><span class="field-label-block">Inspiration</span> <span x-text="detailSubmission.inspiration_links"></span></div></template>
       </div>
       </template>
       <template x-if="detailSubmission.timeline || detailSubmission.maintenance || detailSubmission.budget || detailSubmission.extra_notes">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Timeline &amp; Maintenance</div>
-        <template x-if="detailSubmission.timeline"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Timeline</span> <span x-text="detailSubmission.timeline"></span></div></template>
-        <template x-if="detailSubmission.maintenance"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Maintenance</span> <span x-text="detailSubmission.maintenance"></span></div></template>
-        <template x-if="detailSubmission.budget"><div class="field-value"><span style="color:var(--text-sec);min-width:100px;display:inline-block">Budget</span> <span x-text="detailSubmission.budget"></span></div></template>
-        <template x-if="detailSubmission.extra_notes"><div class="field-value"><span style="color:var(--text-sec);display:block;margin-bottom:2px">Notes</span> <span x-text="detailSubmission.extra_notes"></span></div></template>
+        <template x-if="detailSubmission.timeline"><div class="field-value"><span class="field-label-wide">Timeline</span> <span x-text="detailSubmission.timeline"></span></div></template>
+        <template x-if="detailSubmission.maintenance"><div class="field-value"><span class="field-label-wide">Maintenance</span> <span x-text="detailSubmission.maintenance"></span></div></template>
+        <template x-if="detailSubmission.budget"><div class="field-value"><span class="field-label-wide">Budget</span> <span x-text="detailSubmission.budget"></span></div></template>
+        <template x-if="detailSubmission.extra_notes"><div class="field-value"><span class="field-label-block">Notes</span> <span x-text="detailSubmission.extra_notes"></span></div></template>
       </div>
       </template>
       <template x-if="detailSubmission.estimated_total">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Pricing</div>
-        <div class="field-value" style="font-size:20px;font-weight:700;color:#f59e0b" x-text="formatCurrency(detailSubmission.estimated_total)"></div>
+        <div class="detail-estimate" x-text="formatCurrency(detailSubmission.estimated_total)"></div>
         <template x-if="detailSubmission.price_breakdown && detailSubmission.price_breakdown.length">
-        <div style="margin-top:8px">
-          <div style="font-size:12px;font-weight:600;color:var(--text-sec);margin-bottom:4px">Breakdown</div>
-          <table style="width:100%;font-size:12px;border-collapse:collapse">
-            <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 6px">Item</th><th style="text-align:center;padding:4px 6px">Qty</th><th style="text-align:right;padding:4px 6px">Price</th><th style="text-align:right;padding:4px 6px">Total</th></tr></thead>
+        <div class="mt-8">
+          <div class="text-sm fw-600 text-sec mb-4">Breakdown</div>
+          <table class="w-full" style="font-size:12px;border-collapse:collapse">
+            <thead><tr class="border-bottom"><th class="text-left" style="padding:4px 6px">Item</th><th class="text-center" style="padding:4px 6px">Qty</th><th class="text-right" style="padding:4px 6px">Price</th><th class="text-right" style="padding:4px 6px">Total</th></tr></thead>
             <tbody>
               <template x-for="item in detailSubmission.price_breakdown" :key="(item.label||'')+String(item.lineTotal||0)">
-              <tr><td style="padding:3px 6px" x-text="item.label"></td><td style="text-align:center;padding:3px 6px" x-text="item.qty || 1"></td><td style="text-align:right;padding:3px 6px" x-text="formatCurrency(item.price)"></td><td style="text-align:right;padding:3px 6px;font-weight:600" x-text="formatCurrency(item.lineTotal)"></td></tr>
+              <tr><td style="padding:3px 6px" x-text="item.label"></td><td class="text-center" style="padding:3px 6px" x-text="item.qty || 1"></td><td class="text-right" style="padding:3px 6px" x-text="formatCurrency(item.price)"></td><td class="text-right fw-600" style="padding:3px 6px" x-text="formatCurrency(item.lineTotal)"></td></tr>
               </template>
             </tbody>
           </table>
@@ -1044,11 +1175,11 @@ input[type=number]{-moz-appearance:textfield}
       </div>
       </template>
       <template x-if="detailSubmission.file_urls && detailSubmission.file_urls.length">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Files</div>
         <template x-for="f in detailSubmission.file_urls" :key="f.name">
         <div style="padding:4px 0">
-          <a :href="f.url" target="_blank" style="color:var(--accent);text-decoration:none;font-size:13px;display:flex;align-items:center;gap:6px">
+          <a :href="f.url" target="_blank" class="email-link" style="font-size:13px;display:flex;align-items:center;gap:6px">
             <i class="fas fa-paperclip"></i> <span x-text="f.name"></span>
           </a>
         </div>
@@ -1056,14 +1187,14 @@ input[type=number]{-moz-appearance:textfield}
       </div>
       </template>
       <template x-if="detailSubmission.request_time">
-      <div style="margin-bottom:16px">
+      <div class="detail-section">
         <div class="field-label">Submitted At</div>
         <div class="field-value" x-text="detailSubmission.request_time"></div>
       </div>
       </template>
     </div>
-    <div style="padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg-card);flex-shrink:0">
-      <button class="btn btn-primary btn-sm" @click="toggleStatus(detailSubmission)" :disabled="detailSubmission._loading" style="flex:1">
+    <div class="detail-footer">
+      <button class="btn btn-primary btn-sm flex-1" @click="toggleStatus(detailSubmission)" :disabled="detailSubmission._loading">
         <i class="fas fa-exchange-alt" :class="detailSubmission._loading && 'fa-spin'"></i>
         <span x-text="detailSubmission.status === 'New' ? 'Mark Reviewed' : 'Mark New'"></span>
       </button>
@@ -1077,12 +1208,12 @@ input[type=number]{-moz-appearance:textfield}
 <!-- DELETE MODAL -->
 <div class="modal-overlay" :class="deleteModalOpen && 'open'" @click.self="deleteModalOpen=false">
   <div class="modal-box">
-    <h3 style="font-size:17px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;background:#fef2f2;color:#ef4444;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px"><i class="fas fa-trash-alt"></i></span> Delete Submission</h3>
-    <p style="font-size:14px;color:var(--text-sec);margin-bottom:24px;padding-left:42px">Are you sure? This cannot be undone.</p>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
+    <h3 class="modal-title"><span class="modal-icon-box"><i class="fas fa-trash-alt"></i></span> Delete Submission</h3>
+    <p class="modal-desc">Are you sure? This cannot be undone.</p>
+    <div class="modal-actions">
       <button class="btn btn-ghost" @click="deleteModalOpen=false">Cancel</button>
       <button class="btn btn-danger" @click="doDelete" :disabled="deleteLoading">
-        <span x-show="deleteLoading"><span class="spinner" style="display:inline-block;width:14px;height:14px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:#fff;margin-right:4px;vertical-align:middle"></span></span>
+        <span x-show="deleteLoading"><span class="spinner-btn"></span></span>
         <span x-text="deleteLoading ? 'Deleting...' : 'Delete'"></span>
       </button>
     </div>
@@ -1092,12 +1223,12 @@ input[type=number]{-moz-appearance:textfield}
 <!-- RESET MODAL -->
 <div class="modal-overlay" :class="resetModalOpen && 'open'" @click.self="resetModalOpen=false">
   <div class="modal-box">
-    <h3 style="font-size:17px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;background:#fef2f2;color:#ef4444;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px"><i class="fas fa-exclamation-triangle"></i></span> Reset Settings</h3>
-    <p style="font-size:14px;color:var(--text-sec);margin-bottom:24px;padding-left:42px">Reset all prices and sections to empty defaults. This cannot be undone.</p>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
+    <h3 class="modal-title"><span class="modal-icon-box"><i class="fas fa-exclamation-triangle"></i></span> Reset Settings</h3>
+    <p class="modal-desc">Reset all prices and sections to empty defaults. This cannot be undone.</p>
+    <div class="modal-actions">
       <button class="btn btn-ghost" @click="resetModalOpen=false">Cancel</button>
       <button class="btn btn-danger" @click="doResetDefaults" :disabled="resetting">
-        <span x-show="resetting"><span class="spinner" style="display:inline-block;width:14px;height:14px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:#fff;margin-right:4px;vertical-align:middle"></span></span>
+        <span x-show="resetting"><span class="spinner-btn"></span></span>
         <span x-text="resetting ? 'Resetting...' : 'Yes, Reset'"></span>
       </button>
     </div>
