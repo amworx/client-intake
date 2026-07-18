@@ -73,3 +73,24 @@ Status: 🔴 Not Started | 🟡 In Progress | 🟢 Complete
 ## Task 7 — Verify project structure  🟢
 - [x] Final check: all files in place per plan §7
 - [x] Record final event + lessons in memory
+
+## Task 8 — Deploy to GitHub Pages  🟢
+- [x] Created GitHub repo `amworx/client-intake`
+- [x] Initialized git, committed all files, pushed to `main`
+- [x] Enabled GitHub Pages via API (branch: main, path: /)
+- [x] Added `.nojekyll` file to prevent Jekyll processing
+- [x] Created comprehensive `README.md`
+- [x] Updated `docs/setup.md` with full deployment guide
+
+## Task 9 — Deploy Edge Functions  🟢
+- [x] Logged into Supabase CLI with access token
+- [x] Linked to project `jyqjkkcenuapssmstmze`
+- [x] Deployed `send-notification` Edge Function
+- [x] Created `send-otp` Edge Function and deployed it
+- [x] Updated `index.html` to call `send-otp` function on OTP send
+- [ ] Webhook setup: Manual step needed via Supabase Dashboard → Database → Webhooks
+
+## Task 10 — Update memory & docs  🟢
+- [x] Created event EVT-20260718-0005
+- [x] Updated patterns.md with deployment patterns
+- [x] Updated tasks.md with all completed items

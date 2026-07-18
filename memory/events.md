@@ -42,3 +42,14 @@
 - **Errors**: None
 - **Lessons**: Supabase DB host may only have IPv6 AAAA record. Use pooler `aws-0-{region}.pooler.supabase.com:6543` for IPv4 connectivity. Project was in eu-west-1.
 - **Tags**: schema, database, supabase
+
+## EVT-20260718-0005
+- **Timestamp**: 2026-07-18T20:10
+- **Mode**: BUILD
+- **Action**: Live deployment — GitHub Pages + Edge Functions
+- **Summary**: Created GitHub repo `amworx/client-intake`, pushed all code, enabled GitHub Pages at `https://amworx.github.io/client-intake/`. Deployed `send-notification` + `send-otp` Edge Functions to Supabase. Updated intake form to call send-otp function via fetch. Created comprehensive README with setup guide for new users. Updated setup.md with full deployment documentation.
+- **Result**: App is live at GitHub Pages URL. Both Edge Functions deployed. Webhook creation still needs Dashboard UI step (documented in setup guide).
+- **Files**: README.md, docs/setup.md, index.html, supabase/functions/send-otp/index.ts
+- **Errors**: None
+- **Lessons**: Supabase Database Webhooks must be created through Dashboard UI — no Management API endpoint exists for programmatic creation. `pg_net` extension not available for trigger-based HTTP calls.
+- **Tags**: deploy, github-pages, edge-functions, go-live

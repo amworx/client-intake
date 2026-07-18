@@ -914,6 +914,7 @@ body {
 
   const SUPABASE_URL = 'https://jyqjkkcenuapssmstmze.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5cWpra2NlbnVhcHNzbXN0bXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODk4ODMsImV4cCI6MjA5OTk2NTg4M30.tuPesgd2yCsize4z3jdLAWbxmbQQ_Sv8ChV6lNISaFg';
+  const SUPABASE_EDGE_URL = SUPABASE_URL + '/functions/v1';
   const { createClient } = supabase;
   const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1245,6 +1246,15 @@ body {
           showToast('Failed to send code: ' + res.error.message, 'error');
           return;
         }
+        // Call the Edge Function to email the OTP
+        fetch(SUPABASE_EDGE_URL + '/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+          body: JSON.stringify({ email: email, code: code })
+        }).catch(function() {
+          // Edge Function failure is non-blocking — OTP is stored in DB
+          console.log('OTP edge function unavailable (SMTP may not be configured)');
+        });
         showToast('Verification code sent to ' + email, 'success');
         btnSend.textContent = 'Resend Code';
         otpInput.style.display = 'inline-block';

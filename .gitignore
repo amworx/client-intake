@@ -4,3 +4,5 @@ node_modules/
 memory/credentials.md
 .DS_Store
 Thumbs.db
+supabase/.temp/
+supabase/config.toml
