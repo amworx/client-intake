@@ -726,26 +726,14 @@ body {
       <div class="section-title"><span class="section-icon">&#127754;</span> Website Details</div>
       <div class="section-desc">Describe your website vision and requirements.</div>
       <div class="form-group">
-        <label class="form-label">Tell us about your business <span class="hint">(choose one or both)</span></label>
-        <div style="margin-bottom:10px;">
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:6px 0;">
-            <input type="checkbox" id="biz_desc_option" checked> Describe my business
-          </label>
-          <div id="cond-biz_desc" style="margin:4px 0 0 24px;">
-            <textarea class="form-textarea" id="business_desc" name="business_desc" placeholder="Tell us about your business, what you do, what makes you unique, and what you want your website to achieve..."></textarea>
-          </div>
-        </div>
-        <div>
-          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:6px 0;">
-            <input type="checkbox" id="biz_profile_option"> Upload company profile <span class="hint">(PDF, DOC)</span>
-          </label>
-          <div id="cond-biz_profile" style="display:none;margin:4px 0 0 24px;">
-            <div class="file-zone-sm" id="profileZone" style="border:2px dashed var(--file-zone-border);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;">
-              <div style="font-size:28px;margin-bottom:6px;">&#128196;</div>
-              <div style="font-size:13px;color:var(--text-muted);">Click to upload company profile</div>
-              <input type="file" id="profileFileInput" accept=".pdf,.doc,.docx" style="display:none;">
-            </div>
-            <div id="profileFileName" style="font-size:13px;color:var(--text-muted);margin-top:6px;display:none;"></div>
+        <label class="form-label" for="business_desc">Tell us about your business <span class="hint">(describe below, attach a profile, or both)</span></label>
+        <div style="position:relative;">
+          <textarea class="form-textarea" id="business_desc" name="business_desc" placeholder="Describe your business, what you do, what makes you unique, and what you want your website to achieve..." style="padding-bottom:44px;"></textarea>
+          <div id="biz-attach-bar" style="position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:8px;padding:6px 12px;border-top:1px solid var(--border);background:var(--bg-card);border-radius:0 0 var(--radius) var(--radius);cursor:pointer;transition:background 0.2s;" onclick="document.getElementById('profileFileInput').click();">
+            <span style="font-size:15px;">📎</span>
+            <span id="biz-attach-label" style="font-size:12px;color:var(--text-muted);">Attach company profile (PDF, DOC)</span>
+            <span id="profileFileName" style="font-size:12px;color:var(--success);display:none;margin-left:auto;"></span>
+            <input type="file" id="profileFileInput" accept=".pdf,.doc,.docx" style="display:none;">
           </div>
         </div>
       </div>
@@ -1517,32 +1505,27 @@ body {
   window._profileFile = null;
 
   function setupProfileUpload() {
-    var zone = document.getElementById('profileZone');
     var input = document.getElementById('profileFileInput');
-    var nameDisplay = document.getElementById('profileFileName');
-    if (!zone || !input) return;
-
-    zone.addEventListener('click', function() { input.click(); });
-
-    zone.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      zone.style.borderColor = 'var(--accent)';
-      zone.style.background = 'var(--accent-light)';
-    });
-    zone.addEventListener('dragleave', function() {
-      zone.style.borderColor = 'var(--file-zone-border)';
-      zone.style.background = 'transparent';
-    });
-    zone.addEventListener('drop', function(e) {
-      e.preventDefault();
-      zone.style.borderColor = 'var(--file-zone-border)';
-      zone.style.background = 'transparent';
-      if (e.dataTransfer.files.length > 0) handleProfileFile(e.dataTransfer.files[0]);
-    });
+    var bar = document.getElementById('biz-attach-bar');
+    if (!input || !bar) return;
 
     input.addEventListener('change', function() {
       if (this.files.length > 0) handleProfileFile(this.files[0]);
       this.value = '';
+    });
+
+    // Also allow drag-drop on the bar
+    bar.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      bar.style.border = '1px dashed var(--accent)';
+    });
+    bar.addEventListener('dragleave', function() {
+      bar.style.border = '';
+    });
+    bar.addEventListener('drop', function(e) {
+      e.preventDefault();
+      bar.style.border = '';
+      if (e.dataTransfer.files.length > 0) handleProfileFile(e.dataTransfer.files[0]);
     });
   }
 
@@ -1558,8 +1541,10 @@ body {
     }
     window._profileFile = file;
     var nameDisplay = document.getElementById('profileFileName');
-    nameDisplay.textContent = '✓ ' + file.name + ' (' + formatSize(file.size) + ')';
-    nameDisplay.style.display = 'block';
+    var label = document.getElementById('biz-attach-label');
+    nameDisplay.textContent = '✓ ' + file.name;
+    nameDisplay.style.display = 'inline';
+    label.textContent = 'Change file';
   }
 
   function formatSize(bytes) {
@@ -1766,9 +1751,7 @@ body {
     // Other website type (custom)
     data.other_website_type = document.getElementById('other_website_type') ? document.getElementById('other_website_type').value : '';
 
-    // Business description + profile toggles
-    data.biz_desc_active = document.getElementById('biz_desc_option') ? document.getElementById('biz_desc_option').checked : true;
-    data.biz_profile_active = document.getElementById('biz_profile_option') ? document.getElementById('biz_profile_option').checked : false;
+    // Business description + profile
     data.has_profile_file = window._profileFile !== null;
 
     // Pages and features as arrays
@@ -1821,13 +1804,6 @@ body {
       if (target.name === 'hosting') {
         var cond = document.getElementById('cond-hosting_months');
         cond.classList.toggle('visible', target.value === 'need');
-      }
-      // Business description / profile toggle
-      if (target.id === 'biz_desc_option') {
-        document.getElementById('cond-biz_desc').style.display = target.checked ? 'block' : 'none';
-      }
-      if (target.id === 'biz_profile_option') {
-        document.getElementById('cond-biz_profile').style.display = target.checked ? 'block' : 'none';
       }
       // Other website type conditional
       if (target.name === 'website_type') {
