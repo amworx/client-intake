@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-bind:class="darkMode && 'dark'">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,6 +23,7 @@
   --shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
   --shadow-md:0 4px 6px rgba(0,0,0,.05),0 2px 4px rgba(0,0,0,.04);
   --shadow-lg:0 10px 25px rgba(0,0,0,.08);--radius:8px;--radius-lg:12px;
+  --success:#22c55e;--success-bg:#dcfce7;
 }
 .dark{
   --accent:#818cf8;--accent-hover:#6366f1;--accent-light:#1e1b4b;
@@ -34,6 +35,7 @@
   --shadow-sm:0 1px 2px rgba(0,0,0,.2);--shadow:0 1px 3px rgba(0,0,0,.3),0 1px 2px rgba(0,0,0,.2);
   --shadow-md:0 4px 6px rgba(0,0,0,.3),0 2px 4px rgba(0,0,0,.2);
   --shadow-lg:0 10px 25px rgba(0,0,0,.4);
+  --success:#22c55e;--success-bg:rgba(34,197,94,.12);
 }
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s;overflow:hidden;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .sidebar{background:var(--sidebar);color:var(--sidebar-text);width:240px;height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;z-index:40;transition:transform .3s cubic-bezier(.4,0,.2,1),background .3s}
@@ -335,7 +337,7 @@ input[type=number]{-moz-appearance:textfield}
 .flex-checkbox span{font-size:13px}
 </style>
 </head>
-<body><div x-data="dashboardApp" x-init="init" class="flex h-100vh">
+<body x-bind:class="darkMode && 'dark'"><div x-data="dashboardApp" x-init="init" class="flex h-100vh">
 
 <!-- LOGIN SCREEN -->
 <template x-if="!authenticated && !authLoading">
@@ -492,6 +494,45 @@ input[type=number]{-moz-appearance:textfield}
               <div class="stat-label">Combined estimate (client-side)</div>
             </div>
           </div>
+          <!-- Share Link Generator -->
+          <div class="stat-row" style="margin-bottom: 0;">
+            <div class="stat-card" style="grid-column: 1 / -1;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+                <div class="stat-icon" style="width:36px;height:36px;border-radius:8px;background:var(--accent-subtle);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px">
+                  <i class="fas fa-link"></i>
+                </div>
+                <div>
+                  <div style="font-weight:600;font-size:14px;color:var(--text)">Generate Share Link</div>
+                  <div style="font-size:12px;color:var(--text-sec);margin-top:1px">Create a one-time intake link to send to a client</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+                <div style="flex:2;min-width:180px">
+                  <label style="display:block;font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:4px">CLIENT EMAIL</label>
+                  <input class="input" type="email" x-model="shareEmail" placeholder="client@example.com" @keyup.enter="doGenerateShareLink">
+                </div>
+                <div style="flex:1;min-width:140px">
+                  <label style="display:block;font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:4px">CLIENT NAME (optional)</label>
+                  <input class="input" type="text" x-model="shareName" placeholder="e.g. John Doe" @keyup.enter="doGenerateShareLink">
+                </div>
+                <div style="flex-shrink:0">
+                  <button class="btn btn-success" @click="doGenerateShareLink" :disabled="shareGenerating || !shareEmail">
+                    <i class="fas fa-link" :class="shareGenerating && 'fa-spin'"></i>
+                    <span x-text="shareGenerating ? 'Generating...' : 'Generate Link'"></span>
+                  </button>
+                </div>
+              </div>
+              <template x-if="shareResult">
+              <div style="margin-top:14px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);display:flex;align-items:center;gap:10px;word-break:break-all">
+                <i class="fas fa-check-circle" style="color:var(--success);font-size:16px;flex-shrink:0"></i>
+                <span style="flex:1;font-size:12px;color:var(--text);font-family:monospace" x-text="shareResult"></span>
+                <button class="btn btn-ghost btn-sm" @click="copyShareResult" title="Copy"><i class="fas fa-copy"></i></button>
+                <button class="btn btn-ghost btn-sm" @click="shareResult=null" title="Dismiss">&times;</button>
+              </div>
+              </template>
+            </div>
+          </div>
+
           <div class="table-wrap table-scroll">
             <div class="table-title">Recent Submissions</div>
             <template x-if="submissions.length === 0">
@@ -1338,6 +1379,42 @@ document.addEventListener('alpine:init', () => {
     // Collapse states
     pricingCollapsed: { domain: true, hosting: true, email: true, setup: true, websiteType: true, pages: true, features: true, logo: true, textContent: true, photos: true, timeline: true, maintenance: true },
     sectionCollapsed: { contact: true, domain_hosting: true, website: true, branding: true, timeline_section: true, maintenance_budget: true, review: true },
+
+    // Share link generator
+    shareEmail: '',
+    shareName: '',
+    shareGenerating: false,
+    shareResult: null,
+
+    async doGenerateShareLink() {
+      const email = this.shareEmail?.trim();
+      if (!email) return;
+      this.shareGenerating = true;
+      this.shareResult = null;
+      try {
+        const { data, error } = await supabaseClient.rpc('generate_share_token', {
+          p_email: email,
+          p_full_name: this.shareName?.trim() || null
+        });
+        if (error) throw error;
+        if (!data?.success) throw new Error(data?.message || 'Failed');
+        const baseUrl = (this.settings?.form_url || FORM_URL).replace(/\/+$/,'') + '/';
+        this.shareResult = baseUrl + '?token=' + data.token;
+        this.copyText(this.shareResult);
+        this.showToast('Share link copied to clipboard!', 'ok');
+      } catch (e) {
+        this.showToast('Failed: ' + e.message, 'error');
+      } finally {
+        this.shareGenerating = false;
+      }
+    },
+
+    copyShareResult() {
+      if (this.shareResult) {
+        this.copyText(this.shareResult);
+        this.showToast('Copied!', 'ok');
+      }
+    },
 
     // Realtime
     realtimeChannel: null,
