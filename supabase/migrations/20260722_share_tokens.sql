@@ -8,7 +8,7 @@ create extension if not exists pgcrypto;
 -- 1. share_tokens table
 create table if not exists public.share_tokens (
   id          bigint generated always as identity primary key,
-  email       text not null,
+  email       text,
   token       text not null unique,
   full_name   text,
   used        boolean default false,
@@ -39,7 +39,7 @@ create policy "Authenticated users can update share_tokens"
   with check (true);
 
 -- 3. RPC: generate_share_token
-create or replace function public.generate_share_token(p_email text, p_full_name text default null)
+create or replace function public.generate_share_token(p_full_name text default null)
 returns jsonb
 language plpgsql
 security definer
@@ -50,8 +50,8 @@ declare
 begin
   v_token := encode(extensions.gen_random_bytes(16), 'hex');
   insert into public.share_tokens (email, token, full_name)
-  values (p_email, v_token, p_full_name);
-  return jsonb_build_object('success', true, 'token', v_token, 'email', p_email);
+  values (null, v_token, p_full_name);
+  return jsonb_build_object('success', true, 'token', v_token, 'full_name', p_full_name);
 end;
 $$;
 
@@ -73,7 +73,7 @@ begin
   if v_record.used then
     return jsonb_build_object('valid', false, 'message', 'This link has already been used. Please contact us for a new link.');
   end if;
-  return jsonb_build_object('valid', true, 'email', v_record.email, 'full_name', v_record.full_name);
+  return jsonb_build_object('valid', true, 'email', v_record.email, 'full_name', v_record.full_name, 'has_email', v_record.email is not null);
 end;
 $$;
 
@@ -120,7 +120,7 @@ begin
     if p_token is not null then
       select exists (
         select 1 from public.share_tokens
-        where token = p_token and email = p_email and used = false
+        where token = p_token and (email is null or email = p_email) and used = false
       ) into v_token_ok;
       if v_token_ok then
         update public.share_tokens set used = true, used_at = now() where token = p_token;
@@ -162,6 +162,6 @@ end;
 $$;
 
 -- 7. Grants
-grant execute on function public.generate_share_token(text, text) to authenticated;
+grant execute on function public.generate_share_token(text) to authenticated;
 grant execute on function public.validate_share_token(text) to anon, authenticated;
 grant execute on function public.consume_share_token(text, text) to anon, authenticated;

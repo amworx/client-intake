@@ -2731,15 +2731,17 @@ body {
         return;
       }
       var data = res.data;
-      _shareEmail = data.email;
+      _shareEmail = data.email || null;
 
-      // Pre-fill email field and lock it
-      var emailInput = document.getElementById('client_email');
-      if (emailInput) {
-        emailInput.value = data.email;
-        emailInput.readOnly = true;
-        emailInput.style.background = 'var(--bg-progress)';
-        emailInput.style.cursor = 'not-allowed';
+      // Pre-fill email field and lock it (only if token has an email)
+      if (data.has_email && data.email) {
+        var emailInput = document.getElementById('client_email');
+        if (emailInput) {
+          emailInput.value = data.email;
+          emailInput.readOnly = true;
+          emailInput.style.background = 'var(--bg-progress)';
+          emailInput.style.cursor = 'not-allowed';
+        }
       }
 
       // Pre-fill name

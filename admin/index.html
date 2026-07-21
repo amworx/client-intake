@@ -507,16 +507,12 @@ input[type=number]{-moz-appearance:textfield}
                 </div>
               </div>
               <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
-                <div style="flex:2;min-width:180px">
-                  <label style="display:block;font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:4px">CLIENT EMAIL</label>
-                  <input class="input" type="email" x-model="shareEmail" placeholder="client@example.com" @keyup.enter="doGenerateShareLink">
-                </div>
-                <div style="flex:1;min-width:140px">
-                  <label style="display:block;font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:4px">CLIENT NAME (optional)</label>
+                <div style="flex:1;min-width:200px">
+                  <label style="display:block;font-size:11px;font-weight:600;color:var(--text-sec);margin-bottom:4px">CLIENT NAME</label>
                   <input class="input" type="text" x-model="shareName" placeholder="e.g. John Doe" @keyup.enter="doGenerateShareLink">
                 </div>
                 <div style="flex-shrink:0">
-                  <button class="btn btn-success" @click="doGenerateShareLink" :disabled="shareGenerating || !shareEmail">
+                  <button class="btn btn-success" @click="doGenerateShareLink" :disabled="shareGenerating || !shareName">
                     <i class="fas fa-link" :class="shareGenerating && 'fa-spin'"></i>
                     <span x-text="shareGenerating ? 'Generating...' : 'Generate Link'"></span>
                   </button>
@@ -1381,20 +1377,18 @@ document.addEventListener('alpine:init', () => {
     sectionCollapsed: { contact: true, domain_hosting: true, website: true, branding: true, timeline_section: true, maintenance_budget: true, review: true },
 
     // Share link generator
-    shareEmail: '',
     shareName: '',
     shareGenerating: false,
     shareResult: null,
 
     async doGenerateShareLink() {
-      const email = this.shareEmail?.trim();
-      if (!email) return;
+      const name = this.shareName?.trim();
+      if (!name) return;
       this.shareGenerating = true;
       this.shareResult = null;
       try {
         const { data, error } = await supabaseClient.rpc('generate_share_token', {
-          p_email: email,
-          p_full_name: this.shareName?.trim() || null
+          p_full_name: name
         });
         if (error) throw error;
         if (!data?.success) throw new Error(data?.message || 'Failed');
@@ -1662,10 +1656,7 @@ document.addEventListener('alpine:init', () => {
       if (s._sharing) return;
       s._sharing = true;
       try {
-        const email = s.client_email;
-        if (!email) { this.showToast('No client email to share with', 'error'); return; }
         const { data, error } = await supabaseClient.rpc('generate_share_token', {
-          p_email: email,
           p_full_name: s.full_name || null
         });
         if (error) throw error;

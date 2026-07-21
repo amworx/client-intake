@@ -19,7 +19,7 @@ create table if not exists public.submissions (
   -- Contact
   full_name      text not null,
   business_name  text,
-  client_email   text not null,
+  client_  email       text,
   client_phone   text,
 
   -- Domain & Hosting
@@ -337,7 +337,7 @@ begin
         select 1
         from public.share_tokens
         where token = p_token
-          and email = p_email
+          and (email is null or email = p_email)
           and used = false
       ) into v_token_ok;
 
@@ -440,11 +440,11 @@ $$;
 -- 6. SHARE TOKEN RPC FUNCTIONS
 -- ============================================================
 
--- 6.1 generate_share_token(email, full_name)
--- Creates a unique one-time token for a client email.
+-- 6.1 generate_share_token(full_name)
+-- Creates a unique one-time token. Email is optional (null = client enters their own).
 -- Returns the token string.
 -- Only authenticated users (admin) can call this.
-create or replace function public.generate_share_token(p_email text, p_full_name text default null)
+create or replace function public.generate_share_token(p_full_name text default null)
 returns jsonb
 language plpgsql
 security definer
@@ -454,16 +454,15 @@ declare
   v_token text;
 begin
   -- Generate a cryptographically random token (32 hex chars = 128 bits)
-  v_token := encode(gen_random_bytes(16), 'hex');
+  v_token := encode(extensions.gen_random_bytes(16), 'hex');
 
   insert into public.share_tokens (email, token, full_name)
-  values (p_email, v_token, p_full_name);
+  values (null, v_token, p_full_name);
 
   return jsonb_build_object(
     'success', true,
     'token', v_token,
-    'email', p_email,
-    'url', current_setting('request.headers')::json ->> 'origin' || '/?token=' || v_token
+    'full_name', p_full_name
   );
 end;
 $$;
@@ -502,7 +501,8 @@ begin
   return jsonb_build_object(
     'valid', true,
     'email', v_record.email,
-    'full_name', v_record.full_name
+    'full_name', v_record.full_name,
+    'has_email', v_record.email is not null
   );
 end;
 $$;
@@ -533,6 +533,6 @@ grant execute on function public.verify_otp(text, text) to anon, authenticated;
 grant execute on function public.submit_submission(jsonb, text, text) to anon, authenticated;
 
 -- Grant execute on share token RPCs
-grant execute on function public.generate_share_token(text, text) to authenticated;
+grant execute on function public.generate_share_token(text) to authenticated;
 grant execute on function public.validate_share_token(text) to anon, authenticated;
 grant execute on function public.consume_share_token(text, text) to anon, authenticated;

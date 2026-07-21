@@ -107,3 +107,13 @@
 - **Errors**: (1) gen_random_bytes needed pgcrypto extension which was not enabled. (2) pgcrypto installed in `extensions` schema (Supabase default), so function search_path needed `extensions.` prefix.
 - **Lessons**: Supabase 2026+ installs pgcrypto in `extensions` schema, not `public`. Security definer functions with `set search_path = ''` must use fully qualified `extensions.gen_random_bytes()`.
 - **Tags**: share-tokens, rpc, migration, pgcrypto
+
+## EVT-20260722-0004
+- **Timestamp**: 2026-07-22T~23:55
+- **Mode**: BUILD
+- **Action**: Standalone share link widget + theme toggle fix + push
+- **Summary**: Added a "Generate Share Link" card on the Dashboard page with email/name inputs so admins can create share URLs without needing existing submissions. Fixed the dark mode toggle by moving `x-bind:class="darkMode && 'dark'"` from `<html>` (outside Alpine scope) to `<body>` (inside component scope). Added `--success` CSS variable. Pushed to GitHub.
+- **Files**: admin/index.html
+- **Errors**: None
+- **Lessons**: Alpine `x-bind:class` must be on the same element as `x-data` or a child element — never on a parent of `x-data`.
+- **Tags**: share-link, dark-mode, fix
