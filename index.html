@@ -207,6 +207,8 @@ body {
   color: var(--text);
 }
 .form-label .hint { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+.field-desc { font-size: 12px; color: var(--text-muted); margin: -4px 0 10px 0; line-height: 1.5; }
+.field-desc-sm { font-size: 11px; color: var(--text-muted); margin: 2px 0 0 0; line-height: 1.4; }
 .form-input, .form-textarea, .form-select {
   width: 100%;
   padding: 10px 14px;
@@ -667,6 +669,7 @@ body {
       <div class="section-desc">Tell us about your domain and hosting requirements.</div>
       <div class="form-group">
         <label class="form-label">Do you need a domain name?</label>
+        <div class="field-desc">A domain is your website address (e.g., yourbusiness.com). If you don't have one yet, we can register it for you.</div>
         <div class="radio-group" id="domain-group">
           <div class="radio-option"><input type="radio" name="domain" id="domain_need" value="need" data-price="50"><label for="domain_need">Yes, I need one <span class="price-tag">$50</span></label></div>
           <div class="radio-option"><input type="radio" name="domain" id="domain_no_need" value="no-need" data-price="0"><label for="domain_no_need">No, I have one</label></div>
@@ -679,14 +682,25 @@ body {
       </div>
       <div class="form-group">
         <label class="form-label">Do you need web hosting?</label>
+        <div class="field-desc">Web hosting is where your website files live on the internet so people can visit it. We recommend a minimum of 12 months.</div>
         <div class="radio-group">
-          <div class="radio-option"><input type="radio" name="hosting" id="hosting_need" value="need" data-price="100"><label for="hosting_need">Yes, I need hosting <span class="price-tag">$100</span></label></div>
+          <div class="radio-option"><input type="radio" name="hosting" id="hosting_need" value="need" data-price="100"><label for="hosting_need">Yes, I need hosting <span class="price-tag">$100/mo</span></label></div>
           <div class="radio-option"><input type="radio" name="hosting" id="hosting_no_need" value="no-need" data-price="0"><label for="hosting_no_need">No, I have hosting</label></div>
           <div class="radio-option"><input type="radio" name="hosting" id="hosting_not_sure" value="not-sure" data-price="0"><label for="hosting_not_sure">Not sure</label></div>
+        </div>
+        <div class="conditional" id="cond-hosting_months" style="margin-top:12px;">
+          <label class="form-label" for="hostingMonthsInput">How many months of hosting? <span class="hint">(min 12, max 48)</span></label>
+          <div class="stepper">
+            <button type="button" id="hostingMonthsDec" class="stepper-btn">−</button>
+            <input type="number" class="form-input" id="hostingMonthsInput" value="12" min="12" max="48" step="1" style="width:80px;text-align:center;">
+            <button type="button" id="hostingMonthsInc" class="stepper-btn">+</button>
+            <span style="font-size:13px;color:var(--text-muted);margin-left:4px;">months</span>
+          </div>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Do you need business email?</label>
+        <div class="field-desc">Professional email addresses using your domain name (e.g., you@yourbusiness.com) instead of Gmail/Yahoo. Each mailbox is $30/month.</div>
         <div class="radio-group">
           <div class="radio-option"><input type="radio" name="email" id="email_need" value="need" data-price="30"><label for="email_need">Yes, I need email <span class="price-tag">$30/ mailbox</span></label></div>
           <div class="radio-option"><input type="radio" name="email" id="email_no_need" value="no-need" data-price="0"><label for="email_no_need">No, I have email</label></div>
@@ -699,6 +713,7 @@ body {
       </div>
       <div class="form-group">
         <label class="form-label">Do you need help setting everything up?</label>
+        <div class="field-desc">We can handle the technical setup — connecting your domain, configuring email, installing SSL, and getting your site live. If you're tech-savvy, you can do it yourself.</div>
         <div class="radio-group">
           <div class="radio-option"><input type="radio" name="setup_help" id="setup_help_yes" value="yes" data-price="50"><label for="setup_help_yes">Yes, please help <span class="price-tag">$50</span></label></div>
           <div class="radio-option"><input type="radio" name="setup_help" id="setup_help_no" value="no" data-price="0"><label for="setup_help_no">No, I'll handle it</label></div>
@@ -711,11 +726,32 @@ body {
       <div class="section-title"><span class="section-icon">&#127754;</span> Website Details</div>
       <div class="section-desc">Describe your website vision and requirements.</div>
       <div class="form-group">
-        <label class="form-label" for="business_desc">Describe your business and website goals</label>
-        <textarea class="form-textarea" id="business_desc" name="business_desc" placeholder="Tell us about your business, what you do, and what you want your website to achieve..."></textarea>
+        <label class="form-label">Tell us about your business <span class="hint">(choose one or both)</span></label>
+        <div style="margin-bottom:10px;">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:6px 0;">
+            <input type="checkbox" id="biz_desc_option" checked> Describe my business
+          </label>
+          <div id="cond-biz_desc" style="margin:4px 0 0 24px;">
+            <textarea class="form-textarea" id="business_desc" name="business_desc" placeholder="Tell us about your business, what you do, what makes you unique, and what you want your website to achieve..."></textarea>
+          </div>
+        </div>
+        <div>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:6px 0;">
+            <input type="checkbox" id="biz_profile_option"> Upload company profile <span class="hint">(PDF, DOC)</span>
+          </label>
+          <div id="cond-biz_profile" style="display:none;margin:4px 0 0 24px;">
+            <div class="file-zone-sm" id="profileZone" style="border:2px dashed var(--file-zone-border);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;">
+              <div style="font-size:28px;margin-bottom:6px;">&#128196;</div>
+              <div style="font-size:13px;color:var(--text-muted);">Click to upload company profile</div>
+              <input type="file" id="profileFileInput" accept=".pdf,.doc,.docx" style="display:none;">
+            </div>
+            <div id="profileFileName" style="font-size:13px;color:var(--text-muted);margin-top:6px;display:none;"></div>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">What type of website do you need?</label>
+        <div class="field-desc">Choose the category that best describes your project. Each type includes core features suited for that purpose.</div>
         <div class="radio-group" id="website_type_group">
           <div class="radio-option"><input type="radio" name="website_type" id="wt_simple" value="simple" data-price="300"><label for="wt_simple">Simple (1-3 pages) <span class="price-tag">$300</span></label></div>
           <div class="radio-option"><input type="radio" name="website_type" id="wt_business" value="business" data-price="500"><label for="wt_business">Business <span class="price-tag">$500</span></label></div>
@@ -726,6 +762,11 @@ body {
           <div class="radio-option"><input type="radio" name="website_type" id="wt_booking" value="booking" data-price="700"><label for="wt_booking">Booking System <span class="price-tag">$700</span></label></div>
           <div class="radio-option"><input type="radio" name="website_type" id="wt_membership" value="membership" data-price="1000"><label for="wt_membership">Membership <span class="price-tag">$1,000</span></label></div>
           <div class="radio-option"><input type="radio" name="website_type" id="wt_directory" value="directory" data-price="600"><label for="wt_directory">Directory <span class="price-tag">$600</span></label></div>
+          <div class="radio-option"><input type="radio" name="website_type" id="wt_other" value="other" data-price="0"><label for="wt_other">Other <span class="price-tag">Custom</span></label></div>
+        </div>
+        <div class="conditional" id="cond-other_website_type" style="margin-top:8px;">
+          <label class="form-label" for="other_website_type">Please specify your website type</label>
+          <input class="form-input" type="text" id="other_website_type" placeholder="e.g., Landing page, Web app, Portal...">
         </div>
       </div>
       <div class="form-group">
@@ -751,27 +792,28 @@ body {
       </div>
       <div class="form-group">
         <label class="form-label">Features needed <span class="hint">(select all that apply)</span></label>
+        <div class="field-desc">Additional functionality to enhance your website. Hover over each option for more details.</div>
         <div class="checkbox-group" id="features-group">
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_contact_form" value="contact-form" data-price="80"><label for="feat_contact_form">Contact Form <span class="price-tag">$80</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_live_chat" value="live-chat" data-price="150"><label for="feat_live_chat">Live Chat <span class="price-tag">$150</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_newsletter" value="newsletter" data-price="100"><label for="feat_newsletter">Newsletter Signup <span class="price-tag">$100</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_social_media" value="social-media" data-price="50"><label for="feat_social_media">Social Media Integration <span class="price-tag">$50</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_seo_basic" value="seo-basic" data-price="200"><label for="feat_seo_basic">SEO (Basic) <span class="price-tag">$200</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_seo_advanced" value="seo-advanced" data-price="400"><label for="feat_seo_advanced">SEO (Advanced) <span class="price-tag">$400</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_analytics" value="analytics" data-price="150"><label for="feat_analytics">Analytics Setup <span class="price-tag">$150</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_google_maps" value="google-maps" data-price="50"><label for="feat_google_maps">Google Maps <span class="price-tag">$50</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_booking_system" value="booking-system" data-price="300"><label for="feat_booking_system">Booking System <span class="price-tag">$300</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_membership_area" value="membership-area" data-price="400"><label for="feat_membership_area">Membership Area <span class="price-tag">$400</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_ecommerce" value="ecommerce" data-price="500"><label for="feat_ecommerce">Ecommerce Functionality <span class="price-tag">$500</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_payment_gateway" value="payment-gateway" data-price="200"><label for="feat_payment_gateway">Payment Gateway <span class="price-tag">$200</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_multi_language" value="multi-language" data-price="300"><label for="feat_multi_language">Multi-Language <span class="price-tag">$300</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_search" value="search" data-price="150"><label for="feat_search">Site Search <span class="price-tag">$150</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_image_optimization" value="image-optimization" data-price="100"><label for="feat_image_optimization">Image Optimization <span class="price-tag">$100</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_speed_optimization" value="speed-optimization" data-price="150"><label for="feat_speed_optimization">Speed Optimization <span class="price-tag">$150</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_cms" value="cms" data-price="250"><label for="feat_cms">CMS Integration <span class="price-tag">$250</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_backup" value="backup" data-price="100"><label for="feat_backup">Backup Solution <span class="price-tag">$100</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_ssl" value="ssl" data-price="80"><label for="feat_ssl">SSL Certificate <span class="price-tag">$80</span></label></div>
-          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_custom_feature" value="custom-feature" data-price="200"><label for="feat_custom_feature">Custom Feature <span class="price-tag">$200</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_contact_form" value="contact-form" data-price="80"><label for="feat_contact_form" title="A form that lets visitors send you messages directly from your website.">Contact Form <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_live_chat" value="live-chat" data-price="150"><label for="feat_live_chat" title="Real-time chat widget so visitors can talk to you instantly while browsing.">Live Chat <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_newsletter" value="newsletter" data-price="100"><label for="feat_newsletter" title="Allow visitors to subscribe to email updates, promotions, or news.">Newsletter Signup <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_social_media" value="social-media" data-price="50"><label for="feat_social_media" title="Connect your social media profiles (Instagram, Facebook, LinkedIn) to your website.">Social Media Integration <span class="price-tag">$50</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_seo_basic" value="seo-basic" data-price="200"><label for="feat_seo_basic" title="Basic search engine optimization — meta tags, keywords, and structure to help Google find you.">SEO (Basic) <span class="price-tag">$200</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_seo_advanced" value="seo-advanced" data-price="400"><label for="feat_seo_advanced" title="Advanced SEO — keyword research, competitor analysis, content strategy, and ongoing optimization.">SEO (Advanced) <span class="price-tag">$400</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_analytics" value="analytics" data-price="150"><label for="feat_analytics" title="Install Google Analytics or similar to track visitors, page views, and user behavior.">Analytics Setup <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_google_maps" value="google-maps" data-price="50"><label for="feat_google_maps" title="Embed an interactive Google Map showing your business location.">Google Maps <span class="price-tag">$50</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_booking_system" value="booking-system" data-price="300"><label for="feat_booking_system" title="Let clients book appointments or services online with calendar integration.">Booking System <span class="price-tag">$300</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_membership_area" value="membership-area" data-price="400"><label for="feat_membership_area" title="Create a private area where registered users can access exclusive content.">Membership Area <span class="price-tag">$400</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_ecommerce" value="ecommerce" data-price="500"><label for="feat_ecommerce" title="Sell products or services online with a shopping cart and checkout system.">Ecommerce Functionality <span class="price-tag">$500</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_payment_gateway" value="payment-gateway" data-price="200"><label for="feat_payment_gateway" title="Accept credit cards, PayPal, or other online payments securely.">Payment Gateway <span class="price-tag">$200</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_multi_language" value="multi-language" data-price="300"><label for="feat_multi_language" title="Make your website available in multiple languages for a global audience.">Multi-Language <span class="price-tag">$300</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_search" value="search" data-price="150"><label for="feat_search" title="Add a search bar so visitors can find content on your site quickly.">Site Search <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_image_optimization" value="image-optimization" data-price="100"><label for="feat_image_optimization" title="Compress and optimize images so your website loads faster without losing quality.">Image Optimization <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_speed_optimization" value="speed-optimization" data-price="150"><label for="feat_speed_optimization" title="Improve page load speed through caching, code minification, and performance tuning.">Speed Optimization <span class="price-tag">$150</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_cms" value="cms" data-price="250"><label for="feat_cms" title="Content Management System — lets you edit text and images on your site without technical skills.">CMS Integration <span class="price-tag">$250</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_backup" value="backup" data-price="100"><label for="feat_backup" title="Automatic regular backups of your website so nothing is ever lost.">Backup Solution <span class="price-tag">$100</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_ssl" value="ssl" data-price="80"><label for="feat_ssl" title="Encrypts data between your site and visitors. Shows the padlock icon in browsers. Required for security and SEO.">SSL Certificate <span class="price-tag">$80</span></label></div>
+          <div class="checkbox-option"><input type="checkbox" name="features" id="feat_custom_feature" value="custom-feature" data-price="200"><label for="feat_custom_feature" title="Need something unique not listed here? We'll build it for you.">Custom Feature <span class="price-tag">$200</span></label></div>
         </div>
       </div>
     </section>
@@ -782,6 +824,7 @@ body {
       <div class="section-desc">Share your brand assets and content preferences.</div>
       <div class="form-group">
         <label class="form-label">Do you have a logo?</label>
+        <div class="field-desc">Your logo is the face of your brand. If you need one, our designers can create a professional logo that matches your vision.</div>
         <div class="radio-group">
           <div class="radio-option"><input type="radio" name="logo" id="logo_yes" value="yes" data-price="200"><label for="logo_yes">I need a logo designed <span class="price-tag">$200</span></label></div>
           <div class="radio-option"><input type="radio" name="logo" id="logo_have" value="have" data-price="0"><label for="logo_have">I have a logo</label></div>
@@ -790,6 +833,7 @@ body {
       </div>
       <div class="form-group">
         <label class="form-label">Website text content</label>
+        <div class="field-desc">Every website needs written content — headlines, descriptions, about text, and more. Choose the option that fits your situation.</div>
         <div class="radio-group">
           <div class="radio-option"><input type="radio" name="content_text" id="ct_self" value="self" data-price="0"><label for="ct_self">I'll provide it</label></div>
           <div class="radio-option"><input type="radio" name="content_text" id="ct_need_help" value="need-help" data-price="200"><label for="ct_need_help">I need help writing content <span class="price-tag">$200</span></label></div>
@@ -798,6 +842,7 @@ body {
       </div>
       <div class="form-group">
         <label class="form-label">Photos / imagery</label>
+        <div class="field-desc">Images make your website visually appealing. You can use your own photos, or we can provide professional stock images.</div>
         <div class="radio-group">
           <div class="radio-option"><input type="radio" name="content_photos" id="cp_my_own" value="my-own" data-price="0"><label for="cp_my_own">I have my own photos</label></div>
           <div class="radio-option"><input type="radio" name="content_photos" id="cp_free_stock" value="free-stock" data-price="50"><label for="cp_free_stock">I need stock photos <span class="price-tag">$50</span></label></div>
@@ -820,6 +865,7 @@ body {
       <div class="section-desc">When are you looking to launch?</div>
       <div class="form-group">
         <label class="form-label">Desired timeline</label>
+        <div class="field-desc">When would you like your website to be ready? Rush timelines include an additional fee for priority scheduling.</div>
         <div class="radio-group">
           <div class="radio-option"><input type="radio" name="timeline" id="tl_1week" value="1-week" data-price="200"><label for="tl_1week">1 Week (Rush) <span class="price-tag">$200</span></label></div>
           <div class="radio-option"><input type="radio" name="timeline" id="tl_2weeks" value="2-weeks" data-price="100"><label for="tl_2weeks">2 Weeks <span class="price-tag">$100</span></label></div>
@@ -835,6 +881,7 @@ body {
       <div class="section-desc">Tell us about ongoing maintenance needs and your budget.</div>
       <div class="form-group">
         <label class="form-label">Monthly maintenance plan</label>
+        <div class="field-desc">Keep your website secure, up-to-date, and running smoothly with a maintenance plan. Covers updates, backups, security monitoring, and support.</div>
         <div class="radio-group">
           <div class="radio-option"><input type="radio" name="maintenance" id="maint_no" value="no" data-price="0"><label for="maint_no">None <span class="hint">(no maintenance)</span></label></div>
           <div class="radio-option"><input type="radio" name="maintenance" id="maint_basic" value="basic" data-price="50"><label for="maint_basic">Basic <span class="price-tag">$50/mo</span></label></div>
@@ -969,6 +1016,11 @@ body {
     setupDraftAutoSave();
     setupBreakdownModal();
     setupFormListeners();
+    setupHostingMonthsStepper();
+    setupProfileUpload();
+    // Initialize SSL requirement based on current domain selection
+    var initialDomain = document.querySelector('[name="domain"]:checked');
+    if (initialDomain) updateSslRequirement(initialDomain.value);
     loadOverrides();
   }
 
@@ -1461,6 +1513,55 @@ body {
     return '\u{1F4CE}';
   }
 
+  // ---- Company Profile Upload ----
+  window._profileFile = null;
+
+  function setupProfileUpload() {
+    var zone = document.getElementById('profileZone');
+    var input = document.getElementById('profileFileInput');
+    var nameDisplay = document.getElementById('profileFileName');
+    if (!zone || !input) return;
+
+    zone.addEventListener('click', function() { input.click(); });
+
+    zone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      zone.style.borderColor = 'var(--accent)';
+      zone.style.background = 'var(--accent-light)';
+    });
+    zone.addEventListener('dragleave', function() {
+      zone.style.borderColor = 'var(--file-zone-border)';
+      zone.style.background = 'transparent';
+    });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      zone.style.borderColor = 'var(--file-zone-border)';
+      zone.style.background = 'transparent';
+      if (e.dataTransfer.files.length > 0) handleProfileFile(e.dataTransfer.files[0]);
+    });
+
+    input.addEventListener('change', function() {
+      if (this.files.length > 0) handleProfileFile(this.files[0]);
+      this.value = '';
+    });
+  }
+
+  function handleProfileFile(file) {
+    var allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (allowed.indexOf(file.type) === -1) {
+      showToast('Please upload a PDF or Word document.', 'error');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('Company profile must be under 10MB.', 'error');
+      return;
+    }
+    window._profileFile = file;
+    var nameDisplay = document.getElementById('profileFileName');
+    nameDisplay.textContent = '✓ ' + file.name + ' (' + formatSize(file.size) + ')';
+    nameDisplay.style.display = 'block';
+  }
+
   function formatSize(bytes) {
     if (!bytes) return '0 B';
     if (bytes < 1024) return bytes + ' B';
@@ -1481,12 +1582,14 @@ body {
       total += domainVal;
     }
 
-    // Hosting
+    // Hosting (price × months)
     var hostingEl = document.querySelector('[name="hosting"]:checked');
     var hostingVal = hostingEl ? parseFloat(hostingEl.getAttribute('data-price')) || 0 : 0;
     if (hostingVal > 0) {
-      window._priceItems.push({ label: 'Web Hosting', price: hostingVal, qty: 1, lineTotal: hostingVal });
-      total += hostingVal;
+      var hostingMonths = parseInt(document.getElementById('hostingMonthsInput').value) || 12;
+      var hostingTotal = hostingVal * hostingMonths;
+      window._priceItems.push({ label: 'Web Hosting (' + hostingMonths + ' months)', price: hostingVal, qty: hostingMonths, lineTotal: hostingTotal });
+      total += hostingTotal;
     }
 
     // Email
@@ -1607,6 +1710,9 @@ body {
       html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted);width:140px">Name</td><td style="padding:3px 0">' + escapeHtml(data.full_name) + '</td></tr>';
       if (data.business_name) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Business</td><td style="padding:3px 0">' + escapeHtml(data.business_name) + '</td></tr>';
       if (data.client_email) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Email</td><td style="padding:3px 0">' + escapeHtml(data.client_email) + '</td></tr>';
+      if (data.hosting === 'need' && data.hosting_months) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Hosting</td><td style="padding:3px 0">' + data.hosting_months + ' months</td></tr>';
+      if (data.website_type === 'other' && data.other_website_type) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Website Type</td><td style="padding:3px 0">Custom: ' + escapeHtml(data.other_website_type) + '</td></tr>';
+      if (data.has_profile_file) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Profile</td><td style="padding:3px 0">Company profile attached</td></tr>';
       html += '</table></div>';
     }
 
@@ -1654,6 +1760,17 @@ body {
     // Email count
     data.email_count = Math.min(100, Math.max(1, parseInt(document.getElementById('emailCountInput').value) || 1));
 
+    // Hosting months
+    data.hosting_months = parseInt(document.getElementById('hostingMonthsInput').value) || 12;
+
+    // Other website type (custom)
+    data.other_website_type = document.getElementById('other_website_type') ? document.getElementById('other_website_type').value : '';
+
+    // Business description + profile toggles
+    data.biz_desc_active = document.getElementById('biz_desc_option') ? document.getElementById('biz_desc_option').checked : true;
+    data.biz_profile_active = document.getElementById('biz_profile_option') ? document.getElementById('biz_profile_option').checked : false;
+    data.has_profile_file = window._profileFile !== null;
+
     // Pages and features as arrays
     data.pages = Array.from(document.querySelectorAll('[name="pages"]:checked')).map(function(cb) { return cb.value; });
     data.features = Array.from(document.querySelectorAll('[name="features"]:checked')).map(function(cb) { return cb.value; });
@@ -1697,6 +1814,25 @@ body {
       if (target.name === 'domain') {
         var cond = document.getElementById('cond-domain_idea');
         cond.classList.toggle('visible', target.value === 'need');
+        // SSL auto-require when no domain
+        updateSslRequirement(target.value);
+      }
+      // Hosting months conditional
+      if (target.name === 'hosting') {
+        var cond = document.getElementById('cond-hosting_months');
+        cond.classList.toggle('visible', target.value === 'need');
+      }
+      // Business description / profile toggle
+      if (target.id === 'biz_desc_option') {
+        document.getElementById('cond-biz_desc').style.display = target.checked ? 'block' : 'none';
+      }
+      if (target.id === 'biz_profile_option') {
+        document.getElementById('cond-biz_profile').style.display = target.checked ? 'block' : 'none';
+      }
+      // Other website type conditional
+      if (target.name === 'website_type') {
+        var cond = document.getElementById('cond-other_website_type');
+        cond.classList.toggle('visible', target.value === 'other');
       }
       // Email count conditional
       if (target.name === 'email') {
@@ -1726,6 +1862,55 @@ body {
       }
       submitForm();
     });
+  }
+
+  // ---- Hosting Months Stepper ----
+  function setupHostingMonthsStepper() {
+    var input = document.getElementById('hostingMonthsInput');
+    document.getElementById('hostingMonthsDec').addEventListener('click', function() {
+      var v = parseInt(input.value) || 12;
+      if (v > 12) { input.value = v - 1; }
+      calculate();
+    });
+    document.getElementById('hostingMonthsInc').addEventListener('click', function() {
+      var v = parseInt(input.value) || 12;
+      if (v < 48) { input.value = v + 1; }
+      calculate();
+    });
+    input.addEventListener('input', function() {
+      var v = parseInt(this.value) || 12;
+      if (v < 12) this.value = 12;
+      if (v > 48) this.value = 48;
+      calculate();
+    });
+  }
+
+  // ---- SSL Auto-require when no domain ----
+  function updateSslRequirement(domainValue) {
+    var sslCheckbox = document.getElementById('feat_ssl');
+    var sslLabel = sslCheckbox ? sslCheckbox.closest('.checkbox-option') : null;
+    if (!sslCheckbox || !sslLabel) return;
+    // If client needs a domain or is unsure, SSL is mandatory
+    if (domainValue === 'need' || domainValue === 'not-sure') {
+      sslCheckbox.checked = true;
+      sslCheckbox.disabled = true;
+      sslLabel.style.opacity = '1';
+      sslLabel.title = 'Required when you don\'t have a domain';
+      // Add visual indicator
+      if (!sslLabel.querySelector('.mandatory-badge')) {
+        var badge = document.createElement('span');
+        badge.className = 'mandatory-badge';
+        badge.textContent = 'required';
+        badge.style.cssText = 'font-size:10px;background:var(--error);color:#fff;padding:1px 6px;border-radius:4px;margin-left:4px;font-weight:500;';
+        sslLabel.querySelector('label')?.appendChild(badge);
+      }
+    } else {
+      sslCheckbox.disabled = false;
+      sslLabel.title = '';
+      var badge = sslLabel.querySelector('.mandatory-badge');
+      if (badge) badge.remove();
+    }
+    calculate();
   }
 
   // ---- Validation ----
@@ -1817,6 +2002,20 @@ body {
       }
     });
 
+    // Upload company profile if provided
+    if (window._profileFile) {
+      var profilePath = 'submissions/' + timestamp + '_company_profile_' + window._profileFile.name;
+      var profilePromise = supabaseClient.storage.from('submissions').upload(profilePath, window._profileFile, {
+        cacheControl: '3600',
+        upsert: false
+      }).then(function(res) {
+        if (res.error) throw res.error;
+        var url = SUPABASE_URL + '/storage/v1/object/public/submissions/' + profilePath;
+        fileUrls.push(url);
+      });
+      uploadPromises.push(profilePromise);
+    }
+
     var pdfBlob = null;
     var pdfUrl = null;
 
@@ -1859,6 +2058,9 @@ body {
         maintenance: data.maintenance || null,
         budget: data.budget || null,
         extra_notes: data.extra_notes || null,
+        hosting_months: data.hosting === 'need' ? (data.hosting_months || 12) : null,
+        other_website_type: data.website_type === 'other' ? (data.other_website_type || '') : null,
+        has_company_profile: data.has_profile_file || false,
         price_breakdown: window._priceItems,
         estimated_total: total,
         file_urls: fileUrls,

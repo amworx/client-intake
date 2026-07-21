@@ -18,6 +18,20 @@
 7. **Webhooks**: Must be created manually in Supabase Dashboard → Database → Webhooks (no Management API endpoint available)
 8. **OTP Edge Function**: Intake form calls `SUPABASE_EDGE_URL + '/send-otp'` with POST body `{email, code}`
 
+## OTP Security Enforcement Pattern
+
+When building email verification flows with Supabase:
+
+1. **Never trust the client**: OTP codes must never be logged to console or displayed on screen. Verification must happen server-side.
+2. **Never grant anon table access**: Anon role should never SELECT/UPDATE on `otp_codes`. Instead:
+   - Create a SECURITY DEFINER RPC `verify_otp(email, code)` that checks the code, marks it used, sets `verified_at`
+   - Grant only `EXECUTE` on the RPC to anon role
+3. **Enforce verification on writes**: For any write operation that requires verified email:
+   - Create a SECURITY DEFINER RPC that checks for recently verified OTP (`verified_at > now() - interval '10 minutes'`)
+   - Revoke anon INSERT on the target table — all writes go through the RPC
+4. **Rate limit**: Implement client-side cooldown on the "Send Code" button (60s minimum)
+5. **Fail loudly**: When email delivery fails, show an error message — never expose the code
+
 ## Supabase Connection Pattern
 
 When `db.{ref}.supabase.co` only resolves to IPv6:
