@@ -940,6 +940,7 @@ body {
 
   window._selectedFiles = [];
   window._emailVerified = false;
+  window._verifiedEmail = null;
   window._priceItems = [];
   window._settingsOverrides = null;
   window._submitting = false;
@@ -1167,6 +1168,7 @@ body {
         return { name: f.name, size: f.size, type: f.type };
       });
       data._emailVerified = window._emailVerified;
+      data._verifiedEmail = window._verifiedEmail;
       localStorage.setItem('intake_draft', JSON.stringify(data));
     } catch (e) {
       // silent
@@ -1222,6 +1224,7 @@ body {
     });
     if (data._emailVerified) {
       window._emailVerified = true;
+      window._verifiedEmail = data._verifiedEmail || document.getElementById('client_email').value;
       document.getElementById('otpVerified').style.display = 'inline';
       document.getElementById('btnSendOtp').style.display = 'none';
       document.getElementById('otpInput').style.display = 'none';
@@ -1246,14 +1249,21 @@ body {
     var otpVerified = document.getElementById('otpVerified');
     var emailInput = document.getElementById('client_email');
 
+    // Rate limit state
+    var sendCooldown = false;
+
     btnSend.addEventListener('click', function() {
+      if (sendCooldown) {
+        showToast('Please wait before requesting another code.', 'error');
+        return;
+      }
       var email = emailInput.value.trim();
       if (!email || !isValidEmail(email)) {
         showToast('Please enter a valid email first.', 'error');
         return;
       }
       var code = String(Math.floor(100000 + Math.random() * 900000));
-      console.log('OTP code for ' + email + ': ' + code);
+      // NOTE: Intentionally NOT logging the code to console — security hardening
       var expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
       supabaseClient.from('otp_codes').insert({
@@ -1266,7 +1276,7 @@ body {
           showToast('Failed to send code: ' + res.error.message, 'error');
           return;
         }
-        // Call the Edge Function to email the OTP
+        // Call the Edge Function to email the OTP (code never logged or displayed)
         var codeDisplay = document.getElementById('otpCodeDisplay');
         fetch(SUPABASE_EDGE_URL + '/send-otp', {
           method: 'POST',
@@ -1274,25 +1284,41 @@ body {
           body: JSON.stringify({ email: email, code: code })
         }).then(function(otpRes) {
           return otpRes.json().then(function(otpData) {
-            // If SMTP is not enabled, show the code on screen
+            // If SMTP is not enabled, fail loudly — never show the code on screen
             if (otpData.skipped) {
-              codeDisplay.textContent = 'Your code: ' + code;
-              codeDisplay.style.display = 'inline-flex';
-              showToast('Email not configured — code shown below', 'info');
+              showToast('Email delivery not configured. Please contact the admin to enable SMTP.', 'error');
+              return;
             }
           });
         }).catch(function() {
-          // Edge Function failure — show code on screen
-          codeDisplay.textContent = 'Your code: ' + code;
-          codeDisplay.style.display = 'inline-flex';
-          showToast('Email not configured — code shown below', 'info');
+          // Edge Function failure — fail loudly, never expose the code
+          sendCooldown = false;
+          btnSend.disabled = false;
+          showToast('Failed to send verification email. Please try again or contact support.', 'error');
         });
+        // Rate limit: 60-second cooldown on Send Code button
+        sendCooldown = true;
+        btnSend.disabled = true;
+        var cooldownSec = 60;
+        btnSend.textContent = 'Resend (' + cooldownSec + 's)';
+        var cooldownTimer = setInterval(function() {
+          cooldownSec--;
+          if (cooldownSec > 0) {
+            btnSend.textContent = 'Resend (' + cooldownSec + 's)';
+          } else {
+            clearInterval(cooldownTimer);
+            sendCooldown = false;
+            btnSend.disabled = false;
+            btnSend.textContent = 'Resend Code';
+          }
+        }, 1000);
         showToast('Verification code sent to ' + email, 'success');
-        btnSend.textContent = 'Resend Code';
         otpInput.style.display = 'inline-block';
         btnVerify.style.display = 'inline-block';
         otpInput.focus();
       }).catch(function(err) {
+        sendCooldown = false;
+        btnSend.disabled = false;
         showToast('Failed to send code.', 'error');
       });
     });
@@ -1304,34 +1330,24 @@ body {
         showToast('Please enter the 6-digit code.', 'error');
         return;
       }
-      var now = new Date().toISOString();
-      supabaseClient.from('otp_codes')
-        .select('*')
-        .eq('email', email)
-        .eq('code', code)
-        .eq('used', false)
-        .gte('expires_at', now)
-        .single()
+      // Server-side verification via RPC (SECURITY DEFINER)
+      supabaseClient.rpc('verify_otp', { p_email: email, p_code: code })
         .then(function(res) {
           if (res.error) {
-            showToast('Invalid or expired code. Please try again.', 'error');
+            showToast('Verification failed: ' + (res.error.message || 'Unknown error'), 'error');
             return;
           }
-          if (res.data) {
-            supabaseClient.from('otp_codes')
-              .update({ used: true })
-              .eq('id', res.data.id)
-              .then(function() {
-                window._emailVerified = true;
-                otpVerified.style.display = 'inline';
-                btnSend.style.display = 'none';
-                otpInput.style.display = 'none';
-                btnVerify.style.display = 'none';
-                emailInput.readOnly = true;
-                showToast('Email verified!', 'success');
-              });
+          if (res.data && res.data.success) {
+            window._emailVerified = true;
+            window._verifiedEmail = email; // stored for submission verification
+            otpVerified.style.display = 'inline';
+            btnSend.style.display = 'none';
+            otpInput.style.display = 'none';
+            btnVerify.style.display = 'none';
+            emailInput.readOnly = true;
+            showToast('Email verified!', 'success');
           } else {
-            showToast('Invalid or expired code.', 'error');
+            showToast(res.data?.message || 'Invalid or expired code.', 'error');
           }
         }).catch(function(err) {
           showToast('Verification failed.', 'error');
@@ -1373,12 +1389,27 @@ body {
   }
 
   function addFiles(fileList) {
+    var allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'image/webp',
+      'text/plain', 'text/csv'
+    ];
     var totalSize = window._selectedFiles.reduce(function(sum, f) { return sum + (f.size || 0); }, 0);
     var newTotal = totalSize;
     var toAdd = [];
     for (var i = 0; i < fileList.length; i++) {
-      newTotal += fileList[i].size;
-      toAdd.push(fileList[i]);
+      var file = fileList[i];
+      // Validate file type
+      if (allowedTypes.indexOf(file.type) === -1) {
+        showToast('File type not allowed: ' + (file.name || file.type), 'error');
+        continue;
+      }
+      newTotal += file.size;
+      toAdd.push(file);
     }
     if (newTotal > 25 * 1024 * 1024) {
       showToast('Total file size exceeds 25MB limit.', 'error');
@@ -1832,12 +1863,20 @@ body {
         estimated_total: total,
         file_urls: fileUrls,
         pdf_url: pdfUrl,
-        submitted_at: new Date().toISOString()
+        request_time: new Date().toISOString()
       };
 
-      return supabaseClient.from('submissions').insert(submissionData);
+      // Use server-side RPC that enforces OTP verification
+      var submitEmail = window._verifiedEmail || data.client_email;
+      return supabaseClient.rpc('submit_submission', {
+        p_data: submissionData,
+        p_email: submitEmail
+      });
     }).then(function(subRes) {
       if (subRes.error) throw subRes.error;
+      if (subRes.data && !subRes.data.success) {
+        throw new Error(subRes.data.message || 'Submission rejected');
+      }
       localStorage.removeItem('intake_draft');
       showThankYou(data.full_name);
     }).catch(function(err) {

@@ -90,11 +90,12 @@ create table if not exists public.section_groups (
 
 -- 1.4 otp_codes
 create table if not exists public.otp_codes (
-  id         bigint generated always as identity primary key,
-  email      text not null,
-  code       text not null,
-  expires_at timestamptz not null,
-  used       boolean default false
+  id          bigint generated always as identity primary key,
+  email       text not null,
+  code        text not null,
+  expires_at  timestamptz not null,
+  used        boolean default false,
+  verified_at timestamptz       -- set when OTP is successfully verified
 );
 
 -- Index for OTP verification lookups
@@ -119,9 +120,13 @@ alter table public.section_groups enable row level security;
 alter table public.otp_codes enable row level security;
 
 -- 3.2 submissions policies
-create policy "Anyone can insert submissions"
+-- NOTE: anon INSERT on submissions is intentionally removed.
+-- All submissions go through the submit_submission() RPC (SECURITY DEFINER),
+-- which enforces OTP verification server-side.
+
+create policy "Authenticated users can insert submissions"
   on public.submissions for insert
-  to anon, authenticated
+  to authenticated
   with check (true);
 
 create policy "Authenticated users can view submissions"
@@ -164,16 +169,11 @@ create policy "Anyone can insert OTP codes"
   to anon, authenticated
   with check (true);
 
-create policy "Anyone can read OTP codes (for verification)"
-  on public.otp_codes for select
-  to anon, authenticated
-  using (true);
+-- NOTE: anon SELECT and anon UPDATE on otp_codes are intentionally removed.
+-- All verification goes through the verify_otp() RPC (SECURITY DEFINER).
+-- This prevents attackers from reading or manipulating OTP codes directly.
 
-create policy "Anyone can update OTP codes (mark used)"
-  on public.otp_codes for update
-  to anon, authenticated
-  using (true)
-  with check (true);
+-- RPC-only access — no anon SELECT/UPDATE policies for otp_codes
 
 -- 3.6 Storage policies
 create policy "Anyone can upload files"
@@ -219,3 +219,158 @@ insert into public.section_groups (section_key, groups) values
   ('timeline', '[{"label": "Timeline", "value": "timeline"}]'),
   ('maintenance', '[{"label": "Maintenance Plan", "value": "maintenance-plan"}]
 ') on conflict (section_key) do nothing;
+
+-- ============================================================
+-- 5. RPC FUNCTIONS (SECURITY DEFINER)
+-- ============================================================
+
+-- 5.1 verify_otp(email, code)
+-- Checks the OTP code server-side, marks it verified, returns success/failure.
+-- Called by the intake form (anon) to verify emails without exposing DB internals.
+create or replace function public.verify_otp(p_email text, p_code text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_otp_id bigint;
+  v_result jsonb;
+begin
+  -- Find matching, unexpired, unused OTP
+  select id into v_otp_id
+  from public.otp_codes
+  where email = p_email
+    and code = p_code
+    and expires_at > now()
+    and used = false
+  order by expires_at desc
+  limit 1;
+
+  if v_otp_id is null then
+    return jsonb_build_object(
+      'success', false,
+      'message', 'Invalid or expired verification code.'
+    );
+  end if;
+
+  -- Mark as used with verified timestamp
+  update public.otp_codes
+  set used = true, verified_at = now()
+  where id = v_otp_id;
+
+  return jsonb_build_object(
+    'success', true,
+    'message', 'Email verified successfully.'
+  );
+end;
+$$;
+
+-- 5.2 submit_submission(data jsonb, email text)
+-- Inserts a submission only if the email has been recently OTP-verified (within 10 minutes).
+-- Called by the intake form (anon) to prevent submissions without email verification.
+create or replace function public.submit_submission(p_data jsonb, p_email text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_verified boolean;
+  v_submission_id bigint;
+  v_full_name text;
+begin
+  -- Check email was recently verified via OTP (within last 10 minutes)
+  select exists (
+    select 1
+    from public.otp_codes
+    where email = p_email
+      and used = true
+      and verified_at is not null
+      and verified_at > now() - interval '10 minutes'
+  ) into v_verified;
+
+  if not v_verified then
+    return jsonb_build_object(
+      'success', false,
+      'message', 'Email not verified. Please request and verify an OTP code first.'
+    );
+  end if;
+
+  -- Extract full_name from JSON data
+  v_full_name := p_data ->> 'full_name';
+
+  -- Insert submission
+  insert into public.submissions (
+    full_name,
+    business_name,
+    client_email,
+    client_phone,
+    domain,
+    domain_idea,
+    hosting,
+    email,
+    email_count,
+    setup_help,
+    business_desc,
+    website_type,
+    pages,
+    other_pages,
+    features,
+    logo,
+    content_text,
+    content_photos,
+    brand_colors,
+    inspiration_links,
+    timeline,
+    maintenance,
+    budget,
+    extra_notes,
+    estimated_total,
+    price_breakdown,
+    file_urls,
+    request_time
+  )
+  values (
+    p_data ->> 'full_name',
+    p_data ->> 'business_name',
+    p_data ->> 'client_email',
+    p_data ->> 'client_phone',
+    p_data ->> 'domain',
+    p_data ->> 'domain_idea',
+    p_data ->> 'hosting',
+    p_data ->> 'email',
+    (p_data ->> 'email_count')::int,
+    p_data ->> 'setup_help',
+    p_data ->> 'business_desc',
+    p_data ->> 'website_type',
+    (p_data ->> 'pages')::jsonb,
+    p_data ->> 'other_pages',
+    (p_data ->> 'features')::jsonb,
+    p_data ->> 'logo',
+    p_data ->> 'content_text',
+    p_data ->> 'content_photos',
+    p_data ->> 'brand_colors',
+    p_data ->> 'inspiration_links',
+    p_data ->> 'timeline',
+    p_data ->> 'maintenance',
+    p_data ->> 'budget',
+    p_data ->> 'extra_notes',
+    (p_data ->> 'estimated_total')::numeric,
+    (p_data ->> 'price_breakdown')::jsonb,
+    (p_data ->> 'file_urls')::jsonb,
+    p_data ->> 'request_time'
+  )
+  returning id into v_submission_id;
+
+  return jsonb_build_object(
+    'success', true,
+    'message', 'Submission created successfully.',
+    'submission_id', v_submission_id
+  );
+end;
+$$;
+
+-- Grant execute on RPCs to anon role (needed for the intake form)
+grant execute on function public.verify_otp(text, text) to anon, authenticated;
+grant execute on function public.submit_submission(jsonb, text) to anon, authenticated;

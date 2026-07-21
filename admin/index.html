@@ -487,7 +487,7 @@ input[type=number]{-moz-appearance:textfield}
             <div class="stat-card">
               <div class="stat-icon bg-icon-revenue"><i class="fas fa-dollar-sign"></i></div>
               <div class="stat-value val-revenue" x-text="formatCurrency(submissions.reduce((sum,s)=>sum+(parseFloat(s.estimated_total)||0),0))"></div>
-              <div class="stat-label">Combined estimate</div>
+              <div class="stat-label">Combined estimate (client-side)</div>
             </div>
           </div>
           <div class="table-wrap table-scroll">
@@ -1164,7 +1164,7 @@ input[type=number]{-moz-appearance:textfield}
       </template>
       <template x-if="detailSubmission.estimated_total">
       <div class="detail-section">
-        <div class="field-label">Pricing</div>
+        <div class="field-label">Pricing <span class="text-xs text-sec" style="font-weight:400">(client-side estimate)</span></div>
         <div class="detail-estimate" x-text="formatCurrency(detailSubmission.estimated_total)"></div>
         <template x-if="detailSubmission.price_breakdown && detailSubmission.price_breakdown.length">
         <div class="mt-8">
