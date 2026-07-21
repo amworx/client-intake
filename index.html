@@ -689,12 +689,11 @@ body {
           <div class="radio-option"><input type="radio" name="hosting" id="hosting_not_sure" value="not-sure" data-price="0"><label for="hosting_not_sure">Not sure</label></div>
         </div>
         <div class="conditional" id="cond-hosting_months" style="margin-top:12px;">
-          <label class="form-label" for="hostingMonthsInput">How many months of hosting? <span class="hint">(min 12, max 48)</span></label>
-          <div class="stepper">
-            <button type="button" id="hostingMonthsDec" class="stepper-btn">−</button>
-            <input type="number" class="form-input" id="hostingMonthsInput" value="12" min="12" max="48" step="1" style="width:80px;text-align:center;">
-            <button type="button" id="hostingMonthsInc" class="stepper-btn">+</button>
-            <span style="font-size:13px;color:var(--text-muted);margin-left:4px;">months</span>
+          <label class="form-label">How many months of hosting?</label>
+          <div class="radio-group" id="hosting-months-group">
+            <div class="radio-option"><input type="radio" name="hosting_months" id="hm_12" value="12" checked><label for="hm_12">12 months <span class="price-tag">$240</span></label></div>
+            <div class="radio-option"><input type="radio" name="hosting_months" id="hm_24" value="24"><label for="hm_24">24 months <span class="price-tag">$480</span></label></div>
+            <div class="radio-option"><input type="radio" name="hosting_months" id="hm_48" value="48"><label for="hm_48">48 months <span class="price-tag">$960</span></label></div>
           </div>
         </div>
       </div>
@@ -1004,7 +1003,6 @@ body {
     setupDraftAutoSave();
     setupBreakdownModal();
     setupFormListeners();
-    setupHostingMonthsStepper();
     setupProfileUpload();
     // Initialize SSL requirement based on current domain selection
     var initialDomain = document.querySelector('[name="domain"]:checked');
@@ -1571,7 +1569,8 @@ body {
     var hostingEl = document.querySelector('[name="hosting"]:checked');
     var hostingVal = hostingEl ? parseFloat(hostingEl.getAttribute('data-price')) || 0 : 0;
     if (hostingVal > 0) {
-      var hostingMonths = parseInt(document.getElementById('hostingMonthsInput').value) || 12;
+      var hostingMonthsEl = document.querySelector('[name="hosting_months"]:checked');
+      var hostingMonths = hostingMonthsEl ? parseInt(hostingMonthsEl.value) || 12 : 12;
       var hostingTotal = hostingVal * hostingMonths;
       window._priceItems.push({ label: 'Web Hosting (' + hostingMonths + ' months)', price: hostingVal, qty: hostingMonths, lineTotal: hostingTotal });
       total += hostingTotal;
@@ -1746,7 +1745,7 @@ body {
     data.email_count = Math.min(100, Math.max(1, parseInt(document.getElementById('emailCountInput').value) || 1));
 
     // Hosting months
-    data.hosting_months = parseInt(document.getElementById('hostingMonthsInput').value) || 12;
+    data.hosting_months = parseInt((document.querySelector('[name="hosting_months"]:checked') || {}).value) || 12;
 
     // Other website type (custom)
     data.other_website_type = document.getElementById('other_website_type') ? document.getElementById('other_website_type').value : '';
@@ -1837,27 +1836,6 @@ body {
         return;
       }
       submitForm();
-    });
-  }
-
-  // ---- Hosting Months Stepper ----
-  function setupHostingMonthsStepper() {
-    var input = document.getElementById('hostingMonthsInput');
-    document.getElementById('hostingMonthsDec').addEventListener('click', function() {
-      var v = parseInt(input.value) || 12;
-      if (v > 12) { input.value = v - 1; }
-      calculate();
-    });
-    document.getElementById('hostingMonthsInc').addEventListener('click', function() {
-      var v = parseInt(input.value) || 12;
-      if (v < 48) { input.value = v + 1; }
-      calculate();
-    });
-    input.addEventListener('input', function() {
-      var v = parseInt(this.value) || 12;
-      if (v < 12) this.value = 12;
-      if (v > 48) this.value = 48;
-      calculate();
     });
   }
 
