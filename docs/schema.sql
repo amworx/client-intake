@@ -103,6 +103,20 @@ create table if not exists public.otp_codes (
 -- Index for OTP verification lookups
 create index if not exists idx_otp_codes_email on public.otp_codes (email, code);
 
+-- 1.5 share_tokens (one-time unique links per client)
+create table if not exists public.share_tokens (
+  id          bigint generated always as identity primary key,
+  email       text not null,
+  token       text not null unique,
+  full_name   text,
+  used        boolean default false,
+  used_by_ip  text,
+  created_at  timestamptz default now(),
+  used_at     timestamptz
+);
+
+create index if not exists idx_share_tokens_token on public.share_tokens (token);
+
 -- ============================================================
 -- 2. STORAGE BUCKET
 -- ============================================================
@@ -177,7 +191,28 @@ create policy "Anyone can insert OTP codes"
 
 -- RPC-only access — no anon SELECT/UPDATE policies for otp_codes
 
--- 3.6 Storage policies
+-- 3.6 share_tokens policies
+-- Only authenticated users can read/insert/update share_tokens
+-- Anon can only validate tokens via the validate_share_token RPC
+alter table public.share_tokens enable row level security;
+
+create policy "Authenticated users can view share_tokens"
+  on public.share_tokens for select
+  to authenticated
+  using (true);
+
+create policy "Authenticated users can insert share_tokens"
+  on public.share_tokens for insert
+  to authenticated
+  with check (true);
+
+create policy "Authenticated users can update share_tokens"
+  on public.share_tokens for update
+  to authenticated
+  using (true)
+  with check (true);
+
+-- 3.7 Storage policies
 create policy "Anyone can upload files"
   on storage.objects for insert
   to anon, authenticated
@@ -268,10 +303,12 @@ begin
 end;
 $$;
 
--- 5.2 submit_submission(data jsonb, email text)
--- Inserts a submission only if the email has been recently OTP-verified (within 10 minutes).
--- Called by the intake form (anon) to prevent submissions without email verification.
-create or replace function public.submit_submission(p_data jsonb, p_email text)
+-- 5.2 submit_submission(data jsonb, email text, token text default null)
+-- Inserts a submission. Requires either:
+--   - OTP verification (within last 10 minutes), OR
+--   - A valid, unused share token matching the email.
+-- Called by the intake form (anon) to prevent unverified submissions.
+create or replace function public.submit_submission(p_data jsonb, p_email text, p_token text default null)
 returns jsonb
 language plpgsql
 security definer
@@ -281,6 +318,7 @@ declare
   v_verified boolean;
   v_submission_id bigint;
   v_full_name text;
+  v_token_ok boolean;
 begin
   -- Check email was recently verified via OTP (within last 10 minutes)
   select exists (
@@ -292,10 +330,31 @@ begin
       and verified_at > now() - interval '10 minutes'
   ) into v_verified;
 
+  -- If not OTP-verified, check for a valid share token
+  if not v_verified then
+    if p_token is not null then
+      select exists (
+        select 1
+        from public.share_tokens
+        where token = p_token
+          and email = p_email
+          and used = false
+      ) into v_token_ok;
+
+      if v_token_ok then
+        -- Consume the token
+        update public.share_tokens
+        set used = true, used_at = now()
+        where token = p_token;
+        v_verified := true;
+      end if;
+    end if;
+  end if;
+
   if not v_verified then
     return jsonb_build_object(
       'success', false,
-      'message', 'Email not verified. Please request and verify an OTP code first.'
+      'message', 'Email not verified. Please request and verify an OTP code first, or use a valid share link.'
     );
   end if;
 
@@ -377,6 +436,103 @@ begin
 end;
 $$;
 
--- Grant execute on RPCs to anon role (needed for the intake form)
+-- ============================================================
+-- 6. SHARE TOKEN RPC FUNCTIONS
+-- ============================================================
+
+-- 6.1 generate_share_token(email, full_name)
+-- Creates a unique one-time token for a client email.
+-- Returns the token string.
+-- Only authenticated users (admin) can call this.
+create or replace function public.generate_share_token(p_email text, p_full_name text default null)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_token text;
+begin
+  -- Generate a cryptographically random token (32 hex chars = 128 bits)
+  v_token := encode(gen_random_bytes(16), 'hex');
+
+  insert into public.share_tokens (email, token, full_name)
+  values (p_email, v_token, p_full_name);
+
+  return jsonb_build_object(
+    'success', true,
+    'token', v_token,
+    'email', p_email,
+    'url', current_setting('request.headers')::json ->> 'origin' || '/?token=' || v_token
+  );
+end;
+$$;
+
+-- 6.2 validate_share_token(token)
+-- Checks if a token exists and is unused.
+-- Returns the associated email and full_name if valid.
+-- Anyone (anon) can call this to validate a token from the intake form.
+create or replace function public.validate_share_token(p_token text)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_record record;
+begin
+  select email, full_name, used into v_record
+  from public.share_tokens
+  where token = p_token;
+
+  if not found then
+    return jsonb_build_object(
+      'valid', false,
+      'message', 'Invalid token.'
+    );
+  end if;
+
+  if v_record.used then
+    return jsonb_build_object(
+      'valid', false,
+      'message', 'This link has already been used. Please contact us for a new link.'
+    );
+  end if;
+
+  return jsonb_build_object(
+    'valid', true,
+    'email', v_record.email,
+    'full_name', v_record.full_name
+  );
+end;
+$$;
+
+-- 6.3 consume_share_token(token, ip)
+-- Marks a token as used. Called after successful submission via share link.
+create or replace function public.consume_share_token(p_token text, p_ip text default null)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  update public.share_tokens
+  set used = true, used_at = now(), used_by_ip = p_ip
+  where token = p_token and used = false;
+
+  if not found then
+    return jsonb_build_object('success', false, 'message', 'Token not found or already used.');
+  end if;
+
+  return jsonb_build_object('success', true, 'message', 'Token consumed.');
+end;
+$$;
+
+-- Grant execute on core RPCs (needed for the intake form)
 grant execute on function public.verify_otp(text, text) to anon, authenticated;
-grant execute on function public.submit_submission(jsonb, text) to anon, authenticated;
+grant execute on function public.submit_submission(jsonb, text, text) to anon, authenticated;
+
+-- Grant execute on share token RPCs
+grant execute on function public.generate_share_token(text, text) to authenticated;
+grant execute on function public.validate_share_token(text) to anon, authenticated;
+grant execute on function public.consume_share_token(text, text) to anon, authenticated;

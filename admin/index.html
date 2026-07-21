@@ -80,6 +80,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .btn-primary:hover:not(:disabled){background:var(--accent-hover);box-shadow:0 2px 8px rgba(99,102,241,.3)}
 .btn-danger{background:#ef4444;color:#fff}
 .btn-danger:hover:not(:disabled){background:#dc2626;box-shadow:0 2px 8px rgba(239,68,68,.3)}
+.btn-success{background:#22c55e;color:#fff}
+.btn-success:hover:not(:disabled){background:#16a34a;box-shadow:0 2px 8px rgba(34,197,94,.3)}
 .btn-ghost{background:transparent;color:var(--text-sec);border:1px solid var(--border)}
 .btn-ghost:hover:not(:disabled){background:var(--hover);color:var(--text);border-color:var(--text-tert)}
 .btn-sm{padding:5px 10px;font-size:12px;border-radius:6px}
@@ -1206,8 +1208,17 @@ input[type=number]{-moz-appearance:textfield}
         <i class="fas fa-exchange-alt" :class="detailSubmission._loading && 'fa-spin'"></i>
         <span x-text="detailSubmission.status === 'New' ? 'Mark Reviewed' : 'Mark New'"></span>
       </button>
+      <button class="btn btn-success btn-sm" @click="generateShareLink(detailSubmission)" :disabled="detailSubmission._sharing">
+        <i class="fas fa-link" :class="detailSubmission._sharing && 'fa-spin'"></i>
+        <span x-text="detailSubmission._shareUrl ? 'Copied!' : 'Share Link'"></span>
+      </button>
       <button class="btn btn-danger btn-sm" @click="confirmDelete(detailSubmission)"><i class="fas fa-trash-alt"></i> Delete</button>
       <button class="btn btn-ghost btn-sm" @click="closeDetail">Close</button>
+    </div>
+    <div class="share-link-box" x-show="detailSubmission._shareUrl" x-cloak style="padding:10px 16px;border-top:1px solid var(--border);font-size:12px;word-break:break-all;background:var(--bg-progress);display:flex;align-items:center;gap:8px">
+      <i class="fas fa-check-circle" style="color:var(--success)"></i>
+      <span x-text="detailSubmission._shareUrl" style="flex:1;color:var(--text-muted)"></span>
+      <button class="btn btn-ghost btn-xs" @click="copyShareLink(detailSubmission)" title="Copy again"><i class="fas fa-copy"></i></button>
     </div>
   </div>
   </template>
@@ -1568,6 +1579,53 @@ document.addEventListener('alpine:init', () => {
     confirmDelete(s) {
       this.deleteTarget = s;
       this.deleteModalOpen = true;
+    },
+
+    async generateShareLink(s) {
+      if (s._sharing) return;
+      s._sharing = true;
+      try {
+        const email = s.client_email;
+        if (!email) { this.showToast('No client email to share with', 'error'); return; }
+        const { data, error } = await supabaseClient.rpc('generate_share_token', {
+          p_email: email,
+          p_full_name: s.full_name || null
+        });
+        if (error) throw error;
+        if (!data || !data.success) throw new Error(data?.message || 'Failed to generate link');
+        // Build the URL ourselves since the RPC might not have the right origin
+        const baseUrl = (this.settings?.form_url || window.location.origin.replace('/admin', '').replace('/admin/', '')) + '/index.html';
+        s._shareUrl = baseUrl + '?token=' + data.token;
+        this.copyText(s._shareUrl);
+        this.showToast('Share link copied to clipboard!', 'ok');
+        // Auto-clear after 30s so the UI resets
+        setTimeout(() => { s._shareUrl = null; }, 30000);
+      } catch (e) {
+        this.showToast('Failed to generate link: ' + e.message, 'error');
+      } finally {
+        s._sharing = false;
+      }
+    },
+
+    copyShareLink(s) {
+      if (s._shareUrl) {
+        this.copyText(s._shareUrl);
+        this.showToast('Link copied!', 'ok');
+      }
+    },
+
+    copyText(str) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(str);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = str;
+        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
     },
 
     async doDelete() {

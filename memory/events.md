@@ -74,3 +74,36 @@
 - **Errors**: None
 - **Lessons**: Form enhancement should be validated against mobile viewports. SSL auto-require uses disabled+checked state to prevent user override.
 - **Tags**: features, form, hosting, ssl, ux
+
+## EVT-20260722-0001
+- **Timestamp**: 2026-07-22T~12:00
+- **Mode**: BUILD
+- **Action**: Emoji → Lucide icon migration
+- **Summary**: Replaced every emoji icon across the intake form (section titles, card grids, timeline sidebar) with Lucide SVGs. Added runtime JS mapping function that handles ~50 emoji code points, VS16, and keycap combining chars. Fixed invalid icon name (muscle→dumbbell). Updated CSS for section-icon layout and timeline dot icon transitions.
+- **Result**: 100 Lucide SVGs rendered, 0 emoji remaining, 0 console errors
+- **Files**: index.html
+- **Errors**: None
+- **Lessons**: Variation Selector-16 (U+FE0F) must be stripped from emoji textContent before mapping to icon names. Keycap sequences (digit + VS16 + U+20E3) need multi-step cleanup.
+- **Tags**: lucide, icons, emoji, refactor
+
+## EVT-20260722-0002
+- **Timestamp**: 2026-07-22T~13:00
+- **Mode**: BUILD
+- **Action**: Layout fixes — sidebar overlap, section width, scramble speed
+- **Summary**: Fixed sidebar z-index/layering so top-bar and price-bar no longer cover it. Removed max-width constraint on main-content so sections fill available space without blank right area. Set form-section max-width 900px with auto centering. Increased section spacing (24→32px). Slowed scramble title animation (1800→3500ms) with slower pre-frames.
+- **Result**: Sidebar clears both bars vertically, blank right area eliminated, sections breathe better, animation is more dramatic.
+- **Files**: index.html
+- **Errors**: None
+- **Lessons**: Fixed sidebar needs to be sandwiched between fixed header and footer — top/bottom must match their heights exactly. Using margin auto on child elements with max-width prevents them from stretching too wide on large screens.
+- **Tags**: layout, sidebar, z-index, spacing, animation
+
+## EVT-20260722-0003
+- **Timestamp**: 2026-07-22T~23:45
+- **Mode**: BUILD
+- **Action**: Share tokens — unique client intake links + admin dashboard UX
+- **Summary**: Added `share_tokens` table + RLS + 3 RPCs (generate, validate, consume). Updated `submit_submission` to accept optional `p_token` parameter bypassing OTP if valid token matches email. Intake form reads `?token=xxx` from URL, validates token, pre-fills/locks email field, skips OTP. Admin dashboard has Share Link button + copy functionality. Added `.btn-success` CSS class. Fresh migration SQL (20260722_share_tokens.sql) applied to Supabase. pgcrypto extension and `extensions.gen_random_bytes` needed for token generation.
+- **Result**: All 4 RPCs tested end-to-end — generate, validate, consume, validate-consumed. share_tokens table created with RLS. Migration SQL updated with pgcrypto CREATE EXTENSION. Functions recreated after pgcrypto install.
+- **Files**: admin/index.html, supabase/migrations/20260722_share_tokens.sql, docs/schema.sql
+- **Errors**: (1) gen_random_bytes needed pgcrypto extension which was not enabled. (2) pgcrypto installed in `extensions` schema (Supabase default), so function search_path needed `extensions.` prefix.
+- **Lessons**: Supabase 2026+ installs pgcrypto in `extensions` schema, not `public`. Security definer functions with `set search_path = ''` must use fully qualified `extensions.gen_random_bytes()`.
+- **Tags**: share-tokens, rpc, migration, pgcrypto

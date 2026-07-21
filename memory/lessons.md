@@ -17,3 +17,9 @@
 - **Observation**: Anon role with direct table access (SELECT/INSERT/UPDATE) bypasses all server-side security. OTP verification in client-side code is a critical vulnerability.
 - **Action**: Use SECURITY DEFINER PostgreSQL functions as RPC endpoints. Grant anon only EXECUTE on specific RPCs. The RPC runs with definer privileges and can access tables that anon cannot query directly.
 - **Severity**: Critical
+
+## LSN-20260722-0004
+- **Event**: EVT-20260722-0003
+- **Observation**: Supabase 2026+ installs the `pgcrypto` extension in an `extensions` schema rather than `public`. SECURITY DEFINER functions with `set search_path = ''` cannot find `gen_random_bytes` without a schema qualifier.
+- **Action**: Use `extensions.gen_random_bytes(16)` inside all security definer functions. Add `CREATE EXTENSION IF NOT EXISTS pgcrypto;` at top of migration files.
+- **Severity**: Medium

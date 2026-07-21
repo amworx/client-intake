@@ -1005,6 +1005,8 @@ body {
   <div id="draftBanner" class="draft-banner"></div>
 
   <form id="intakeForm" novalidate>
+    <!-- Share Token Status Banner (hidden by default) -->
+    <div id="token-status" class="hidden" style="padding:12px 16px;margin-bottom:16px;background:#ecfdf5;border:1px solid #34d399;border-radius:var(--radius-lg);font-size:14px;color:#065f46;line-height:1.5"></div>
     <!-- Section 1: Contact -->
     <section class="form-section" data-section="1" id="s-contact">
       <div class="section-title"><span class="section-icon"><i data-lucide="user" style="width:22px;height:22px"></i></span> Contact Information</div>
@@ -1051,9 +1053,12 @@ body {
         <div class="conditional" id="cond-domain_idea" style="margin-top:8px;">
           <label class="form-label">How many years would you like to register the domain for?</label>
           <div class="card-grid-sm" style="margin-bottom:12px;">
-            <div class="card-option radio-card"><input type="radio" name="domain_years" id="dy_1" value="1" checked><label for="dy_1"><span class="card-icon">1️⃣</span><span class="card-title">1 Year</span><span class="card-desc">Standard annual registration</span><span class="card-price">$15</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="domain_years" id="dy_2" value="2"><label for="dy_2"><span class="card-icon">2️⃣</span><span class="card-title">2 Years</span><span class="card-desc">Two years — pay once, no renewals</span><span class="card-price">$30</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="domain_years" id="dy_3" value="3"><label for="dy_3"><span class="card-icon">3️⃣</span><span class="card-title">3 Years</span><span class="card-desc">Three years — maximum convenience</span><span class="card-price">$45</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="domain_years" id="dy_1" value="1" checked data-renewal-price="18"><label for="dy_1"><span class="card-icon">1️⃣</span><span class="card-title">1 Year</span><span class="card-desc">Standard annual registration</span><span class="card-price">$15</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="domain_years" id="dy_2" value="2" data-renewal-price="18"><label for="dy_2"><span class="card-icon">2️⃣</span><span class="card-title">2 Years</span><span class="card-desc">Lock in two years — no renewal next year</span><span class="card-price">$30</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="domain_years" id="dy_3" value="3" data-renewal-price="18"><label for="dy_3"><span class="card-icon">3️⃣</span><span class="card-title">3 Years</span><span class="card-desc">Three years — max savings vs renewing</span><span class="card-price">$45</span><span class="card-check"></span></label></div>
+          </div>
+          <div class="notice-warn" style="margin-top:10px;padding:8px 12px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;line-height:1.5;">
+            ⚠️ <strong>Renewal Notice:</strong> Domain renews at <strong>$18/yr</strong> after the initial term. Multi-year registration locks in today's rate and avoids the price increase.
           </div>
           <label class="form-label" for="domain_idea">Domain Idea (if you have one)</label>
           <input class="form-input" type="text" id="domain_idea" name="domain_idea" placeholder="mybusiness.com">
@@ -1073,6 +1078,9 @@ body {
             <div class="card-option radio-card"><input type="radio" name="hosting_months" id="hm_12" value="12" checked><label for="hm_12"><span class="card-icon">📅</span><span class="card-title">12 months</span><span class="card-desc">Best value — one year of hosting</span><span class="card-price">$240</span><span class="card-check"></span></label></div>
             <div class="card-option radio-card"><input type="radio" name="hosting_months" id="hm_24" value="24"><label for="hm_24"><span class="card-icon">📅</span><span class="card-title">24 months</span><span class="card-desc">Two years — even better savings</span><span class="card-price">$480</span><span class="card-check"></span></label></div>
             <div class="card-option radio-card"><input type="radio" name="hosting_months" id="hm_48" value="48"><label for="hm_48"><span class="card-icon">📅</span><span class="card-title">48 months</span><span class="card-desc">Four years — maximum savings</span><span class="card-price">$960</span><span class="card-check"></span></label></div>
+          </div>
+          <div class="notice-warn" style="margin-top:10px;padding:8px 12px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;line-height:1.5;">
+            ⚠️ <strong>Renewal Notice:</strong> Hosting renews at <strong>$20/mo</strong> after the initial term. Multi-month prepayment locks in today's rate.
           </div>
         </div>
       </div>
@@ -1400,6 +1408,7 @@ body {
     setupTimelineSidebar();
     replaceEmojiIcons();
     buildSections();
+    setupShareToken();   // must run before setupOtp (pre-fills email & skips OTP)
     setupOtp();
     setupFileUpload();
     setupDraftAutoSave();
@@ -1973,7 +1982,7 @@ body {
     window._priceItems = [];
     var total = 0;
 
-    // Domain (price × years)
+    // Domain (price × years) with renewal pricing
     var domainEl = document.querySelector('[name="domain"]:checked');
     var domainVal = domainEl ? parseFloat(domainEl.getAttribute('data-price')) || 0 : 0;
     if (domainVal > 0) {
@@ -1982,9 +1991,14 @@ body {
       var domainTotal = domainVal * domainYears;
       window._priceItems.push({ label: 'Domain Name (' + domainYears + ' year' + (domainYears > 1 ? 's' : '') + ')', price: domainVal, qty: domainYears, lineTotal: domainTotal });
       total += domainTotal;
+      // Renewal cost notice
+      var renewalPrice = domainYearsEl ? parseFloat(domainYearsEl.getAttribute('data-renewal-price')) || 0 : 0;
+      if (renewalPrice > 0 && renewalPrice !== domainVal) {
+        window._priceItems.push({ label: '↳ Domain Renewal (per year after initial term)', price: renewalPrice, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: 'Renews at $' + renewalPrice + '/yr' });
+      }
     }
 
-    // Hosting (price × months)
+    // Hosting (price × months) with renewal info
     var hostingEl = document.querySelector('[name="hosting"]:checked');
     var hostingVal = hostingEl ? parseFloat(hostingEl.getAttribute('data-price')) || 0 : 0;
     if (hostingVal > 0) {
@@ -1993,6 +2007,8 @@ body {
       var hostingTotal = hostingVal * hostingMonths;
       window._priceItems.push({ label: 'Web Hosting (' + hostingMonths + ' months)', price: hostingVal, qty: hostingMonths, lineTotal: hostingTotal });
       total += hostingTotal;
+      // Renewal cost notice
+      window._priceItems.push({ label: '↳ Hosting Renewal (per month after initial term)', price: hostingVal, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: '$' + hostingVal + '/mo ongoing' });
     }
 
     // Email
@@ -2131,16 +2147,31 @@ body {
     var items = window._priceItems;
     if (items.length > 0) {
       hasData = true;
+      var subtotal = 0;
+      var renewalNotes = [];
       html += '<div style="padding:12px 0;font-size:13px">';
       html += '<div style="font-weight:600;margin-bottom:6px">Price Breakdown</div>';
       items.forEach(function(item) {
+        if (item.isRenewal) {
+          renewalNotes.push(item);
+          return;
+        }
         if (item.qty > 1) {
           html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + ' x' + item.qty + '</span><span>$' + item.lineTotal.toLocaleString() + '</span></div>';
         } else {
           html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + '</span><span>$' + item.price.toLocaleString() + '</span></div>';
         }
+        subtotal += item.lineTotal;
       });
-      html += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border);padding-top:8px;margin-top:6px"><span>Estimated Total</span><span>$' + items.reduce(function(s, i) { return s + i.lineTotal; }, 0).toLocaleString() + '</span></div>';
+      html += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border);padding-top:8px;margin-top:6px"><span>Estimated Total (Initial Term)</span><span>$' + subtotal.toLocaleString() + '</span></div>';
+      if (renewalNotes.length > 0) {
+        html += '<div style="margin-top:8px;padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e;line-height:1.5">';
+        html += '<strong>↻ Renewal Pricing:</strong><br>';
+        renewalNotes.forEach(function(n) {
+          html += escapeHtml(n.label) + '<br>';
+        });
+        html += '</div>';
+      }
       html += '</div>';
     }
 
@@ -2203,14 +2234,26 @@ body {
     var items = window._priceItems;
     var html = '';
     var total = 0;
+    var renewalInfo = [];
     items.forEach(function(item) {
+      if (item.isRenewal) {
+        renewalInfo.push(item);
+        return;
+      }
       html += '<tr><td>' + escapeHtml(item.label) + '</td><td>' + item.qty + '</td><td>$' + item.price.toLocaleString() + '</td><td>$' + item.lineTotal.toLocaleString() + '</td></tr>';
       total += item.lineTotal;
     });
     if (items.length === 0) {
       html += '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px">No items selected yet.</td></tr>';
     }
-    html += '<tr class="grand-total"><td colspan="3">Estimated Total</td><td>$' + total.toLocaleString() + '</td></tr>';
+    html += '<tr class="grand-total"><td colspan="3">Estimated Total (Initial Term)</td><td>$' + total.toLocaleString() + '</td></tr>';
+    // Renewal info rows
+    if (renewalInfo.length > 0) {
+      html += '<tr><td colspan="4" style="padding:10px 8px 2px;font-size:12px;color:#92400e;background:#fef3c7;font-weight:600">↻ Renewal Pricing (after initial term)</td></tr>';
+      renewalInfo.forEach(function(item) {
+        html += '<tr><td colspan="4" style="padding:2px 8px;font-size:12px;color:#92400e;background:#fef3c7">' + escapeHtml(item.label) + '</td></tr>';
+      });
+    }
     tbody.innerHTML = html;
     document.getElementById('breakdownModal').classList.add('open');
   }
@@ -2472,12 +2515,14 @@ body {
         request_time: new Date().toISOString()
       };
 
-      // Use server-side RPC that enforces OTP verification
+      // Use server-side RPC that enforces OTP verification (or share token)
       var submitEmail = window._verifiedEmail || data.client_email;
-      return supabaseClient.rpc('submit_submission', {
+      var rpcParams = {
         p_data: submissionData,
         p_email: submitEmail
-      });
+      };
+      if (_shareToken) rpcParams.p_token = _shareToken;
+      return supabaseClient.rpc('submit_submission', rpcParams);
     }).then(function(subRes) {
       if (subRes.error) throw subRes.error;
       if (subRes.data && !subRes.data.success) {
@@ -2664,6 +2709,59 @@ body {
       toast.style.transition = 'opacity 0.3s';
       setTimeout(function() { toast.remove(); }, 300);
     }, 4000);
+  }
+
+  // ---- Share Token (unique client link) ----
+  var _shareToken = null;
+  var _shareEmail = null;
+
+  function setupShareToken() {
+    var params = new URLSearchParams(window.location.search);
+    var token = params.get('token');
+    if (!token) return;
+
+    _shareToken = token;
+    document.getElementById('token-status')?.classList.remove('hidden');
+
+    // Validate token with server
+    supabase.rpc('validate_share_token', { p_token: token }).then(function(res) {
+      if (res.error || !res.data || !res.data.valid) {
+        document.getElementById('token-status').innerHTML =
+          '<span style="color:var(--error)">⚠️ This link is invalid or has already been used. Please contact us for a new link.</span>';
+        return;
+      }
+      var data = res.data;
+      _shareEmail = data.email;
+
+      // Pre-fill email field and lock it
+      var emailInput = document.getElementById('client_email');
+      if (emailInput) {
+        emailInput.value = data.email;
+        emailInput.readOnly = true;
+        emailInput.style.background = 'var(--bg-progress)';
+        emailInput.style.cursor = 'not-allowed';
+      }
+
+      // Pre-fill name
+      if (data.full_name) {
+        var nameInput = document.getElementById('full_name');
+        if (nameInput) nameInput.value = data.full_name;
+      }
+
+      // Show welcome banner
+      var statusEl = document.getElementById('token-status');
+      statusEl.innerHTML =
+        '<span style="display:flex;align-items:center;gap:8px">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,12 9,17 20,6"/></svg>' +
+        ' Welcome' + (data.full_name ? ', ' + data.full_name : '') + '! Your personalized intake form is ready. Just fill it out and submit.</span>';
+
+      // Mark email as verified (skip OTP)
+      window._emailVerified = true;
+      document.getElementById('emailStatus').textContent = '✓ Verified via secure link';
+      document.getElementById('emailStatus').style.color = 'var(--success)';
+      document.getElementById('btnSendOtp').disabled = true;
+      document.getElementById('btnSendOtp').textContent = 'Auto-verified';
+    });
   }
 
   // ---- Replace emoji icons with Lucide icons ----

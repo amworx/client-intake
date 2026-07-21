@@ -162,4 +162,4 @@ $$;
 
 -- Grant execute on RPCs to anon role
 grant execute on function public.verify_otp(text, text) to anon, authenticated;
-grant execute on function public.submit_submission(jsonb, text) to anon, authenticated;
+grant execute on function public.submit_submission(jsonb, text, text) to anon, authenticated;
