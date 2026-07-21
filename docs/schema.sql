@@ -25,9 +25,11 @@ create table if not exists public.submissions (
   -- Domain & Hosting
   domain         text check (domain in ('need', 'no-need', 'not-sure')),
   domain_idea    text,
+  domain_years   int default 1 check (domain_years between 1 and 5),
   hosting        text check (hosting in ('need', 'no-need', 'not-sure')),
+  hosting_months int default 12 check (hosting_months in (12, 24, 48)),
   email          text check (email in ('need', 'no-need', 'not-sure')),
-  email_count    int default 1 check (email_count between 1 and 5),
+  email_count    int default 1 check (email_count between 1 and 100),
   setup_help     text check (setup_help in ('yes', 'no')),
 
   -- Website
@@ -308,7 +310,9 @@ begin
     client_phone,
     domain,
     domain_idea,
+    domain_years,
     hosting,
+    hosting_months,
     email,
     email_count,
     setup_help,
@@ -338,7 +342,9 @@ begin
     p_data ->> 'client_phone',
     p_data ->> 'domain',
     p_data ->> 'domain_idea',
+    (p_data ->> 'domain_years')::int,
     p_data ->> 'hosting',
+    (p_data ->> 'hosting_months')::int,
     p_data ->> 'email',
     (p_data ->> 'email_count')::int,
     p_data ->> 'setup_help',

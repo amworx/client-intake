@@ -1118,10 +1118,11 @@ input[type=number]{-moz-appearance:textfield}
         <template x-if="detailSubmission.client_phone"><div class="field-value"><span class="field-label">Phone</span> <span x-text="detailSubmission.client_phone"></span></div></template>
       </div>
       </template>
-      <template x-if="detailSubmission.domain || detailSubmission.domain_idea || detailSubmission.hosting || detailSubmission.email || detailSubmission.email_count || detailSubmission.setup_help">
+      <template x-if="detailSubmission.domain || detailSubmission.domain_idea || detailSubmission.domain_years || detailSubmission.hosting || detailSubmission.email || detailSubmission.email_count || detailSubmission.setup_help">
       <div class="detail-section">
         <div class="field-label">Domain &amp; Hosting</div>
         <template x-if="detailSubmission.domain"><div class="field-value"><span class="field-label-wide">Domain</span> <span x-text="detailSubmission.domain"></span></div></template>
+        <template x-if="detailSubmission.domain_years"><div class="field-value"><span class="field-label-wide">Domain Duration</span> <span x-text="detailSubmission.domain_years + ' years'"></span></div></template>
         <template x-if="detailSubmission.domain_idea"><div class="field-value"><span class="field-label-wide">Domain Idea</span> <span x-text="detailSubmission.domain_idea"></span></div></template>
         <template x-if="detailSubmission.hosting"><div class="field-value"><span class="field-label-wide">Hosting</span> <span x-text="detailSubmission.hosting"></span></div></template>
         <template x-if="detailSubmission.email"><div class="field-value"><span class="field-label-wide">Email</span> <span x-text="detailSubmission.email"></span></div></template>
