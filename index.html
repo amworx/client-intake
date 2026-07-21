@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root {
   --bg: #ffffff;
@@ -103,18 +104,93 @@ body {
   background-clip: text;
 }
 .top-bar-actions { display: flex; align-items: center; gap: 12px; }
-.dark-toggle {
-  background: var(--bg-progress);
-  border: 1px solid var(--border);
-  color: var(--text);
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  transition: background 0.2s, transform 0.2s;
+/* ---- Theme Toggle (Uiverse RiccardoRapelli) ---- */
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 54px;
+  height: 28px;
+  flex-shrink: 0;
 }
-.dark-toggle:hover { background: var(--bg-card-hover); transform: scale(1.05); }
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.theme-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #3b82f6;
+  transition: background 0.4s;
+  border-radius: 28px;
+  overflow: hidden;
+}
+.theme-switch input:checked + .theme-slider {
+  background: #0f172a;
+}
+.theme-knob {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background: #fbbf24;
+  border-radius: 50%;
+  transition: transform 0.4s, background 0.4s;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-switch input:checked + .theme-slider .theme-knob {
+  transform: translateX(26px);
+  background: #e2e8f0;
+}
+.theme-knob svg {
+  width: 14px;
+  height: 14px;
+  transition: opacity 0.3s;
+}
+.theme-knob .sun-icon { color: #fff; }
+.theme-knob .moon-icon { display: none; color: #1e293b; }
+.theme-switch input:checked + .theme-slider .theme-knob .sun-icon { display: none; }
+.theme-switch input:checked + .theme-slider .theme-knob .moon-icon { display: block; }
+/* Clouds */
+.theme-slider .cloud {
+  position: absolute;
+  fill: rgba(255,255,255,0.35);
+  animation: cloud-drift 5s ease-in-out infinite;
+}
+.theme-slider .cloud:nth-child(2) { animation-delay: 1s; fill: rgba(255,255,255,0.2); }
+.theme-slider .cloud:nth-child(3) { animation-delay: 2s; }
+@keyframes cloud-drift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+/* Stars */
+.theme-stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.theme-switch input:checked + .theme-slider .theme-stars {
+  opacity: 1;
+}
+.theme-star {
+  position: absolute;
+  fill: #fff;
+  animation: star-twinkle 2s ease-in-out infinite;
+}
+.theme-star:nth-child(2) { animation-delay: 0.4s; }
+.theme-star:nth-child(3) { animation-delay: 0.8s; }
+.theme-star:nth-child(4) { animation-delay: 1.2s; }
+@keyframes star-twinkle {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
 .admin-link {
   background: var(--accent);
   color: #fff;
@@ -344,12 +420,14 @@ body {
   width: 40px; height: 40px;
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
   background: var(--bg-progress);
   color: var(--text-muted);
   transition: all 0.2s;
   flex-shrink: 0;
   margin-bottom: 2px;
+}
+.card-option .card-icon svg {
+  width: 20px; height: 20px;
 }
 .card-option .card-title {
   font-size: 12px;
@@ -815,7 +893,24 @@ body {
   <h1>AM Worx — Client Intake</h1>
   <div class="top-bar-actions">
     <a href="admin/index.html" class="admin-link" title="Admin Dashboard">Admin</a>
-    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">&#9790;</button>
+    <label class="theme-switch" title="Toggle dark mode">
+      <input type="checkbox" id="darkToggle">
+      <span class="theme-slider">
+        <span class="theme-knob">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+        <svg class="cloud" style="width:22px;top:4px;left:28px" viewBox="0 0 24 24"><path d="M17.5 19H9a5 5 0 0 1-.44-9.98A6.5 6.5 0 0 1 21.5 12.5 3.5 3.5 0 0 1 17.5 19z"/></svg>
+        <svg class="cloud" style="width:14px;top:2px;left:36px" viewBox="0 0 24 24"><path d="M17.5 19H9a5 5 0 0 1-.44-9.98A6.5 6.5 0 0 1 21.5 12.5 3.5 3.5 0 0 1 17.5 19z"/></svg>
+        <svg class="cloud" style="width:16px;top:16px;left:22px" viewBox="0 0 24 24"><path d="M17.5 19H9a5 5 0 0 1-.44-9.98A6.5 6.5 0 0 1 21.5 12.5 3.5 3.5 0 0 1 17.5 19z"/></svg>
+        <span class="theme-stars">
+          <svg class="theme-star" style="width:8px;top:5px;left:5px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
+          <svg class="theme-star" style="width:5px;top:12px;left:2px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
+          <svg class="theme-star" style="width:6px;top:2px;left:14px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
+          <svg class="theme-star" style="width:4px;top:18px;left:10px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
+        </span>
+      </span>
+    </label>
   </div>
 </div>
 
@@ -899,19 +994,36 @@ body {
       </div>
       <div class="form-group">
         <label class="form-label">Do you need business email?</label>
-        <div class="field-desc">Professional email addresses using your domain name (e.g., you@yourbusiness.com) instead of Gmail/Yahoo. Each mailbox is $30/month.</div>
+        <div class="field-desc">Professional email addresses using your domain name (e.g., you@yourbusiness.com). No more shared Gmail/Yahoo.</div>
         <div class="card-grid-sm">
-          <div class="card-option radio-card"><input type="radio" name="email" id="email_need" value="need" data-price="10"><label for="email_need"><span class="card-icon">📧</span><span class="card-title">Need email</span><span class="card-desc">Professional email @yourdomain.com</span><span class="card-price">$10/mailbox</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="email" id="email_no_need" value="no-need" data-price="0"><label for="email_no_need"><span class="card-icon">✅</span><span class="card-title">Have email</span><span class="card-desc">I already have business email set up</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="email" id="email_not_sure" value="not-sure" data-price="0"><label for="email_not_sure"><span class="card-icon">🤔</span><span class="card-title">Not sure</span><span class="card-desc">I'll decide later with your advice</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="email" id="email_need" value="need"><label for="email_need"><span class="card-icon"><i data-lucide="mail" style="width:20px;height:20px"></i></span><span class="card-title">Need email</span><span class="card-desc">Set up professional email @yourdomain</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="email" id="email_no_need" value="no-need"><label for="email_no_need"><span class="card-icon"><i data-lucide="check-circle" style="width:20px;height:20px"></i></span><span class="card-title">Have email</span><span class="card-desc">I already have business email set up</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="email" id="email_not_sure" value="not-sure"><label for="email_not_sure"><span class="card-icon"><i data-lucide="help-circle" style="width:20px;height:20px"></i></span><span class="card-title">Not sure</span><span class="card-desc">I'll decide later with your advice</span><span class="card-check"></span></label></div>
         </div>
-        <div class="conditional" id="cond-email_count" style="margin-top:10px;">
-          <label class="form-label" for="emailCountInput">Number of mailboxes</label>
-          <div class="stepper-wrap">
-            <button type="button" class="stepper-btn" id="emailMinus" aria-label="Decrease">&minus;</button>
-            <input type="number" class="stepper-input" id="emailCountInput" value="1" min="1" max="100" step="1" readonly>
-            <button type="button" class="stepper-btn" id="emailPlus" aria-label="Increase">+</button>
-            <span class="stepper-total" id="emailTotalLabel">$10/mo</span>
+
+        <div class="conditional" id="cond-email_plan" style="margin-top:12px;">
+          <label class="form-label">Choose your email plan</label>
+          <div class="field-desc">Bundle plans include <strong>1GB storage</strong> per mailbox. Custom plans include <strong>20GB storage</strong> per mailbox.</div>
+          <div class="card-grid-sm" id="email-plan-group">
+            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_2" value="2-bundle" data-price="25"><label for="ep_2"><span class="card-icon"><i data-lucide="inbox" style="width:20px;height:20px"></i></span><span class="card-title">2 Mailboxes</span><span class="card-desc">1GB storage each — perfect for small teams</span><span class="card-price">$25/mo</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_100" value="100-bundle" data-price="150"><label for="ep_100"><span class="card-icon"><i data-lucide="layers" style="width:20px;height:20px"></i></span><span class="card-title">100 Mailboxes</span><span class="card-desc">1GB storage each — for growing businesses</span><span class="card-price">$150/mo</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_unlimited" value="unlimited" data-price="300"><label for="ep_unlimited"><span class="card-icon"><i data-lucide="infinity" style="width:20px;height:20px"></i></span><span class="card-title">Unlimited</span><span class="card-desc">1GB storage each — no user limits</span><span class="card-price">$300/mo</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_custom" value="custom" data-price="2.5"><label for="ep_custom"><span class="card-icon"><i data-lucide="sliders" style="width:20px;height:20px"></i></span><span class="card-title">Custom</span><span class="card-desc">20GB storage each — $2.50/mailbox</span><span class="card-price">$2.50/box</span><span class="card-check"></span></label></div>
+          </div>
+
+          <div class="conditional" id="cond-email_custom" style="margin-top:10px;">
+            <label class="form-label">Number of mailboxes</label>
+            <div class="stepper-wrap">
+              <button type="button" class="stepper-btn" id="emailMinus" aria-label="Decrease">&minus;</button>
+              <input type="number" class="stepper-input" id="emailCountInput" value="3" min="1" max="500" step="1" readonly>
+              <button type="button" class="stepper-btn" id="emailPlus" aria-label="Increase">+</button>
+              <span class="stepper-total" id="emailTotalLabel">$7.50/mo</span>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">20GB storage per mailbox</div>
+          </div>
+
+          <div class="notice-warn" style="margin-top:12px;padding:10px 14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;line-height:1.5;">
+            ⚠️ <strong>Renewal Notice:</strong> The renewal price for business email is significantly higher than the initial purchase price and may cost more than <strong>2x</strong> the first-time price. Please plan your budget accordingly.
           </div>
         </div>
       </div>
@@ -1209,6 +1321,8 @@ body {
     setupBreakdownModal();
     setupFormListeners();
     setupProfileUpload();
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') lucide.createIcons();
     // Initialize SSL requirement based on current domain selection
     var initialDomain = document.querySelector('[name="domain"]:checked');
     if (initialDomain) updateSslRequirement(initialDomain.value);
@@ -1220,10 +1334,12 @@ body {
     const toggle = document.getElementById('darkToggle');
     const saved = localStorage.getItem('darkMode');
     if (saved === 'true') {
+      toggle.checked = true;
       document.documentElement.classList.add('dark');
     }
-    toggle.addEventListener('click', function() {
-      const isDark = document.documentElement.classList.toggle('dark');
+    toggle.addEventListener('change', function() {
+      const isDark = this.checked;
+      document.documentElement.classList.toggle('dark', isDark);
       localStorage.setItem('darkMode', isDark);
     });
   }
@@ -1786,13 +1902,21 @@ body {
 
     // Email
     var emailEl = document.querySelector('[name="email"]:checked');
-    var emailVal = emailEl ? parseFloat(emailEl.getAttribute('data-price')) || 0 : 0;
-    var emailQty = 0;
-    if (emailVal > 0) {
-      emailQty = parseInt(document.getElementById('emailCountInput').value) || 1;
-      var emailTotal = emailVal * emailQty;
-      window._priceItems.push({ label: 'Business Email', price: emailVal, qty: emailQty, lineTotal: emailTotal });
-      total += emailTotal;
+    if (emailEl && emailEl.value === 'need') {
+      var planEl = document.querySelector('[name="email_plan"]:checked');
+      if (planEl) {
+        var planPrice = parseFloat(planEl.getAttribute('data-price')) || 0;
+        if (planEl.value === 'custom') {
+          var customQty = parseInt(document.getElementById('emailCountInput').value) || 1;
+          var emailTotal = planPrice * customQty;
+          window._priceItems.push({ label: 'Business Email (' + customQty + ' mailboxes @ $2.50)', price: planPrice, qty: customQty, lineTotal: emailTotal });
+          total += emailTotal;
+        } else {
+          var labelMap = { '2-bundle': '2 Mailboxes Bundle', '100-bundle': '100 Mailboxes Bundle', 'unlimited': 'Unlimited Mailboxes' };
+          window._priceItems.push({ label: 'Business Email - ' + (labelMap[planEl.value] || planEl.value), price: planPrice, qty: 1, lineTotal: planPrice });
+          total += planPrice;
+        }
+      }
     }
 
     // Setup Help
@@ -1934,7 +2058,7 @@ body {
   // ---- Collect Form Data ----
   function collectFormData() {
     var data = {};
-    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'extra_notes'];
+    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'extra_notes'];
 
     fields.forEach(function(f) {
       var el = document.querySelector('[name="' + f + '"]');
@@ -2018,10 +2142,15 @@ body {
         var cond = document.getElementById('cond-other_website_type');
         cond.classList.toggle('visible', target.value === 'other');
       }
-      // Email count conditional
+      // Email plan conditional
       if (target.name === 'email') {
-        var cond = document.getElementById('cond-email_count');
+        var cond = document.getElementById('cond-email_plan');
         cond.classList.toggle('visible', target.value === 'need');
+      }
+      // Email custom stepper conditional
+      if (target.name === 'email_plan') {
+        var cond = document.getElementById('cond-email_custom');
+        cond.classList.toggle('visible', target.value === 'custom');
       }
       calculate();
     });
@@ -2029,12 +2158,12 @@ body {
       calculate();
     });
 
-    // Email count stepper
+    // Email custom stepper ($2.50/mailbox, shown only when custom plan selected)
     var emailCountInput = document.getElementById('emailCountInput');
     var emailTotalLabel = document.getElementById('emailTotalLabel');
     function updateEmailTotal() {
       var v = parseInt(emailCountInput.value) || 1;
-      emailTotalLabel.textContent = '$' + (v * 10) + '/mo';
+      emailTotalLabel.textContent = '$' + (v * 2.5).toFixed(2) + '/mo';
     }
     document.getElementById('emailMinus').addEventListener('click', function() {
       var v = parseInt(emailCountInput.value) || 1;
@@ -2042,13 +2171,13 @@ body {
     });
     document.getElementById('emailPlus').addEventListener('click', function() {
       var v = parseInt(emailCountInput.value) || 1;
-      if (v < 100) { emailCountInput.value = v + 1; updateEmailTotal(); calculate(); }
+      if (v < 500) { emailCountInput.value = v + 1; updateEmailTotal(); calculate(); }
     });
     emailCountInput.addEventListener('input', function() {
       var v = parseInt(this.value) || 1;
       if (v < 1) { this.value = 1; v = 1; }
-      if (v > 100) { this.value = 100; v = 100; }
-      emailTotalLabel.textContent = '$' + (v * 10) + '/mo';
+      if (v > 500) { this.value = 500; v = 500; }
+      emailTotalLabel.textContent = '$' + (v * 2.5).toFixed(2) + '/mo';
       calculate();
     });
     // Init email total
