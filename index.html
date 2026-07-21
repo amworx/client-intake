@@ -104,92 +104,74 @@ body {
   background-clip: text;
 }
 .top-bar-actions { display: flex; align-items: center; gap: 12px; }
-/* ---- Theme Toggle (Uiverse RiccardoRapelli) ---- */
-.theme-switch {
+/* ---- Theme Toggle (Uiverse njesenberger Gooey) ---- */
+.theme-toggle-wrap {
+  --active-color: #0f172a;
+  --inactive-color: #3b82f6;
   position: relative;
-  display: inline-block;
-  width: 54px;
-  height: 28px;
+  aspect-ratio: 292 / 142;
+  height: 1.5em;
   flex-shrink: 0;
 }
-.theme-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.theme-slider {
+.theme-toggle-wrap .toggle-input {
+  appearance: none;
+  margin: 0;
   position: absolute;
+  z-index: 1;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   cursor: pointer;
-  inset: 0;
-  background: #3b82f6;
-  transition: background 0.4s;
-  border-radius: 28px;
-  overflow: hidden;
 }
-.theme-switch input:checked + .theme-slider {
-  background: #0f172a;
+.theme-toggle-wrap .toggle {
+  width: 100%; height: 100%;
+  overflow: visible;
+  display: block;
 }
-.theme-knob {
-  position: absolute;
-  content: "";
-  height: 22px;
-  width: 22px;
-  left: 3px;
-  bottom: 3px;
-  background: #fbbf24;
-  border-radius: 50%;
-  transition: transform 0.4s, background 0.4s;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.theme-toggle-wrap .toggle-background {
+  fill: var(--inactive-color);
+  transition: fill 0.4s;
 }
-.theme-switch input:checked + .theme-slider .theme-knob {
-  transform: translateX(26px);
-  background: #e2e8f0;
+.theme-toggle-wrap .toggle-input:checked + .toggle .toggle-background {
+  fill: var(--active-color);
 }
-.theme-knob svg {
-  width: 14px;
-  height: 14px;
-  transition: opacity 0.3s;
+.theme-toggle-wrap .toggle-circle-center {
+  transform-origin: center;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.theme-knob .sun-icon { color: #fff; }
-.theme-knob .moon-icon { display: none; color: #1e293b; }
-.theme-switch input:checked + .theme-slider .theme-knob .sun-icon { display: none; }
-.theme-switch input:checked + .theme-slider .theme-knob .moon-icon { display: block; }
-/* Clouds */
-.theme-slider .cloud {
-  position: absolute;
-  fill: rgba(255,255,255,0.35);
-  animation: cloud-drift 5s ease-in-out infinite;
+.theme-toggle-wrap .toggle-input:checked + .toggle .toggle-circle-center {
+  transform: translateX(150px);
 }
-.theme-slider .cloud:nth-child(2) { animation-delay: 1s; fill: rgba(255,255,255,0.2); }
-.theme-slider .cloud:nth-child(3) { animation-delay: 2s; }
-@keyframes cloud-drift {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(3px); }
+.theme-toggle-wrap .toggle-circle {
+  transform-origin: center;
+  backface-visibility: hidden;
+  transition: transform 0.45s;
 }
-/* Stars */
-.theme-stars {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.4s;
+.theme-toggle-wrap .toggle-circle.left {
+  transform: scale(1);
 }
-.theme-switch input:checked + .theme-slider .theme-stars {
-  opacity: 1;
+.theme-toggle-wrap .toggle-input:checked + .toggle .toggle-circle.left {
+  transform: scale(0);
 }
-.theme-star {
-  position: absolute;
+.theme-toggle-wrap .toggle-circle.right {
+  transform: scale(0);
+}
+.theme-toggle-wrap .toggle-input:checked + .toggle .toggle-circle.right {
+  transform: scale(1);
+}
+.theme-toggle-wrap .toggle-icon {
+  transition: fill 0.4s;
+}
+.theme-toggle-wrap .toggle-icon.on {
+  fill: var(--inactive-color);
+}
+.theme-toggle-wrap .toggle-input:checked + .toggle .toggle-icon.on {
   fill: #fff;
-  animation: star-twinkle 2s ease-in-out infinite;
 }
-.theme-star:nth-child(2) { animation-delay: 0.4s; }
-.theme-star:nth-child(3) { animation-delay: 0.8s; }
-.theme-star:nth-child(4) { animation-delay: 1.2s; }
-@keyframes star-twinkle {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.3); opacity: 1; }
+.theme-toggle-wrap .toggle-icon.off {
+  fill: #eaeaec;
+}
+.theme-toggle-wrap .toggle-input:checked + .toggle .toggle-icon.off {
+  fill: var(--active-color);
 }
 .admin-link {
   background: var(--accent);
@@ -897,23 +879,22 @@ body {
   <h1>AM Worx — Client Intake</h1>
   <div class="top-bar-actions">
     <a href="admin/index.html" class="admin-link" title="Admin Dashboard">Admin</a>
-    <label class="theme-switch" title="Toggle dark mode">
-      <input type="checkbox" id="darkToggle">
-      <span class="theme-slider">
-        <span class="theme-knob">
-          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-          <svg class="moon-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </span>
-        <svg class="cloud" style="width:22px;top:4px;left:28px" viewBox="0 0 24 24"><path d="M17.5 19H9a5 5 0 0 1-.44-9.98A6.5 6.5 0 0 1 21.5 12.5 3.5 3.5 0 0 1 17.5 19z"/></svg>
-        <svg class="cloud" style="width:14px;top:2px;left:36px" viewBox="0 0 24 24"><path d="M17.5 19H9a5 5 0 0 1-.44-9.98A6.5 6.5 0 0 1 21.5 12.5 3.5 3.5 0 0 1 17.5 19z"/></svg>
-        <svg class="cloud" style="width:16px;top:16px;left:22px" viewBox="0 0 24 24"><path d="M17.5 19H9a5 5 0 0 1-.44-9.98A6.5 6.5 0 0 1 21.5 12.5 3.5 3.5 0 0 1 17.5 19z"/></svg>
-        <span class="theme-stars">
-          <svg class="theme-star" style="width:8px;top:5px;left:5px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
-          <svg class="theme-star" style="width:5px;top:12px;left:2px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
-          <svg class="theme-star" style="width:6px;top:2px;left:14px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
-          <svg class="theme-star" style="width:4px;top:18px;left:10px" viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
-        </span>
-      </span>
+    <label class="theme-toggle-wrap" title="Toggle dark mode">
+      <input class="toggle-input" type="checkbox" id="darkToggle">
+      <svg class="toggle" viewBox="0 0 292 142" xmlns="http://www.w3.org/2000/svg">
+        <path class="toggle-background" d="M71 142C31.7878 142 0 110.212 0 71C0 31.7878 31.7878 0 71 0C110.212 0 119 30 146 30C173 30 182 0 221 0C260 0 292 31.7878 292 71C292 110.212 260.212 142 221 142C181.788 142 173 112 146 112C119 112 110.212 142 71 142Z"/>
+        <rect class="toggle-icon on" x="64" y="39" width="12" height="64" rx="6"/>
+        <path class="toggle-icon off" fill-rule="evenodd" d="M221 91C232.046 91 241 82.0457 241 71C241 59.9543 232.046 51 221 51C209.954 51 201 59.9543 201 71C201 82.0457 209.954 91 221 91ZM221 103C238.673 103 253 88.6731 253 71C253 53.3269 238.673 39 221 39C203.327 39 189 53.3269 189 71C189 88.6731 203.327 103 221 103Z"/>
+        <g filter="url('#theme-goo')">
+          <rect class="toggle-circle-center" x="13" y="42" width="116" height="58" rx="29" fill="#fff"/>
+          <rect class="toggle-circle left" x="14" y="14" width="114" height="114" rx="58" fill="#fff"/>
+          <rect class="toggle-circle right" x="164" y="14" width="114" height="114" rx="58" fill="#fff"/>
+        </g>
+        <filter id="theme-goo">
+          <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"/>
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo"/>
+        </filter>
+      </svg>
     </label>
   </div>
 </div>
