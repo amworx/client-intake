@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -35,9 +35,6 @@
   --radius: 8px;
   --radius-lg: 12px;
   --price-bar-bg: #ffffff;
-  --progress-step-bg: #e2e8f0;
-  --progress-step-active: #6366f1;
-  --progress-step-complete: #22c55e;
   --overlay-bg: rgba(0,0,0,0.5);
   --toast-bg: #1e293b;
   --file-zone-border: #cbd5e1;
@@ -64,9 +61,6 @@ html.dark {
   --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
   --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
   --price-bar-bg: #1e293b;
-  --progress-step-bg: #334155;
-  --progress-step-active: #818cf8;
-  --progress-step-complete: #4ade80;
   --overlay-bg: rgba(0,0,0,0.7);
   --toast-bg: #334155;
   --file-zone-border: #475569;
@@ -98,10 +92,7 @@ body {
 }
 .top-bar h1 {
   font-size: 18px; font-weight: 600;
-  background: linear-gradient(135deg, var(--accent), #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text);
 }
 .top-bar-actions { display: flex; align-items: center; gap: 12px; }
 /* ---- Theme Toggle (Uiverse njesenberger Gooey) ---- */
@@ -173,6 +164,20 @@ body {
 .theme-toggle-wrap .toggle-input:checked + .toggle .toggle-icon.off {
   fill: var(--active-color);
 }
+.top-bar h1 #scrambleTitle {
+  transition: color 0.3s;
+}
+.top-bar h1 #scrambleTitle.scrambled-revealed {
+  background: linear-gradient(135deg, var(--accent), #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: scrambleGlow 0.6s ease-out;
+}
+@keyframes scrambleGlow {
+  0% { filter: brightness(1.5); }
+  100% { filter: brightness(1); }
+}
 .admin-link {
   background: var(--accent);
   color: #fff;
@@ -185,52 +190,155 @@ body {
 }
 .admin-link:hover { background: var(--accent-hover); transform: scale(1.05); }
 
-/* Progress Tracker */
-.progress-tracker {
-  position: fixed; top: 56px; left: 0; right: 0;
+/* Timeline Sidebar — Aceternity-inspired */
+.timeline-sidebar {
+  position: fixed;
+  left: 0;
+  top: 56px;
+  bottom: 60px;
+  width: 200px;
+  z-index: 90;
   background: var(--bg-card);
-  border-bottom: 1px solid var(--border);
-  padding: 10px 16px;
-  display: flex; align-items: center; gap: 4px;
-  overflow-x: auto;
-  z-index: 99;
+  border-right: 1px solid var(--border);
+  padding: 0;
+  overflow: hidden;
   transition: background 0.3s, border-color 0.3s;
 }
-.progress-step {
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 10px;
-  border-radius: var(--radius);
+.timeline-inner {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.timeline-inner::before {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--border);
+  border-radius: 1px;
+}
+.timeline-fill {
+  position: absolute;
+  left: 23px;
+  top: 0;
+  width: 2px;
+  height: 0%;
+  background: linear-gradient(180deg, var(--accent), #ec4899);
+  border-radius: 1px;
+  z-index: 1;
+  transition: height 0.15s ease-out;
+}
+.timeline-fill::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px 3px rgba(99,102,241,0.4);
+}
+.tl-dots {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex: 1;
+  padding: 8px 0;
+}
+.tl-dot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 18px;
+  border: none;
+  background: none;
   cursor: pointer;
-  white-space: nowrap;
-  font-size: 12px;
+  font-family: inherit;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+  border-radius: 0 8px 8px 0;
+  margin-right: 8px;
+}
+.tl-dot:hover {
+  background: var(--accent-light);
+}
+.tl-dot-marker {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.tl-dot.active .tl-dot-marker {
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-light), 0 0 16px 2px rgba(99,102,241,0.25);
+}
+.tl-dot.completed .tl-dot-marker {
+  border-color: var(--success);
+  background: var(--success);
+}
+.tl-dot.completed .tl-dot-marker::after {
+  content: '';
+  position: absolute;
+  top: 1px; left: 3px;
+  width: 4px; height: 7px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.tl-dot-label {
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-muted);
-  background: transparent;
-  border: none;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+.tl-dot.active .tl-dot-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+.tl-dot.completed .tl-dot-label {
+  color: var(--text);
+  font-weight: 500;
+}
+.tl-dot-icon {
+  color: var(--text-light);
+  transition: color 0.25s;
   flex-shrink: 0;
 }
-.progress-step:hover { background: var(--bg-card-hover); color: var(--text); }
-.progress-step.active { color: var(--progress-step-active); background: var(--accent-light); }
-.progress-step.complete { color: var(--progress-step-complete); }
-.progress-step .step-num {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: var(--bg-progress);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 600;
-  transition: all 0.2s;
+.tl-dot.active .tl-dot-icon {
+  color: var(--accent);
 }
-.progress-step.active .step-num { background: var(--progress-step-active); color: #fff; }
-.progress-step.complete .step-num { background: var(--progress-step-complete); color: #fff; }
-.progress-step .step-check { display: none; font-size: 12px; }
-.progress-step.complete .step-check { display: inline; }
-.progress-arrow { color: var(--text-light); font-size: 10px; flex-shrink: 0; }
+.tl-dot.completed .tl-dot-icon {
+  color: var(--success);
+}
+.tl-dot-label .tl-dot-sub {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--text-light);
+  margin-top: 1px;
+}
 
 /* Main Content */
 .main-content {
   max-width: 800px;
-  margin: 120px auto 0;
+  margin: 100px 20px 0 220px;
   padding: 0 20px 40px;
 }
 
@@ -251,7 +359,13 @@ body {
   margin-bottom: 4px;
   display: flex; align-items: center; gap: 8px;
 }
-.section-title .section-icon { font-size: 22px; }
+.section-title .section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
 .section-desc {
   font-size: 14px; color: var(--text-muted);
   margin-bottom: 20px;
@@ -848,15 +962,17 @@ body {
 /* Stepper inline */
 .stepper-inline { display: flex; align-items: center; gap: 4px; }
 
+@media (max-width: 900px) {
+  .timeline-sidebar { display: none; }
+  .main-content { margin-left: 20px; }
+}
+
 @media (max-width: 640px) {
   .top-bar { padding: 10px 16px; }
   .top-bar h1 { font-size: 15px; }
-  .progress-tracker { padding: 8px 12px; gap: 2px; }
-  .progress-step { font-size: 10px; padding: 4px 6px; }
-  .progress-step .step-num { width: 18px; height: 18px; font-size: 9px; }
   .form-section { padding: 20px 16px; }
   .section-title { font-size: 17px; }
-  .main-content { margin-top: 110px; padding: 0 12px 40px; }
+  .main-content { margin-top: 80px; padding: 0 12px 40px; margin-left: 12px; margin-right: 12px; }
   .radio-group, .checkbox-group { gap: 6px; }
   .radio-option label, .checkbox-option label { padding: 6px 10px; font-size: 12px; }
   .price-bar { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
@@ -876,7 +992,7 @@ body {
 </div>
 
 <div class="top-bar">
-  <h1>AM Worx — Client Intake</h1>
+  <h1><span id="scrambleTitle">AM Worx — Client Intake</span></h1>
   <div class="top-bar-actions">
     <a href="admin/index.html" class="admin-link" title="Admin Dashboard">Admin</a>
     <label class="theme-toggle-wrap" title="Toggle dark mode">
@@ -899,7 +1015,12 @@ body {
   </div>
 </div>
 
-<div class="progress-tracker" id="progressTracker"></div>
+<div class="timeline-sidebar" id="timelineSidebar">
+  <div class="timeline-inner">
+    <div class="timeline-fill" id="timelineFill"></div>
+    <div class="tl-dots" id="timelineDots"></div>
+  </div>
+</div>
 
 <div class="main-content" id="mainContent">
   <div id="errorBanner" class="error-banner"></div>
@@ -908,7 +1029,7 @@ body {
   <form id="intakeForm" novalidate>
     <!-- Section 1: Contact -->
     <section class="form-section" data-section="1" id="s-contact">
-      <div class="section-title"><span class="section-icon">&#128100;</span> Contact Information</div>
+      <div class="section-title"><span class="section-icon"><i data-lucide="user" style="width:22px;height:22px"></i></span> Contact Information</div>
       <div class="section-desc">Let us know who you are and how to reach you.</div>
       <div class="form-group">
         <label class="form-label" for="full_name">Full Name <span class="hint">*</span></label>
@@ -939,7 +1060,7 @@ body {
 
     <!-- Section 2: Domain & Hosting -->
     <section class="form-section" data-section="2" id="s-domain">
-      <div class="section-title"><span class="section-icon">&#127760;</span> Domain &amp; Hosting</div>
+      <div class="section-title"><span class="section-icon"><i data-lucide="globe" style="width:22px;height:22px"></i></span> Domain &amp; Hosting</div>
       <div class="section-desc">Tell us about your domain and hosting requirements.</div>
       <div class="form-group">
         <label class="form-label">Do you need a domain name?</label>
@@ -1024,7 +1145,7 @@ body {
 
     <!-- Section 3: Website -->
     <section class="form-section" data-section="3" id="s-website">
-      <div class="section-title"><span class="section-icon">&#127754;</span> Website Details</div>
+      <div class="section-title"><span class="section-icon"><i data-lucide="layout" style="width:22px;height:22px"></i></span> Website Details</div>
       <div class="section-desc">Describe your website vision and requirements.</div>
       <div class="form-group">
         <label class="form-label" for="business_desc">Tell us about your business <span class="hint">(describe below, attach a profile, or both)</span></label>
@@ -1109,7 +1230,7 @@ body {
 
     <!-- Section 4: Branding & Content -->
     <section class="form-section" data-section="4" id="s-branding">
-      <div class="section-title"><span class="section-icon">&#127912;</span> Branding &amp; Content</div>
+      <div class="section-title"><span class="section-icon"><i data-lucide="palette" style="width:22px;height:22px"></i></span> Branding &amp; Content</div>
       <div class="section-desc">Share your brand assets and content preferences.</div>
       <div class="form-group">
         <label class="form-label">Do you have a logo?</label>
@@ -1150,7 +1271,7 @@ body {
 
     <!-- Section 5: Timeline -->
     <section class="form-section" data-section="5" id="s-timeline">
-      <div class="section-title"><span class="section-icon">&#128197;</span> Timeline</div>
+      <div class="section-title"><span class="section-icon"><i data-lucide="calendar" style="width:22px;height:22px"></i></span> Timeline</div>
       <div class="section-desc">When are you looking to launch?</div>
       <div class="form-group">
         <label class="form-label">Desired timeline</label>
@@ -1166,7 +1287,7 @@ body {
 
     <!-- Section 6: Maintenance & Budget -->
     <section class="form-section" data-section="6" id="s-maintenance">
-      <div class="section-title"><span class="section-icon">&#128295;</span> Maintenance &amp; Budget</div>
+      <div class="section-title"><span class="section-icon"><i data-lucide="wrench" style="width:22px;height:22px"></i></span> Maintenance &amp; Budget</div>
       <div class="section-desc">Tell us about ongoing maintenance needs and your budget.</div>
       <div class="form-group">
         <label class="form-label">Monthly maintenance plan</label>
@@ -1197,7 +1318,7 @@ body {
 
     <!-- Section 7: Review & Submit -->
     <section class="form-section" data-section="7" id="s-review">
-      <div class="section-title"><span class="section-icon">&#128203;</span> Review &amp; Submit</div>
+      <div class="section-title"><span class="section-icon"><i data-lucide="clipboard-list" style="width:22px;height:22px"></i></span> Review &amp; Submit</div>
       <div class="section-desc">Please review your selections before submitting.</div>
       <div class="form-group">
         <label class="form-label">Files <span class="hint">(optional, max 25MB total)</span></label>
@@ -1282,13 +1403,13 @@ body {
   window._submitting = false;
 
   const SECTIONS_CONFIG = [
-    { id: 'contact', icon: '\u{1F464}', title: 'Contact', short: 'Contact' },
-    { id: 'domain', icon: '\u{1F310}', title: 'Domain & Hosting', short: 'Domain' },
-    { id: 'website', icon: '\u{1F6A7}', title: 'Website Details', short: 'Website' },
-    { id: 'branding', icon: '\u{1F3A8}', title: 'Branding & Content', short: 'Branding' },
-    { id: 'timeline', icon: '\u{1F4C5}', title: 'Timeline', short: 'Timeline' },
-    { id: 'maintenance', icon: '\u{1F527}', title: 'Maintenance & Budget', short: 'Maint' },
-    { id: 'review', icon: '\u{1F4CB}', title: 'Review & Submit', short: 'Review' }
+    { id: 'contact', icon: 'user', title: 'Contact', short: 'Contact' },
+    { id: 'domain', icon: 'globe', title: 'Domain & Hosting', short: 'Domain' },
+    { id: 'website', icon: 'layout', title: 'Website Details', short: 'Website' },
+    { id: 'branding', icon: 'palette', title: 'Branding & Content', short: 'Branding' },
+    { id: 'timeline', icon: 'calendar', title: 'Timeline', short: 'Timeline' },
+    { id: 'maintenance', icon: 'wrench', title: 'Maintenance & Budget', short: 'Maint' },
+    { id: 'review', icon: 'clipboard-list', title: 'Review & Submit', short: 'Review' }
   ];
 
   // ---- Init ----
@@ -1298,7 +1419,8 @@ body {
 
   function initApp() {
     setupDarkMode();
-    setupProgressTracker();
+    setupTimelineSidebar();
+    replaceEmojiIcons();
     buildSections();
     setupOtp();
     setupFileUpload();
@@ -1306,6 +1428,8 @@ body {
     setupBreakdownModal();
     setupFormListeners();
     setupProfileUpload();
+    // Initialize scramble effect on title
+    setTimeout(function() { initScrambleTitle(); }, 600);
     // Initialize Lucide icons
     if (typeof lucide !== 'undefined') lucide.createIcons();
     // Initialize SSL requirement based on current domain selection
@@ -1329,60 +1453,68 @@ body {
     });
   }
 
-  // ---- Progress Tracker ----
-  function setupProgressTracker() {
-    const container = document.getElementById('progressTracker');
+  // ---- Timeline Sidebar (Aceternity-inspired) ----
+  function setupTimelineSidebar() {
+    const container = document.getElementById('timelineDots');
+    if (!container) return;
+    const fillEl = document.getElementById('timelineFill');
+
     let html = '';
     SECTIONS_CONFIG.forEach(function(s, i) {
-      if (i > 0) {
-        html += '<span class="progress-arrow">\u27A1</span>';
-      }
-      html += '<button class="progress-step" data-section="' + (i + 1) + '">';
-      html += '<span class="step-num" id="stepNum' + (i + 1) + '">' + (i + 1) + '</span>';
-      html += '<span class="step-check">\u2713</span>';
-      html += '<span>' + s.short + '</span>';
+      html += '<button class="tl-dot' + (i === 0 ? ' active' : '') + '" data-section="' + (i + 1) + '">';
+      html += '<span class="tl-dot-marker"></span>';
+      html += '<i class="tl-dot-icon" data-lucide="' + s.icon + '" style="width:14px;height:14px;flex-shrink:0"></i>';
+      html += '<span class="tl-dot-label">' + s.title + '</span>';
       html += '</button>';
     });
     container.innerHTML = html;
+    // Render Lucide icons in the dots
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 
+    // Click to scroll
     container.addEventListener('click', function(e) {
-      var btn = e.target.closest('.progress-step');
+      var btn = e.target.closest('.tl-dot');
       if (!btn) return;
       var sec = btn.getAttribute('data-section');
       var el = document.getElementById('s-' + SECTIONS_CONFIG[parseInt(sec) - 1].id);
       if (el) {
-        var offset = 140;
+        var offset = 120;
         var top = el.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top: top, behavior: 'smooth' });
       }
     });
 
+    // Track active section via IntersectionObserver
     var sectionEls = document.querySelectorAll('.form-section');
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (!entry.isIntersecting) return;
         var sec = entry.target.getAttribute('data-section');
-        document.querySelectorAll('.progress-step').forEach(function(s) {
-          s.classList.remove('active');
-          if (s.getAttribute('data-section') === sec) {
-            s.classList.add('active');
-          }
-        });
-        markCompleteSteps(sec);
+        updateTimelineState(sec);
       });
     }, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
-
     sectionEls.forEach(function(el) { observer.observe(el); });
+
+    // Fill line follows scroll progress (tracing beam effect)
+    function updateFill() {
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var progress = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+      fillEl.style.height = (progress * 100) + '%';
+    }
+    window.addEventListener('scroll', updateFill);
+    updateFill();
   }
 
-  function markCompleteSteps(currentSec) {
+  function updateTimelineState(currentSec) {
     var current = parseInt(currentSec);
-    document.querySelectorAll('.progress-step').forEach(function(s) {
+    document.querySelectorAll('.tl-dot').forEach(function(s) {
       var sec = parseInt(s.getAttribute('data-section'));
-      if (sec < current) {
-        s.classList.add('complete');
-      } else {
-        s.classList.remove('complete');
+      s.classList.remove('active', 'completed');
+      if (sec === current) {
+        s.classList.add('active');
+      } else if (sec < current) {
+        s.classList.add('completed');
       }
     });
   }
@@ -1435,8 +1567,8 @@ body {
           section.classList.add('hidden-section');
           var stepIdx = SECTIONS_CONFIG.findIndex(function(s) { return s.id === key; });
           if (stepIdx !== -1) {
-            var steps = document.querySelectorAll('.progress-step');
-            if (steps[stepIdx]) steps[stepIdx].style.display = 'none';
+            var dots = document.querySelectorAll('.tl-dot');
+            if (dots[stepIdx]) dots[stepIdx].style.display = 'none';
           }
         }
         if (override.options && override.options.constructor === Object) {
@@ -2554,6 +2686,144 @@ body {
       toast.style.transition = 'opacity 0.3s';
       setTimeout(function() { toast.remove(); }, 300);
     }, 4000);
+  }
+
+  // ---- Replace emoji icons with Lucide icons ----
+  function replaceEmojiIcons() {
+    var map = {};
+    function reg(cp, name) { map[String.fromCodePoint(cp)] = name; }
+    reg(0x1F310, 'globe');        // 🌐
+    reg(0x2705, 'check-circle');  // ✅
+    reg(0x1F914, 'help-circle');  // 🤔
+    reg(0x1F5A5, 'monitor');      // 🖥️
+    reg(0x1F6E0, 'wrench');       // 🛠️
+    reg(0x1F4AA, 'dumbbell');     // 💪
+    reg(0x1F4C4, 'file-text');    // 📄
+    reg(0x1F3E2, 'building');     // 🏢
+    reg(0x1F3A8, 'palette');      // 🎨
+    reg(0x270D, 'pen-tool');      // ✍️
+    reg(0x1F6CD, 'shopping-bag');  // 🛍️
+    reg(0x1F3EA, 'store');        // 🏪
+    reg(0x1F510, 'lock');         // 🔐
+    reg(0x1F4D6, 'book');         // 📖
+    reg(0x2699, 'settings');      // ⚙️
+    reg(0x1F3E0, 'home');         // 🏠
+    reg(0x1F464, 'user');         // 👤
+    reg(0x26A1, 'zap');           // ⚡
+    reg(0x1F4E7, 'mail');         // 📧
+    reg(0x1F5BC, 'image');        // 🖼️
+    reg(0x2753, 'help-circle');   // ❓
+    reg(0x2B50, 'star');          // ⭐
+    reg(0x1F4B0, 'dollar-sign');  // 💰
+    reg(0x1F4BC, 'briefcase');    // 💼
+    reg(0x2709, 'mail');          // ✉️
+    reg(0x1F4AC, 'message-circle'); // 💬
+    reg(0x1F4EC, 'mail');         // 📬
+    reg(0x1F517, 'link');         // 🔗
+    reg(0x1F50D, 'search');       // 🔍
+    reg(0x1F4C8, 'trending-up');  // 📈
+    reg(0x1F4CA, 'bar-chart');    // 📊
+    reg(0x1F4CD, 'map-pin');      // 📍
+    reg(0x1F6D2, 'shopping-cart'); // 🛒
+    reg(0x1F4B3, 'credit-card');  // 💳
+    reg(0x1F50E, 'search');       // 🔎
+    reg(0x1F4DD, 'file-text');    // 📝
+    reg(0x1F4BE, 'hard-drive');   // 💾
+    reg(0x1F512, 'shield');       // 🔒
+    reg(0x23F0, 'clock');         // ⏰
+    reg(0x1F4F8, 'camera');       // 📸
+    reg(0x1F680, 'rocket');       // 🚀
+    reg(0x1F9D8, 'wind');         // 🧘
+    reg(0x23F8, 'pause-circle');  // ⏸️
+    reg(0x1F527, 'wrench');       // 🔧
+    reg(0x1F6E1, 'shield');       // 🛡️
+    reg(0x1F4B5, 'dollar-sign');  // 💵
+    reg(0x1F48E, 'gem');          // 💎
+    reg(0x1F3C6, 'trophy');       // 🏆
+    reg(0x1F4C5, 'calendar');     // 📅
+    // Keycap numbers (1️⃣ 2️⃣ 3️⃣) - detect by the combining chars
+    // These will be handled by the textContent check below
+    reg(0x0031, 'calendar');      // 1
+    reg(0x0032, 'calendar');      // 2
+    reg(0x0033, 'calendar');      // 3
+
+    document.querySelectorAll('.card-icon').forEach(function(el) {
+      var text = el.textContent.trim();
+      // Skip if already has Lucide icon
+      if (el.querySelector('[data-lucide]')) return;
+      // Strip Variation Selector-16 (U+FE0F) and keycap combining char
+      var clean = text.replace(/\uFE0F/g, '').replace(/\u20E3/g, '').trim();
+      // Try exact match, clean match, then first char
+      var iconName = map[text] || map[clean] || map[clean.charAt(0)] || map[text.charAt(0)];
+      if (iconName) {
+        el.innerHTML = '<i data-lucide="' + iconName + '" style="width:20px;height:20px"></i>';
+      }
+    });
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }
+
+  // ---- Scramble Title Effect (powered by Spell UI Special Text) ----
+  function initScrambleTitle() {
+    var el = document.getElementById('scrambleTitle');
+    if (!el) return;
+    var originalText = el.textContent;
+    var chars = '!@#$%^&*()_+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var duration = 1800;
+    var startTime = Date.now();
+    var revealed = false;
+
+    function getRandomChar() {
+      return chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function animate() {
+      var elapsed = Date.now() - startTime;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = easeOutCubic(progress);
+      var revealCount = Math.floor(eased * originalText.length);
+
+      var result = '';
+      for (var i = 0; i < originalText.length; i++) {
+        if (i < revealCount) {
+          result += originalText[i];
+        } else {
+          result += getRandomChar();
+        }
+      }
+      el.textContent = result;
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else if (!revealed) {
+        revealed = true;
+        el.textContent = originalText;
+        el.classList.add('scrambled-revealed');
+      }
+    }
+
+    // Scramble a few times before the real animation
+    var setupFrames = 8;
+    var setupInterval = 60;
+    for (var i = 0; i < setupFrames; i++) {
+      (function(frame) {
+        setTimeout(function() {
+          if (!revealed) {
+            var partial = '';
+            for (var j = 0; j < originalText.length; j++) {
+              partial += getRandomChar();
+            }
+            el.textContent = partial;
+          }
+        }, setupInterval * frame);
+      })(i);
+    }
+
+    setTimeout(animate, setupFrames * setupInterval + 200);
   }
 
   // ---- Utils ----
