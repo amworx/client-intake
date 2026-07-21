@@ -2724,7 +2724,7 @@ body {
     document.getElementById('token-status')?.classList.remove('hidden');
 
     // Validate token with server
-    supabase.rpc('validate_share_token', { p_token: token }).then(function(res) {
+    supabaseClient.rpc('validate_share_token', { p_token: token }).then(function(res) {
       if (res.error || !res.data || !res.data.valid) {
         document.getElementById('token-status').innerHTML =
           '<span style="color:var(--error)">⚠️ This link is invalid or has already been used. Please contact us for a new link.</span>';
