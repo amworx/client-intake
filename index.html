@@ -172,7 +172,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: scrambleGlow 0.6s ease-out;
+  animation: scrambleGlow 1.0s ease-out;
 }
 @keyframes scrambleGlow {
   0% { filter: brightness(1.5); }
@@ -194,10 +194,10 @@ body {
 .timeline-sidebar {
   position: fixed;
   left: 0;
-  top: 56px;
-  bottom: 60px;
+  top: 58px;
+  bottom: 64px;
   width: 200px;
-  z-index: 90;
+  z-index: 99;
   background: var(--bg-card);
   border-right: 1px solid var(--border);
   padding: 0;
@@ -337,9 +337,8 @@ body {
 
 /* Main Content */
 .main-content {
-  max-width: 800px;
-  margin: 100px 20px 0 220px;
-  padding: 0 20px 40px;
+  margin: 100px 20px 0 240px;
+  padding: 0 0 40px;
 }
 
 /* Sections */
@@ -348,7 +347,10 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
   transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
   scroll-margin-top: 140px;
 }
@@ -964,7 +966,7 @@ body {
 
 @media (max-width: 900px) {
   .timeline-sidebar { display: none; }
-  .main-content { margin-left: 20px; }
+  .main-content { margin-left: 20px; margin-right: 20px; margin-top: 80px; }
 }
 
 @media (max-width: 640px) {
@@ -972,7 +974,7 @@ body {
   .top-bar h1 { font-size: 15px; }
   .form-section { padding: 20px 16px; }
   .section-title { font-size: 17px; }
-  .main-content { margin-top: 80px; padding: 0 12px 40px; margin-left: 12px; margin-right: 12px; }
+  .main-content { margin-top: 80px; padding: 0 0 40px; margin-left: 12px; margin-right: 12px; }
   .radio-group, .checkbox-group { gap: 6px; }
   .radio-option label, .checkbox-option label { padding: 6px 10px; font-size: 12px; }
   .price-bar { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
@@ -2769,7 +2771,7 @@ body {
     if (!el) return;
     var originalText = el.textContent;
     var chars = '!@#$%^&*()_+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    var duration = 1800;
+    var duration = 3500;
     var startTime = Date.now();
     var revealed = false;
 
@@ -2807,8 +2809,8 @@ body {
     }
 
     // Scramble a few times before the real animation
-    var setupFrames = 8;
-    var setupInterval = 60;
+    var setupFrames = 10;
+    var setupInterval = 80;
     for (var i = 0; i < setupFrames; i++) {
       (function(frame) {
         setTimeout(function() {
