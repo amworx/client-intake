@@ -193,3 +193,14 @@
 - **Errors**: Old 2-param RPC overload caused ambiguous function error; resolved by dropping it.
 - **Lessons**: `create or replace function` only works when the function signature (parameter types/count) matches. Adding a parameter with a default value creates a separate overload.
 - **Tags**: complexity_score, rpc, overload, fix
+
+## EVT-20260722-0012
+- **Timestamp**: 2026-07-22T~18:30
+- **Mode**: BUILD
+- **Action**: Fixed 3 production bugs + UI polish
+- **Summary**: (1) "submissionData is not defined" error on submit — `var submissionData` was scoped to one `.then()` callback but referenced in a subsequent `.then()`. Hoisted declaration to `submitForm()` outer scope. (2) OTP showed "Code sent!" then later "Email delivery not configured" — the success toast and UI reveal fired immediately after the Edge Function `fetch()` was initiated, not after it resolved. Moved success path inside the `.then()` that runs only after the Edge Function confirms send. Applied to both main form and bundle confirmation form. (3) Recommendation card UI upgraded — added gradient background, shimmering accent bar, lucide sparkles icon, pill badges with colored dots, single-column hover-slide row layout, slide-up entrance animation, and soft accent-tinted box-shadow.
+- **Result**: All 3 bugs fixed. Submission flow works end-to-end. OTP show success only on actual email send. Recommendation card looks polished in right sidebar.
+- **Files**: index.html
+- **Errors**: None
+- **Lessons**: (a) In promise chains, each `.then()` callback has its own function scope — `var` declarations don't carry across. Hoist to the outer function or pass values through the chain. (b) Never fire a success toast/toast/UI reveal before an async operation completes — wrap inside the success callback. The same bug existed in two places (main + bundle OTP). (c) For sidebar recommendation cards, single-column label-value rows work better than 3-column grids in 280px width.
+- **Tags**: bug-fix, scoping, otp, toast, async, ui, sidebar, animation

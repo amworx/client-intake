@@ -998,11 +998,23 @@ body {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.35s ease, visibility 0.35s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .pricing-screen.open {
   opacity: 1;
   visibility: visible;
 }
+@media (max-width: 768px) {
+  .pricing-screen {
+    padding: 60px 16px 40px;
+    align-items: flex-start;
+  }
+  .pricing-screen-inner {
+    gap: 18px;
+  }
+}
+
 .pricing-screen-bg {
   position: fixed;
   inset: 0;
@@ -1496,7 +1508,7 @@ body {
 }
 
 /* Responsive: narrow screens */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .peritem-sections-grid {
     grid-template-columns: 1fr;
     max-width: 380px;

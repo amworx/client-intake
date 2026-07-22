@@ -910,6 +910,62 @@ input[type=number]{-moz-appearance:textfield}
           </div>
 
         </div>
+        <!-- Bundle Management -->
+        <h3 class="settings-heading">Bundle Management</h3>
+        <div class="pricing-grid">
+          <template x-for="(tier, ti) in settingsForm.BUNDLES" :key="tier.id">
+            <div class="section-card">
+              <div class="card-header" @click="bundleCollapsed[tier.id] = !bundleCollapsed[tier.id]">
+                <span class="price-header-text">
+                  <span class="price-icon-box" :style="'background:' + tier.color + '22;color:' + tier.color">
+                    <i class="fas fa-box"></i>
+                  </span>
+                  <span x-text="tier.name || tier.id"></span>
+                </span>
+                <i class="fas fa-chevron-right collapse-icon" :class="!bundleCollapsed[tier.id] && 'open'"></i>
+              </div>
+              <div class="card-body" x-show="!bundleCollapsed[tier.id]">
+                <div class="section-grid-2 mb-12">
+                  <div>
+                    <label class="field-label">Tier Name</label>
+                    <input class="input" type="text" x-model="tier.name" :placeholder="tier.id">
+                  </div>
+                  <div>
+                    <label class="field-label">Monthly Price ($)</label>
+                    <div class="number-stepper">
+                      <button class="stepper-btn stepper-dec" @click="tier.price = Math.max(0, (tier.price || 0) - 1)">−</button>
+                      <input class="stepper-input" type="number" x-model="tier.price" min="0">
+                      <button class="stepper-btn stepper-inc" @click="tier.price = (tier.price || 0) + 1">+</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="section-grid-2 mb-12">
+                  <div>
+                    <label class="field-label">Icon (Lucide name)</label>
+                    <input class="input" type="text" x-model="tier.icon" placeholder="rocket">
+                  </div>
+                  <div>
+                    <label class="field-label">Color (hex)</label>
+                    <input class="input" type="text" x-model="tier.color" placeholder="#22c55e">
+                  </div>
+                </div>
+                <div class="mb-12">
+                  <label class="field-label mb-6">Features</label>
+                  <template x-for="(f, fi) in tier.features" :key="fi">
+                    <div class="option-row">
+                      <input class="input input-flex-3" type="text" x-model="tier.features[fi]" placeholder="Feature description">
+                      <button class="btn btn-ghost btn-sm btn-danger-ghost" @click="tier.features.splice(fi, 1)"><i class="fas fa-times"></i></button>
+                    </div>
+                  </template>
+                  <button class="btn btn-ghost btn-sm" @click="tier.features.push('')"><i class="fas fa-plus"></i> Add Feature</button>
+                </div>
+                <div>
+                  <button class="btn btn-ghost btn-sm" @click="resetBundleTier(tier)">Reset to Default</button>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
         <!-- Survey Sections -->
         <h3 class="settings-heading">Survey Sections</h3>
         <div class="survey-grid">
@@ -1468,7 +1524,8 @@ document.addEventListener('alpine:init', () => {
       smtp_email: 'amworxx@gmail.com',
       smtp_password: '',
       PRICES: {},
-      SECTIONS: {}
+      SECTIONS: {},
+      BUNDLES: []
     },
     smtpPassVisible: false,
     search: '',
@@ -1509,6 +1566,7 @@ document.addEventListener('alpine:init', () => {
 
     // Collapse states
     pricingCollapsed: { domain: true, hosting: true, email: true, setup: true, websiteType: true, pages: true, features: true, logo: true, textContent: true, photos: true, timeline: true, maintenance: true },
+    bundleCollapsed: { essential: true, growth: true, scale: true },
     sectionCollapsed: { contact: true, domain_hosting: true, website: true, branding: true, timeline_section: true, maintenance_budget: true, review: true },
 
     // Share link generator
@@ -1631,7 +1689,12 @@ document.addEventListener('alpine:init', () => {
             smtp_email: data.smtp_email || 'amworxx@gmail.com',
             smtp_password: data.smtp_password || '',
             PRICES: JSON.parse(JSON.stringify(data.prices || {})),
-            SECTIONS: secs
+            SECTIONS: secs,
+            BUNDLES: JSON.parse(JSON.stringify(data.bundles || [
+              { id: 'essential', name: 'Essential', price: 19, icon: 'rocket', color: '#22c55e', features: ['Web hosting', 'SSL certificate', 'Weekly backups', 'Security updates', 'Email support', '1 hour/month minor edits'] },
+              { id: 'growth', name: 'Growth', price: 49, icon: 'trending-up', color: '#6366f1', features: ['Everything in Essential', 'Faster hosting', 'Daily backups', 'Priority support', 'Up to 5 business emails', '3 hours/month content updates', 'Performance monitoring', 'Basic SEO monitoring'] },
+              { id: 'scale', name: 'Scale', price: 89, icon: 'award', color: '#ec4899', features: ['Everything in Growth', 'Premium hosting', 'Unlimited business emails', 'Advanced security monitoring', 'Monthly SEO report', 'Analytics report', 'Up to 8 hours/month updates', 'Emergency support', 'Consultation calls'] }
+            ]))
           };
         }
       } catch (e) {
@@ -1947,6 +2010,16 @@ document.addEventListener('alpine:init', () => {
       opt.price = Math.max(0, v + delta);
     },
 
+    resetBundleTier(tier) {
+      const defaults = {
+        essential: { name: 'Essential', price: 19, icon: 'rocket', color: '#22c55e', features: ['Web hosting', 'SSL certificate', 'Weekly backups', 'Security updates', 'Email support', '1 hour/month minor edits'] },
+        growth: { name: 'Growth', price: 49, icon: 'trending-up', color: '#6366f1', features: ['Everything in Essential', 'Faster hosting', 'Daily backups', 'Priority support', 'Up to 5 business emails', '3 hours/month content updates', 'Performance monitoring', 'Basic SEO monitoring'] },
+        scale: { name: 'Scale', price: 89, icon: 'award', color: '#ec4899', features: ['Everything in Growth', 'Premium hosting', 'Unlimited business emails', 'Advanced security monitoring', 'Monthly SEO report', 'Analytics report', 'Up to 8 hours/month updates', 'Emergency support', 'Consultation calls'] }
+      };
+      const d = defaults[tier.id];
+      if (d) Object.assign(tier, d);
+    },
+
     addOption(sectionKey) {
       if (!this.settingsForm.SECTIONS[sectionKey].options) {
         this.settingsForm.SECTIONS[sectionKey].options = [];
@@ -1975,7 +2048,8 @@ document.addEventListener('alpine:init', () => {
             smtp_email: this.settingsForm.smtp_email,
             smtp_password: this.settingsForm.smtp_password,
             prices: this.settingsForm.PRICES,
-            sections: this.settingsForm.SECTIONS
+            sections: this.settingsForm.SECTIONS,
+            bundles: this.settingsForm.BUNDLES
           }).eq('id', 1);
         if (error) throw error;
         this.settings = { ...this.settings, ...this.settingsForm };

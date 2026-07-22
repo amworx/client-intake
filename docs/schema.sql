@@ -95,6 +95,7 @@ create table if not exists public.settings (
   date_style          text default 'medium' check (date_style in ('short', 'medium', 'long')),
   prices              jsonb default '{}'::jsonb,
   sections            jsonb default '{}'::jsonb,
+  bundles             jsonb default '[]'::jsonb,
   smtp_enabled        boolean default false,
   smtp_email          text default 'amworxx@gmail.com',
   smtp_password       text default '',

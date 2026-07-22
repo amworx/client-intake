@@ -71,3 +71,67 @@ When implementing package recommendation from form answers:
 3. **Display live**: show progress bar + level label + recommended package that updates as user answers questions
 4. **Include in recommendation card**: show the recommended package with timeline and investment estimate in review section
 5. **Log in submission**: store `complexity_score` with submission for admin visibility
+
+## Promise Chain Variable Scope Pattern
+
+When variables defined inside one `.then()` callback need to be referenced in subsequent `.then()` callbacks:
+
+```js
+// ❌ WRONG — var is scoped to the .then() callback function
+Promise.resolve().then(function() {
+  // ... work ...
+  var submissionData = { ... };
+  return supabaseClient.rpc('submit', { p_data: submissionData });
+}).then(function(res) {
+  submissionData.submission_id = res.id; // ReferenceError: submissionData is not defined
+});
+
+// ✅ RIGHT — hoist declaration to outer scope
+var submissionData;
+Promise.resolve().then(function() {
+  // ... work ...
+  submissionData = { ... };
+  return supabaseClient.rpc('submit', { p_data: submissionData });
+}).then(function(res) {
+  submissionData.submission_id = res.id; // works
+});
+```
+
+**Key insight:** Each `.then()` callback creates a new function scope. `var` declarations do NOT carry across. `let`/`const` are block-scoped — same problem. Hoist to the function that owns the entire chain.
+
+## Async Success Toast Pattern
+
+When firing UI feedback (toast, reveal input, start cooldown) after an async operation like `fetch()`:
+
+```js
+// ❌ WRONG — fires immediately after fetch is initiated, not resolved
+fetch(url, opts).then(handleResponse);
+showToast('Success!', 'success');           // fires TOO EARLY
+input.style.display = 'block';              // fires TOO EARLY
+startCooldown();                            // fires TOO EARLY
+
+// ✅ RIGHT — only fires after the async operation actually succeeds
+fetch(url, opts).then(function(res) {
+  return res.json().then(function(data) {
+    if (data.error) { showError(); return; }
+    if (data.skipped) { showError(); return; }
+    showToast('Success!', 'success');       // fires AFTER success
+    input.style.display = 'block';
+    startCooldown();
+  });
+}).catch(showError);
+```
+
+**Key insight:** Success UI must live inside the `.then()` callback that runs after the async operation resolves successfully. If you need both success and cooldown logic, chain them: put the immediate success path inside the first `.then()`, then add a second `.then()` for the cooldown that only runs if the first one didn't error/return early.
+
+## Sidebar Recommendation Card UI Pattern
+
+When placing a live-updating recommendation/preview card in a 280px right sidebar:
+
+1. **Single-column rows, not multi-column grids** — three columns at 280px width is cramped and unreadable. Use `display: flex; justify-content: space-between` with label on left, value on right.
+2. **Visual depth** — gradient background + soft shadow with accent tint + shimmering top accent bar (3s shimmer animation).
+3. **Pill badges with colored dots** — circle dot inside the badge makes it look like a status indicator, not just colored text.
+4. **Icon in header** — Lucide icon (e.g., `sparkles`) next to the card title adds personality and visual anchor.
+5. **Hover feedback on items** — `transform: translateX(2px)` + accent border on hover creates interactivity without noise.
+6. **Entrance animation** — subtle slide-up + scale (`cubic-bezier(0.16, 1, 0.3, 1)`) when the card transitions from hidden to visible feels premium.
+7. **Dashed-border note** — adds visual rhythm between the data grid and the disclaimer, breaking the monotony of solid cards.
