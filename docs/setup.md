@@ -70,6 +70,16 @@ set form_url = 'https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/'
 where id = 1;
 ```
 
+### Apply bundle tiers column (if upgrading from earlier version)
+If you already have a settings row, apply this migration to add the `bundles` JSONB column:
+
+```sql
+alter table if exists public.settings
+  add column if not exists bundles jsonb default '[]'::jsonb;
+```
+
+The app will auto-seed default bundle data (Essential/Growth/Scale) if the column is empty.
+
 ---
 
 ## 5. Push & Verify
