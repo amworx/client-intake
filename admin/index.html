@@ -552,7 +552,10 @@ input[type=number]{-moz-appearance:textfield}
                   </td>
                   <td x-text="s.business_name || '—'"></td>
                   <td x-text="formatDate(s.created_at, settings.date_style)"></td>
-                  <td x-text="formatCurrency(s.estimated_total)"></td>
+                  <td>
+                    <span x-text="formatCurrency(s.estimated_total)"></span>
+                    <span x-show="s.pricing_mode === 'bundle'" style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:600;background:var(--accent-light);color:var(--accent);margin-left:4px;vertical-align:middle">Bundle</span>
+                  </td>
                   <td><span class="badge" :class="s.status === 'New' ? 'badge-new' : 'badge-reviewed'"><span x-show="s.status === 'New'" class="pulse" style="width:6px;height:6px;border-radius:50%;display:inline-block;background:var(--accent)"></span><span x-text="s.status"></span></span></td>
                 </tr>
                 </template>
@@ -602,7 +605,10 @@ input[type=number]{-moz-appearance:textfield}
                 <td x-text="s.business_name || '—'"></td>
                 <td><a :href="'mailto:'+s.client_email" @click.stop class="email-link" x-text="s.client_email"></a></td>
                 <td x-text="formatDate(s.created_at, settings.date_style)" class="nowrap"></td>
-                <td x-text="formatCurrency(s.estimated_total)" class="fw-600"></td>
+                <td class="fw-600">
+                  <span x-text="formatCurrency(s.estimated_total)"></span>
+                  <span x-show="s.pricing_mode === 'bundle'" style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:600;background:var(--accent-light);color:var(--accent);margin-left:4px;vertical-align:middle">Bundle</span>
+                </td>
                 <td><span class="badge" :class="s.status === 'New' ? 'badge-new' : 'badge-reviewed'"><span x-show="s.status === 'New'" class="pulse" style="width:6px;height:6px;border-radius:50%;display:inline-block;background:var(--accent)"></span><span x-text="s.status"></span></span></td>
                 <td>
                   <div class="table-actions" @click.stop>
@@ -1202,22 +1208,47 @@ input[type=number]{-moz-appearance:textfield}
         <template x-if="detailSubmission.extra_notes"><div class="field-value"><span class="field-label-block">Notes</span> <span x-text="detailSubmission.extra_notes"></span></div></template>
       </div>
       </template>
-      <template x-if="detailSubmission.estimated_total">
+      <template x-if="detailSubmission.estimated_total || detailSubmission.pricing_mode">
       <div class="detail-section">
-        <div class="field-label">Pricing <span class="text-xs text-sec" style="font-weight:400">(client-side estimate)</span></div>
-        <div class="detail-estimate" x-text="formatCurrency(detailSubmission.estimated_total)"></div>
-        <template x-if="detailSubmission.price_breakdown && detailSubmission.price_breakdown.length">
-        <div class="mt-8">
-          <div class="text-sm fw-600 text-sec mb-4">Breakdown</div>
-          <table class="w-full" style="font-size:12px;border-collapse:collapse">
-            <thead><tr class="border-bottom"><th class="text-left" style="padding:4px 6px">Item</th><th class="text-center" style="padding:4px 6px">Qty</th><th class="text-right" style="padding:4px 6px">Price</th><th class="text-right" style="padding:4px 6px">Total</th></tr></thead>
-            <tbody>
-              <template x-for="item in detailSubmission.price_breakdown" :key="(item.label||'')+String(item.lineTotal||0)">
-              <tr><td style="padding:3px 6px" x-text="item.label"></td><td class="text-center" style="padding:3px 6px" x-text="item.qty || 1"></td><td class="text-right" style="padding:3px 6px" x-text="formatCurrency(item.price)"></td><td class="text-right fw-600" style="padding:3px 6px" x-text="formatCurrency(item.lineTotal)"></td></tr>
-              </template>
-            </tbody>
-          </table>
+        <div class="field-label">
+          Pricing
+          <span class="text-xs text-sec" style="font-weight:400">
+            <span x-show="detailSubmission.pricing_mode === 'bundle'">
+              <span class="badge badge-bundle" style="display:inline-block;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:600;background:var(--accent-light);color:var(--accent);margin-left:4px">Bundle</span>
+            </span>
+            <span x-show="detailSubmission.pricing_mode !== 'bundle'" style="margin-left:4px">(client-side estimate)</span>
+          </span>
         </div>
+        <template x-if="detailSubmission.pricing_mode === 'bundle'">
+          <div>
+            <div class="detail-estimate" x-show="detailSubmission.bundle_tier && detailSubmission.bundle_tier !== 'not-sure'" x-text="formatCurrency(detailSubmission.estimated_total) + '/yr'"></div>
+            <div x-show="detailSubmission.bundle_tier && detailSubmission.bundle_tier !== 'not-sure'" style="font-size:13px;color:var(--text-muted);margin-top:2px">
+              <span x-text="'$' + Math.round(detailSubmission.estimated_total / 12) + '/mo'"></span> &middot;
+              <span x-text="detailSubmission.bundle_tier.charAt(0).toUpperCase() + detailSubmission.bundle_tier.slice(1)"></span> Bundle &middot;
+              12-month term
+            </div>
+            <div x-show="detailSubmission.bundle_tier === 'not-sure'" style="padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e">
+              <i class="fas fa-question-circle"></i> Client selected "Not sure — recommend the best option"
+            </div>
+          </div>
+        </template>
+        <template x-if="detailSubmission.pricing_mode !== 'bundle'">
+          <div>
+            <div class="detail-estimate" x-text="formatCurrency(detailSubmission.estimated_total)"></div>
+            <template x-if="detailSubmission.price_breakdown && detailSubmission.price_breakdown.length">
+            <div class="mt-8">
+              <div class="text-sm fw-600 text-sec mb-4">Breakdown</div>
+              <table class="w-full" style="font-size:12px;border-collapse:collapse">
+                <thead><tr class="border-bottom"><th class="text-left" style="padding:4px 6px">Item</th><th class="text-center" style="padding:4px 6px">Qty</th><th class="text-right" style="padding:4px 6px">Price</th><th class="text-right" style="padding:4px 6px">Total</th></tr></thead>
+                <tbody>
+                  <template x-for="item in detailSubmission.price_breakdown" :key="(item.label||'')+String(item.lineTotal||0)">
+                  <tr><td style="padding:3px 6px" x-text="item.label"></td><td class="text-center" style="padding:3px 6px" x-text="item.qty || 1"></td><td class="text-right" style="padding:3px 6px" x-text="formatCurrency(item.price)"></td><td class="text-right fw-600" style="padding:3px 6px" x-text="formatCurrency(item.lineTotal)"></td></tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            </template>
+          </div>
         </template>
       </div>
       </template>

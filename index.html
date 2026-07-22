@@ -65,6 +65,278 @@ html.dark {
   --toast-bg: #334155;
   --file-zone-border: #475569;
 }
+
+/* ---- Pricing Mode Selector ---- */
+.pricing-mode-selector {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: background 0.3s, border-color 0.3s;
+}
+.pricing-mode-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.pricing-mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.pricing-mode-card {
+  position: relative;
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  background: var(--bg);
+  transition: all 0.25s ease;
+  text-align: left;
+  font-family: inherit;
+}
+.pricing-mode-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.pricing-mode-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.pricing-mode-card .pm-icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+  color: var(--accent);
+}
+.pricing-mode-card .pm-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.pricing-mode-card .pm-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+.pricing-mode-card .pm-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  background: var(--bg);
+}
+.pricing-mode-card.selected .pm-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.pricing-mode-card.selected .pm-check::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+/* ---- Bundle Tier Cards ---- */
+.bundle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 4px;
+}
+.bundle-card {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.bundle-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+.bundle-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-lg);
+}
+.bundle-card .bundle-header {
+  padding: 18px 16px 12px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.bundle-card .bundle-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+  display: block;
+  color: var(--accent);
+}
+.bundle-card .bundle-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+.bundle-card .bundle-price {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 4px 0 2px;
+}
+.bundle-card .bundle-price-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.bundle-card .bundle-body {
+  padding: 14px 16px;
+  flex: 1;
+}
+.bundle-card .bundle-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.bundle-card .bundle-body li {
+  font-size: 12.5px;
+  color: var(--text);
+  padding: 4px 0 4px 18px;
+  position: relative;
+  line-height: 1.4;
+}
+.bundle-card .bundle-body li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.6;
+}
+.bundle-card .bundle-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  background: var(--bg);
+}
+.bundle-card.selected .bundle-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.bundle-card.selected .bundle-check::after {
+  content: '';
+  width: 7px;
+  height: 11px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+.bundle-card .bundle-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent);
+}
+.bundle-not-sure {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: var(--bg);
+}
+.bundle-not-sure:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.bundle-not-sure.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.bundle-not-sure .bns-icon {
+  font-size: 18px;
+  color: var(--text-muted);
+}
+.bundle-not-sure .bns-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+.bundle-not-sure .bns-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.bundle-not-sure .bns-check {
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+  background: var(--bg);
+}
+.bundle-not-sure.selected .bns-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.bundle-not-sure.selected .bns-check::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+/* ---- Hidden / show helpers ---- */
+.pricing-per-item-only,
+.pricing-bundle-only {
+  display: none;
+}
+.mode-per-item .pricing-per-item-only {
+  display: block;
+}
+.mode-bundle .pricing-bundle-only {
+  display: block;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -1001,6 +1273,42 @@ body {
 </div>
 
 <div class="main-content" id="mainContent">
+  <!-- Pricing Mode Selector -->
+  <div class="pricing-mode-selector" id="pricingModeSelector">
+    <div class="pricing-mode-label">How would you like to price your project?</div>
+    <div class="pricing-mode-grid">
+      <div class="pricing-mode-card selected" data-mode="per-item" id="pmPerItem">
+        <div class="pm-icon"><i data-lucide="list" style="width:20px;height:20px"></i></div>
+        <div class="pm-title">Per-Item Pricing</div>
+        <div class="pm-desc">Choose individual services — pay for exactly what you need, one time or monthly.</div>
+        <div class="pm-check"></div>
+      </div>
+      <div class="pricing-mode-card" data-mode="bundle" id="pmBundle">
+        <div class="pm-icon"><i data-lucide="package" style="width:20px;height:20px"></i></div>
+        <div class="pm-title">Managed Bundle</div>
+        <div class="pm-desc">All-inclusive flat monthly fee with hosting, email, maintenance, and support included.</div>
+        <div class="pm-check"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bundle Selection (hidden unless bundle mode selected) -->
+  <div class="pricing-bundle-only form-section" data-section="1.5" id="s-bundle">
+    <div class="section-title"><span class="section-icon"><i data-lucide="package" style="width:22px;height:22px"></i></span> Choose Your Bundle</div>
+    <div class="section-desc">All bundles include hosting, SSL, backups, security, and support. Pick the tier that fits your needs.</div>
+    <div class="bundle-grid" id="bundleGrid">
+      <!-- Generated by JS -->
+    </div>
+    <div class="bundle-not-sure" id="bundleNotSure">
+      <div class="bns-icon"><i data-lucide="help-circle" style="width:18px;height:18px"></i></div>
+      <div>
+        <div class="bns-text">Not sure yet — recommend the best option for me</div>
+        <div class="bns-sub">We'll assess your needs and suggest the ideal plan.</div>
+      </div>
+      <div class="bns-check"></div>
+    </div>
+  </div>
+
   <div id="errorBanner" class="error-banner"></div>
   <div id="draftBanner" class="draft-banner"></div>
 
@@ -1388,7 +1696,88 @@ body {
   window._settingsOverrides = null;
   window._submitting = false;
 
-  const SECTIONS_CONFIG = [
+  // ---- Pricing Mode ----
+  window._pricingMode = 'per-item'; // 'per-item' | 'bundle'
+  window._selectedBundle = null;    // bundle tier id or 'not-sure'
+
+  const BUNDLE_TIERS = [
+    {
+      id: 'essential',
+      name: 'Essential',
+      price: 19,
+      icon: 'rocket',
+      color: '#22c55e',
+      features: [
+        'Web hosting',
+        'SSL certificate',
+        'Weekly backups',
+        'Security updates',
+        'Email support',
+        '1 hour/month minor edits'
+      ]
+    },
+    {
+      id: 'growth',
+      name: 'Growth',
+      price: 49,
+      icon: 'trending-up',
+      color: '#6366f1',
+      features: [
+        'Everything in Essential',
+        'Faster hosting',
+        'Daily backups',
+        'Priority support',
+        'Up to 5 business emails',
+        '3 hours/month content updates',
+        'Performance monitoring',
+        'Basic SEO monitoring'
+      ]
+    },
+    {
+      id: 'scale',
+      name: 'Scale',
+      price: 89,
+      icon: 'award',
+      color: '#ec4899',
+      features: [
+        'Everything in Growth',
+        'Premium hosting',
+        'Unlimited business emails',
+        'Advanced security monitoring',
+        'Monthly SEO report',
+        'Analytics report',
+        'Up to 8 hours/month updates',
+        'Emergency support',
+        'Consultation calls'
+      ]
+    }
+  ];
+
+  // Dynamic sections config — rebuilt on mode change
+  function getSectionsConfig() {
+    if (window._pricingMode === 'bundle') {
+      return [
+        { id: 'contact', icon: 'user', title: 'Contact', short: 'Contact' },
+        { id: 'bundle', icon: 'package', title: 'Bundle', short: 'Bundle' },
+        { id: 'website', icon: 'layout', title: 'Website Details', short: 'Website' },
+        { id: 'branding', icon: 'palette', title: 'Branding & Content', short: 'Branding' },
+        { id: 'timeline', icon: 'calendar', title: 'Timeline', short: 'Timeline' },
+        { id: 'review', icon: 'clipboard-list', title: 'Review & Submit', short: 'Review' }
+      ];
+    }
+    return [
+      { id: 'contact', icon: 'user', title: 'Contact', short: 'Contact' },
+      { id: 'domain', icon: 'globe', title: 'Domain & Hosting', short: 'Domain' },
+      { id: 'website', icon: 'layout', title: 'Website Details', short: 'Website' },
+      { id: 'branding', icon: 'palette', title: 'Branding & Content', short: 'Branding' },
+      { id: 'timeline', icon: 'calendar', title: 'Timeline', short: 'Timeline' },
+      { id: 'maintenance', icon: 'wrench', title: 'Maintenance & Budget', short: 'Maint' },
+      { id: 'review', icon: 'clipboard-list', title: 'Review & Submit', short: 'Review' }
+    ];
+  }
+
+  // Current active sections config
+  var SECTIONS_CONFIG = getSectionsConfig();
     { id: 'contact', icon: 'user', title: 'Contact', short: 'Contact' },
     { id: 'domain', icon: 'globe', title: 'Domain & Hosting', short: 'Domain' },
     { id: 'website', icon: 'layout', title: 'Website Details', short: 'Website' },
@@ -1405,6 +1794,8 @@ body {
 
   function initApp() {
     setupDarkMode();
+    setupPricingMode();
+    renderBundleCards();
     setupTimelineSidebar();
     replaceEmojiIcons();
     buildSections();
@@ -1440,8 +1831,121 @@ body {
     });
   }
 
+  // ---- Pricing Mode Setup ----
+  function setupPricingMode() {
+    var perItemCard = document.getElementById('pmPerItem');
+    var bundleCard = document.getElementById('pmBundle');
+    var modeSelector = document.getElementById('pricingModeSelector');
+    var bundleSection = document.getElementById('s-bundle');
+    var mainContent = document.getElementById('mainContent');
+
+    function setMode(mode) {
+      window._pricingMode = mode;
+      perItemCard.classList.toggle('selected', mode === 'per-item');
+      bundleCard.classList.toggle('selected', mode === 'bundle');
+      mainContent.classList.toggle('mode-per-item', mode === 'per-item');
+      mainContent.classList.toggle('mode-bundle', mode === 'bundle');
+
+      // Show/hide bundle section
+      if (mode === 'bundle') {
+        bundleSection.style.display = 'block';
+      } else {
+        bundleSection.style.display = 'none';
+      }
+
+      // Hide/show sections per mode
+      var domainSection = document.getElementById('s-domain');
+      var maintSection = document.getElementById('s-maintenance');
+      if (mode === 'bundle') {
+        if (domainSection) domainSection.style.display = 'none';
+        if (maintSection) maintSection.style.display = 'none';
+      } else {
+        if (domainSection) domainSection.style.display = '';
+        if (maintSection) maintSection.style.display = '';
+      }
+
+      // Rebuild timeline for this mode
+      SECTIONS_CONFIG = getSectionsConfig();
+      renumberSections();
+      setupTimelineSidebar();
+
+      // Render Lucide icons for newly visible elements
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      calculate();
+    }
+
+    function renumberSections() {
+      SECTIONS_CONFIG.forEach(function(cfg, idx) {
+        var el = document.getElementById('s-' + cfg.id);
+        if (el) el.setAttribute('data-section', idx + 1);
+      });
+    }
+
+    perItemCard.addEventListener('click', function() { setMode('per-item'); });
+    bundleCard.addEventListener('click', function() { setMode('bundle'); });
+
+    // Init with per-item
+    setMode('per-item');
+  }
+
+  function renderBundleCards() {
+    var grid = document.getElementById('bundleGrid');
+    if (!grid) return;
+    var html = '';
+    BUNDLE_TIERS.forEach(function(tier) {
+      html += '<div class="bundle-card" data-tier="' + tier.id + '">';
+      html += '<div class="bundle-badge" style="background:' + tier.color + '"></div>';
+      html += '<div class="bundle-check"></div>';
+      html += '<div class="bundle-header">';
+      html += '<span class="bundle-icon"><i data-lucide="' + tier.icon + '" style="width:28px;height:28px;color:' + tier.color + '"></i></span>';
+      html += '<div class="bundle-name">' + tier.name + '</div>';
+      html += '<div class="bundle-price">$' + tier.price + '<span class="bundle-price-sub">/mo</span></div>';
+      html += '<div style="font-size:12px;color:var(--text-muted);margin-top:2px">12-month term</div>';
+      html += '</div>';
+      html += '<div class="bundle-body"><ul>';
+      tier.features.forEach(function(f) {
+        html += '<li>' + f + '</li>';
+      });
+      html += '</ul></div>';
+      html += '</div>';
+    });
+    grid.innerHTML = html;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // Click handlers
+    grid.querySelectorAll('.bundle-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        grid.querySelectorAll('.bundle-card').forEach(function(c) { c.classList.remove('selected'); });
+        document.getElementById('bundleNotSure').classList.remove('selected');
+        this.classList.add('selected');
+        window._selectedBundle = this.getAttribute('data-tier');
+        calculate();
+      });
+    });
+
+    // "Not sure" handler
+    var notSure = document.getElementById('bundleNotSure');
+    if (notSure) {
+      notSure.addEventListener('click', function() {
+        grid.querySelectorAll('.bundle-card').forEach(function(c) { c.classList.remove('selected'); });
+        this.classList.toggle('selected');
+        window._selectedBundle = this.classList.contains('selected') ? 'not-sure' : null;
+        calculate();
+      });
+    }
+  }
+
   // ---- Timeline Sidebar (Aceternity-inspired) ----
+  var _timelineObserver = null;
+
   function setupTimelineSidebar() {
+    // Disconnect previous observer to avoid duplicates
+    if (_timelineObserver) {
+      _timelineObserver.disconnect();
+      _timelineObserver = null;
+    }
+
     const container = document.getElementById('timelineDots');
     if (!container) return;
     const fillEl = document.getElementById('timelineFill');
@@ -1473,14 +1977,14 @@ body {
 
     // Track active section via IntersectionObserver
     var sectionEls = document.querySelectorAll('.form-section');
-    var observer = new IntersectionObserver(function(entries) {
+    _timelineObserver = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (!entry.isIntersecting) return;
         var sec = entry.target.getAttribute('data-section');
         updateTimelineState(sec);
       });
     }, { threshold: 0.3, rootMargin: '-80px 0px -40% 0px' });
-    sectionEls.forEach(function(el) { observer.observe(el); });
+    sectionEls.forEach(function(el) { _timelineObserver.observe(el); });
 
     // Fill line follows scroll progress (tracing beam effect)
     function updateFill() {
@@ -1982,142 +2486,167 @@ body {
     window._priceItems = [];
     var total = 0;
 
-    // Domain (price × years) with renewal pricing
-    var domainEl = document.querySelector('[name="domain"]:checked');
-    var domainVal = domainEl ? parseFloat(domainEl.getAttribute('data-price')) || 0 : 0;
-    if (domainVal > 0) {
-      var domainYearsEl = document.querySelector('[name="domain_years"]:checked');
-      var domainYears = domainYearsEl ? parseInt(domainYearsEl.value) || 1 : 1;
-      var domainTotal = domainVal * domainYears;
-      window._priceItems.push({ label: 'Domain Name (' + domainYears + ' year' + (domainYears > 1 ? 's' : '') + ')', price: domainVal, qty: domainYears, lineTotal: domainTotal });
-      total += domainTotal;
-      // Renewal cost notice
-      var renewalPrice = domainYearsEl ? parseFloat(domainYearsEl.getAttribute('data-renewal-price')) || 0 : 0;
-      if (renewalPrice > 0 && renewalPrice !== domainVal) {
-        window._priceItems.push({ label: '↳ Domain Renewal (per year after initial term)', price: renewalPrice, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: 'Renews at $' + renewalPrice + '/yr' });
-      }
-    }
-
-    // Hosting (price × months) with renewal info
-    var hostingEl = document.querySelector('[name="hosting"]:checked');
-    var hostingVal = hostingEl ? parseFloat(hostingEl.getAttribute('data-price')) || 0 : 0;
-    if (hostingVal > 0) {
-      var hostingMonthsEl = document.querySelector('[name="hosting_months"]:checked');
-      var hostingMonths = hostingMonthsEl ? parseInt(hostingMonthsEl.value) || 12 : 12;
-      var hostingTotal = hostingVal * hostingMonths;
-      window._priceItems.push({ label: 'Web Hosting (' + hostingMonths + ' months)', price: hostingVal, qty: hostingMonths, lineTotal: hostingTotal });
-      total += hostingTotal;
-      // Renewal cost notice
-      window._priceItems.push({ label: '↳ Hosting Renewal (per month after initial term)', price: hostingVal, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: '$' + hostingVal + '/mo ongoing' });
-    }
-
-    // Email
-    var emailEl = document.querySelector('[name="email"]:checked');
-    if (emailEl && emailEl.value === 'need') {
-      var planEl = document.querySelector('[name="email_plan"]:checked');
-      if (planEl) {
-        var planPrice = parseFloat(planEl.getAttribute('data-price')) || 0;
-        if (planEl.value === 'custom') {
-          var customQty = parseInt(document.getElementById('emailCountInput').value) || 1;
-          var emailTotal = planPrice * customQty;
-          window._priceItems.push({ label: 'Business Email (' + customQty + ' mailboxes @ $2.50)', price: planPrice, qty: customQty, lineTotal: emailTotal });
-          total += emailTotal;
+    if (window._pricingMode === 'bundle') {
+      // ---- Bundle Mode: flat monthly fee ----
+      var tier = window._selectedBundle;
+      if (tier && tier !== 'not-sure') {
+        var tierData = BUNDLE_TIERS.find(function(t) { return t.id === tier; });
+        if (tierData) {
+          var monthlyPrice = tierData.price;
+          var annualTotal = monthlyPrice * 12;
+          window._priceItems.push({ label: tierData.name + ' Bundle', price: monthlyPrice, qty: 12, lineTotal: annualTotal, isBundle: true, bundleMonthly: monthlyPrice });
+          total = annualTotal;
+          document.getElementById('totalAmount').textContent = '$' + monthlyPrice + '/mo';
         } else {
-          var labelMap = { '2-bundle': '2 Mailboxes Bundle', '100-bundle': '100 Mailboxes Bundle', 'unlimited': 'Unlimited Mailboxes' };
-          window._priceItems.push({ label: 'Business Email - ' + (labelMap[planEl.value] || planEl.value), price: planPrice, qty: 1, lineTotal: planPrice });
-          total += planPrice;
+          document.getElementById('totalAmount').textContent = '$0';
+        }
+      } else if (tier === 'not-sure') {
+        document.getElementById('totalAmount').textContent = 'TBD — we\'ll advise';
+      } else {
+        document.getElementById('totalAmount').textContent = '$0';
+      }
+    } else {
+      // ---- Per-Item Mode: existing calculation ----
+      // Domain (price × years) with renewal pricing
+      var domainEl = document.querySelector('[name="domain"]:checked');
+      var domainVal = domainEl ? parseFloat(domainEl.getAttribute('data-price')) || 0 : 0;
+      if (domainVal > 0) {
+        var domainYearsEl = document.querySelector('[name="domain_years"]:checked');
+        var domainYears = domainYearsEl ? parseInt(domainYearsEl.value) || 1 : 1;
+        var domainTotal = domainVal * domainYears;
+        window._priceItems.push({ label: 'Domain Name (' + domainYears + ' year' + (domainYears > 1 ? 's' : '') + ')', price: domainVal, qty: domainYears, lineTotal: domainTotal });
+        total += domainTotal;
+        // Renewal cost notice
+        var renewalPrice = domainYearsEl ? parseFloat(domainYearsEl.getAttribute('data-renewal-price')) || 0 : 0;
+        if (renewalPrice > 0 && renewalPrice !== domainVal) {
+          window._priceItems.push({ label: '↳ Domain Renewal (per year after initial term)', price: renewalPrice, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: 'Renews at $' + renewalPrice + '/yr' });
         }
       }
-    }
 
-    // Setup Help
-    var setupEl = document.querySelector('[name="setup_help"]:checked');
-    var setupVal = setupEl ? parseFloat(setupEl.getAttribute('data-price')) || 0 : 0;
-    if (setupVal > 0) {
-      window._priceItems.push({ label: 'Setup Assistance', price: setupVal, qty: 1, lineTotal: setupVal });
-      total += setupVal;
-    }
-
-    // Website Type
-    var wtEl = document.querySelector('[name="website_type"]:checked');
-    var wtVal = wtEl ? parseFloat(wtEl.getAttribute('data-price')) || 0 : 0;
-    if (wtVal > 0) {
-      window._priceItems.push({ label: 'Website Type (' + (wtEl ? wtEl.value : '') + ')', price: wtVal, qty: 1, lineTotal: wtVal });
-      total += wtVal;
-    }
-
-    // Pages (checkboxes)
-    var pageCbs = document.querySelectorAll('[name="pages"]:checked');
-    pageCbs.forEach(function(cb) {
-      var p = parseFloat(cb.getAttribute('data-price')) || 0;
-      if (p > 0) {
-        var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
-        window._priceItems.push({ label: 'Page: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
-        total += p;
+      // Hosting (price × months) with renewal info
+      var hostingEl = document.querySelector('[name="hosting"]:checked');
+      var hostingVal = hostingEl ? parseFloat(hostingEl.getAttribute('data-price')) || 0 : 0;
+      if (hostingVal > 0) {
+        var hostingMonthsEl = document.querySelector('[name="hosting_months"]:checked');
+        var hostingMonths = hostingMonthsEl ? parseInt(hostingMonthsEl.value) || 12 : 12;
+        var hostingTotal = hostingVal * hostingMonths;
+        window._priceItems.push({ label: 'Web Hosting (' + hostingMonths + ' months)', price: hostingVal, qty: hostingMonths, lineTotal: hostingTotal });
+        total += hostingTotal;
+        // Renewal cost notice
+        window._priceItems.push({ label: '↳ Hosting Renewal (per month after initial term)', price: hostingVal, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: '$' + hostingVal + '/mo ongoing' });
       }
-    });
 
-    // Features (checkboxes)
-    var featCbs = document.querySelectorAll('[name="features"]:checked');
-    featCbs.forEach(function(cb) {
-      var p = parseFloat(cb.getAttribute('data-price')) || 0;
-      if (p > 0) {
-        var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
-        window._priceItems.push({ label: 'Feature: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
-        total += p;
+      // Email
+      var emailEl = document.querySelector('[name="email"]:checked');
+      if (emailEl && emailEl.value === 'need') {
+        var planEl = document.querySelector('[name="email_plan"]:checked');
+        if (planEl) {
+          var planPrice = parseFloat(planEl.getAttribute('data-price')) || 0;
+          if (planEl.value === 'custom') {
+            var customQty = parseInt(document.getElementById('emailCountInput').value) || 1;
+            var emailTotal = planPrice * customQty;
+            window._priceItems.push({ label: 'Business Email (' + customQty + ' mailboxes @ $2.50)', price: planPrice, qty: customQty, lineTotal: emailTotal });
+            total += emailTotal;
+          } else {
+            var labelMap = { '2-bundle': '2 Mailboxes Bundle', '100-bundle': '100 Mailboxes Bundle', 'unlimited': 'Unlimited Mailboxes' };
+            window._priceItems.push({ label: 'Business Email - ' + (labelMap[planEl.value] || planEl.value), price: planPrice, qty: 1, lineTotal: planPrice });
+            total += planPrice;
+          }
+        }
       }
-    });
 
-    // Logo
-    var logoEl = document.querySelector('[name="logo"]:checked');
-    var logoVal = logoEl ? parseFloat(logoEl.getAttribute('data-price')) || 0 : 0;
-    if (logoVal > 0) {
-      window._priceItems.push({ label: 'Logo Design', price: logoVal, qty: 1, lineTotal: logoVal });
-      total += logoVal;
+      // Setup Help
+      var setupEl = document.querySelector('[name="setup_help"]:checked');
+      var setupVal = setupEl ? parseFloat(setupEl.getAttribute('data-price')) || 0 : 0;
+      if (setupVal > 0) {
+        window._priceItems.push({ label: 'Setup Assistance', price: setupVal, qty: 1, lineTotal: setupVal });
+        total += setupVal;
+      }
+
+      // Website Type
+      var wtEl = document.querySelector('[name="website_type"]:checked');
+      var wtVal = wtEl ? parseFloat(wtEl.getAttribute('data-price')) || 0 : 0;
+      if (wtVal > 0) {
+        window._priceItems.push({ label: 'Website Type (' + (wtEl ? wtEl.value : '') + ')', price: wtVal, qty: 1, lineTotal: wtVal });
+        total += wtVal;
+      }
+
+      // Pages (checkboxes)
+      var pageCbs = document.querySelectorAll('[name="pages"]:checked');
+      pageCbs.forEach(function(cb) {
+        var p = parseFloat(cb.getAttribute('data-price')) || 0;
+        if (p > 0) {
+          var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
+          window._priceItems.push({ label: 'Page: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
+          total += p;
+        }
+      });
+
+      // Features (checkboxes)
+      var featCbs = document.querySelectorAll('[name="features"]:checked');
+      featCbs.forEach(function(cb) {
+        var p = parseFloat(cb.getAttribute('data-price')) || 0;
+        if (p > 0) {
+          var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
+          window._priceItems.push({ label: 'Feature: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
+          total += p;
+        }
+      });
+
+      // Logo
+      var logoEl = document.querySelector('[name="logo"]:checked');
+      var logoVal = logoEl ? parseFloat(logoEl.getAttribute('data-price')) || 0 : 0;
+      if (logoVal > 0) {
+        window._priceItems.push({ label: 'Logo Design', price: logoVal, qty: 1, lineTotal: logoVal });
+        total += logoVal;
+      }
+
+      // Content Text
+      var ctEl = document.querySelector('[name="content_text"]:checked');
+      var ctVal = ctEl ? parseFloat(ctEl.getAttribute('data-price')) || 0 : 0;
+      if (ctVal > 0) {
+        window._priceItems.push({ label: 'Content Writing', price: ctVal, qty: 1, lineTotal: ctVal });
+        total += ctVal;
+      }
+
+      // Content Photos
+      var cpEl = document.querySelector('[name="content_photos"]:checked');
+      var cpVal = cpEl ? parseFloat(cpEl.getAttribute('data-price')) || 0 : 0;
+      if (cpVal > 0) {
+        window._priceItems.push({ label: 'Stock Photos', price: cpVal, qty: 1, lineTotal: cpVal });
+        total += cpVal;
+      }
+
+      // Timeline
+      var tlEl = document.querySelector('[name="timeline"]:checked');
+      var tlVal = tlEl ? parseFloat(tlEl.getAttribute('data-price')) || 0 : 0;
+      if (tlVal > 0) {
+        window._priceItems.push({ label: 'Rush Timeline (' + (tlEl ? tlEl.value : '') + ')', price: tlVal, qty: 1, lineTotal: tlVal });
+        total += tlVal;
+      }
+
+      // Maintenance
+      var maintEl = document.querySelector('[name="maintenance"]:checked');
+      var maintVal = maintEl ? parseFloat(maintEl.getAttribute('data-price')) || 0 : 0;
+      if (maintVal > 0) {
+        window._priceItems.push({ label: 'Monthly Maintenance (' + (maintEl ? maintEl.value : '') + ')', price: maintVal, qty: 1, lineTotal: maintVal });
+        total += maintVal;
+      }
+
+      // Apply overrides
+      if (window._settingsOverrides && window._settingsOverrides.prices) {
+        // already applied via data-price attributes
+      }
+
+      document.getElementById('totalAmount').textContent = '$' + total.toLocaleString();
     }
-
-    // Content Text
-    var ctEl = document.querySelector('[name="content_text"]:checked');
-    var ctVal = ctEl ? parseFloat(ctEl.getAttribute('data-price')) || 0 : 0;
-    if (ctVal > 0) {
-      window._priceItems.push({ label: 'Content Writing', price: ctVal, qty: 1, lineTotal: ctVal });
-      total += ctVal;
-    }
-
-    // Content Photos
-    var cpEl = document.querySelector('[name="content_photos"]:checked');
-    var cpVal = cpEl ? parseFloat(cpEl.getAttribute('data-price')) || 0 : 0;
-    if (cpVal > 0) {
-      window._priceItems.push({ label: 'Stock Photos', price: cpVal, qty: 1, lineTotal: cpVal });
-      total += cpVal;
-    }
-
-    // Timeline
-    var tlEl = document.querySelector('[name="timeline"]:checked');
-    var tlVal = tlEl ? parseFloat(tlEl.getAttribute('data-price')) || 0 : 0;
-    if (tlVal > 0) {
-      window._priceItems.push({ label: 'Rush Timeline (' + (tlEl ? tlEl.value : '') + ')', price: tlVal, qty: 1, lineTotal: tlVal });
-      total += tlVal;
-    }
-
-    // Maintenance
-    var maintEl = document.querySelector('[name="maintenance"]:checked');
-    var maintVal = maintEl ? parseFloat(maintEl.getAttribute('data-price')) || 0 : 0;
-    if (maintVal > 0) {
-      window._priceItems.push({ label: 'Monthly Maintenance (' + (maintEl ? maintEl.value : '') + ')', price: maintVal, qty: 1, lineTotal: maintVal });
-      total += maintVal;
-    }
-
-    // Apply overrides
-    if (window._settingsOverrides && window._settingsOverrides.prices) {
-      // already applied via data-price attributes
-    }
-
-    document.getElementById('totalAmount').textContent = '$' + total.toLocaleString();
 
     // Enable/disable submit
     var btn = document.getElementById('btnSubmit');
     var hasContent = window._priceItems.length > 0 && window._emailVerified;
+    if (window._pricingMode === 'bundle' && window._selectedBundle === 'not-sure') {
+      hasContent = window._emailVerified; // allow submit even without tier chosen
+    }
     btn.disabled = !hasContent;
 
     updateReviewSummary();
@@ -2137,6 +2666,7 @@ body {
       html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted);width:140px">Name</td><td style="padding:3px 0">' + escapeHtml(data.full_name) + '</td></tr>';
       if (data.business_name) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Business</td><td style="padding:3px 0">' + escapeHtml(data.business_name) + '</td></tr>';
       if (data.client_email) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Email</td><td style="padding:3px 0">' + escapeHtml(data.client_email) + '</td></tr>';
+      if (data.pricing_mode) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Pricing</td><td style="padding:3px 0">' + (data.pricing_mode === 'bundle' ? 'Managed Bundle' : 'Per-Item') + (data.bundle_tier && data.bundle_tier !== 'not-sure' ? ' — ' + data.bundle_tier.charAt(0).toUpperCase() + data.bundle_tier.slice(1) : data.bundle_tier === 'not-sure' ? ' — TBD' : '') + '</td></tr>';
       if (data.domain === 'need' && data.domain_years) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Domain</td><td style="padding:3px 0">' + data.domain_years + ' year' + (data.domain_years > 1 ? 's' : '') + '</td></tr>';
       if (data.hosting === 'need' && data.hosting_months) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Hosting</td><td style="padding:3px 0">' + data.hosting_months + ' months</td></tr>';
       if (data.website_type === 'other' && data.other_website_type) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Website Type</td><td style="padding:3px 0">Custom: ' + escapeHtml(data.other_website_type) + '</td></tr>';
@@ -2150,29 +2680,48 @@ body {
       var subtotal = 0;
       var renewalNotes = [];
       html += '<div style="padding:12px 0;font-size:13px">';
-      html += '<div style="font-weight:600;margin-bottom:6px">Price Breakdown</div>';
-      items.forEach(function(item) {
-        if (item.isRenewal) {
-          renewalNotes.push(item);
-          return;
+
+      // Bundle mode summary
+      if (window._pricingMode === 'bundle') {
+        var bundleItem = items.find(function(i) { return i.isBundle; });
+        if (bundleItem) {
+          html += '<div style="font-weight:600;margin-bottom:6px">Managed Bundle — Monthly Plan</div>';
+          html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(bundleItem.label) + '</span><span>$' + bundleItem.bundleMonthly + '/mo</span></div>';
+          html += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border);padding-top:8px;margin-top:6px"><span>Annual Total (12 months)</span><span>$' + bundleItem.lineTotal.toLocaleString() + '</span></div>';
+          html += '<div style="margin-top:6px;padding:6px 10px;background:var(--accent-light);border-radius:6px;font-size:12px;color:var(--text-muted)">';
+          html += '12-month term. Includes hosting, SSL, backups, email, maintenance, and support.';
+          html += '</div>';
+        } else if (window._selectedBundle === 'not-sure') {
+          html += '<div style="font-weight:600;margin-bottom:6px">Bundle Selection</div>';
+          html += '<div style="padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e">Not sure yet — we\'ll recommend the best option after reviewing your needs.</div>';
         }
-        if (item.qty > 1) {
-          html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + ' x' + item.qty + '</span><span>$' + item.lineTotal.toLocaleString() + '</span></div>';
-        } else {
-          html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + '</span><span>$' + item.price.toLocaleString() + '</span></div>';
-        }
-        subtotal += item.lineTotal;
-      });
-      html += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border);padding-top:8px;margin-top:6px"><span>Estimated Total (Initial Term)</span><span>$' + subtotal.toLocaleString() + '</span></div>';
-      if (renewalNotes.length > 0) {
-        html += '<div style="margin-top:8px;padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e;line-height:1.5">';
-        html += '<strong>↻ Renewal Pricing:</strong><br>';
-        renewalNotes.forEach(function(n) {
-          html += escapeHtml(n.label) + '<br>';
+        html += '</div>';
+      } else {
+        // Per-item breakdown
+        html += '<div style="font-weight:600;margin-bottom:6px">Price Breakdown</div>';
+        items.forEach(function(item) {
+          if (item.isRenewal) {
+            renewalNotes.push(item);
+            return;
+          }
+          if (item.qty > 1) {
+            html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + ' x' + item.qty + '</span><span>$' + item.lineTotal.toLocaleString() + '</span></div>';
+          } else {
+            html += '<div style="display:flex;justify-content:space-between;padding:2px 0"><span>' + escapeHtml(item.label) + '</span><span>$' + item.price.toLocaleString() + '</span></div>';
+          }
+          subtotal += item.lineTotal;
         });
+        html += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border);padding-top:8px;margin-top:6px"><span>Estimated Total (Initial Term)</span><span>$' + subtotal.toLocaleString() + '</span></div>';
+        if (renewalNotes.length > 0) {
+          html += '<div style="margin-top:8px;padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e;line-height:1.5">';
+          html += '<strong>↻ Renewal Pricing:</strong><br>';
+          renewalNotes.forEach(function(n) {
+            html += escapeHtml(n.label) + '<br>';
+          });
+          html += '</div>';
+        }
         html += '</div>';
       }
-      html += '</div>';
     }
 
     if (!hasData) {
@@ -2184,6 +2733,8 @@ body {
   // ---- Collect Form Data ----
   function collectFormData() {
     var data = {};
+    data.pricing_mode = window._pricingMode;
+    data.bundle_tier = window._pricingMode === 'bundle' ? window._selectedBundle : null;
     var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'extra_notes'];
 
     fields.forEach(function(f) {
@@ -2235,24 +2786,38 @@ body {
     var html = '';
     var total = 0;
     var renewalInfo = [];
-    items.forEach(function(item) {
-      if (item.isRenewal) {
-        renewalInfo.push(item);
-        return;
+
+    if (window._pricingMode === 'bundle') {
+      var bundleItem = items.find(function(i) { return i.isBundle; });
+      if (bundleItem) {
+        html += '<tr><td>' + escapeHtml(bundleItem.label) + '</td><td>12 months</td><td>$' + bundleItem.bundleMonthly + '/mo</td><td>$' + bundleItem.lineTotal.toLocaleString() + '</td></tr>';
+        html += '<tr class="grand-total"><td colspan="3">Annual Total (12-month term)</td><td>$' + bundleItem.lineTotal.toLocaleString() + '</td></tr>';
+        html += '<tr><td colspan="4" style="padding:8px;font-size:11px;color:var(--text-muted);background:var(--accent-light);text-align:center">';
+        html += 'Includes hosting, SSL, backups, email, maintenance &amp; support. $' + bundleItem.bundleMonthly + '/mo flat rate.';
+        html += '</td></tr>';
+      } else {
+        html += '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px">No bundle selected yet.</td></tr>';
       }
-      html += '<tr><td>' + escapeHtml(item.label) + '</td><td>' + item.qty + '</td><td>$' + item.price.toLocaleString() + '</td><td>$' + item.lineTotal.toLocaleString() + '</td></tr>';
-      total += item.lineTotal;
-    });
-    if (items.length === 0) {
-      html += '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px">No items selected yet.</td></tr>';
-    }
-    html += '<tr class="grand-total"><td colspan="3">Estimated Total (Initial Term)</td><td>$' + total.toLocaleString() + '</td></tr>';
-    // Renewal info rows
-    if (renewalInfo.length > 0) {
-      html += '<tr><td colspan="4" style="padding:10px 8px 2px;font-size:12px;color:#92400e;background:#fef3c7;font-weight:600">↻ Renewal Pricing (after initial term)</td></tr>';
-      renewalInfo.forEach(function(item) {
-        html += '<tr><td colspan="4" style="padding:2px 8px;font-size:12px;color:#92400e;background:#fef3c7">' + escapeHtml(item.label) + '</td></tr>';
+    } else {
+      items.forEach(function(item) {
+        if (item.isRenewal) {
+          renewalInfo.push(item);
+          return;
+        }
+        html += '<tr><td>' + escapeHtml(item.label) + '</td><td>' + item.qty + '</td><td>$' + item.price.toLocaleString() + '</td><td>$' + item.lineTotal.toLocaleString() + '</td></tr>';
+        total += item.lineTotal;
       });
+      if (items.length === 0) {
+        html += '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px">No items selected yet.</td></tr>';
+      }
+      html += '<tr class="grand-total"><td colspan="3">Estimated Total (Initial Term)</td><td>$' + total.toLocaleString() + '</td></tr>';
+      // Renewal info rows
+      if (renewalInfo.length > 0) {
+        html += '<tr><td colspan="4" style="padding:10px 8px 2px;font-size:12px;color:#92400e;background:#fef3c7;font-weight:600">↻ Renewal Pricing (after initial term)</td></tr>';
+        renewalInfo.forEach(function(item) {
+          html += '<tr><td colspan="4" style="padding:2px 8px;font-size:12px;color:#92400e;background:#fef3c7">' + escapeHtml(item.label) + '</td></tr>';
+        });
+      }
     }
     tbody.innerHTML = html;
     document.getElementById('breakdownModal').classList.add('open');
@@ -2397,7 +2962,12 @@ body {
     }
 
     // At least some selections
-    if (window._priceItems.length === 0) {
+    if (window._pricingMode === 'bundle') {
+      if (!window._selectedBundle) {
+        errors.push('Please select a bundle tier or "not sure" to continue.');
+        valid = false;
+      }
+    } else if (window._priceItems.length === 0) {
       errors.push('Please make at least one selection in the form.');
       valid = false;
     }
@@ -2484,6 +3054,8 @@ body {
         business_name: data.business_name || null,
         client_email: data.client_email,
         client_phone: data.client_phone || null,
+        pricing_mode: data.pricing_mode || 'per-item',
+        bundle_tier: data.bundle_tier || null,
         domain: data.domain || null,
         domain_idea: data.domain_idea || null,
         domain_years: data.domain === 'need' ? (parseInt(data.domain_years) || 1) : null,
@@ -2630,46 +3202,75 @@ body {
 
         // Price Breakdown
         if (y > 250) { doc.addPage(); y = 25; }
-        section('Price Breakdown');
-        doc.setFontSize(9);
-        doc.setTextColor(100, 116, 139);
+        if (window._pricingMode === 'bundle') {
+          // Bundle mode PDF breakdown
+          var bundleItem = window._priceItems.find(function(i) { return i.isBundle; });
+          if (bundleItem) {
+            section('Pricing Plan');
+            doc.setFontSize(11);
+            doc.setTextColor(15, 23, 42);
+            doc.setFont(undefined, 'bold');
+            doc.text(bundleItem.label, margin, y);
+            y += 7;
+            doc.setFont(undefined, 'normal');
+            doc.setFontSize(10);
+            doc.text('Monthly Fee: $' + bundleItem.bundleMonthly + '/mo', margin, y);
+            y += 6;
+            doc.text('Annual Total: $' + bundleItem.lineTotal.toLocaleString() + '/yr', margin, y);
+            y += 6;
+            doc.text('Term: 12 months', margin, y);
+            y += 6;
+            doc.text('Includes: hosting, SSL, backups, email, maintenance & support', margin, y);
+          } else if (window._selectedBundle === 'not-sure') {
+            section('Pricing Plan');
+            doc.setFontSize(10);
+            doc.setTextColor(100, 116, 139);
+            doc.text('Bundle selection: Not sure — awaiting AM Worx recommendation.', margin, y);
+          }
+          y += 4;
+        } else {
+          // Per-item price breakdown
+          section('Price Breakdown');
+          doc.setFontSize(9);
+          doc.setTextColor(100, 116, 139);
 
-        var colItem = margin;
-        var colQty = pageWidth - margin - 70;
-        var colPrice = pageWidth - margin - 45;
-        var colTotal = pageWidth - margin - 22;
+          var colItem = margin;
+          var colQty = pageWidth - margin - 70;
+          var colPrice = pageWidth - margin - 45;
+          var colTotal = pageWidth - margin - 22;
 
-        doc.setFont(undefined, 'bold');
-        doc.text('Item', colItem, y);
-        doc.text('Qty', colQty, y);
-        doc.text('Price', colPrice, y);
-        doc.text('Total', colTotal, y);
-        y += 2;
-        doc.setDrawColor(200, 200, 200);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 5;
-        doc.setFont(undefined, 'normal');
-        doc.setTextColor(15, 23, 42);
+          doc.setFont(undefined, 'bold');
+          doc.text('Item', colItem, y);
+          doc.text('Qty', colQty, y);
+          doc.text('Price', colPrice, y);
+          doc.text('Total', colTotal, y);
+          y += 2;
+          doc.setDrawColor(200, 200, 200);
+          doc.line(margin, y, pageWidth - margin, y);
+          y += 5;
+          doc.setFont(undefined, 'normal');
+          doc.setTextColor(15, 23, 42);
 
-        var items = window._priceItems;
-        items.forEach(function(item) {
-          if (y > 275) { doc.addPage(); y = 25; }
-          doc.text(String(item.label).slice(0, 35), colItem, y);
-          doc.text(String(item.qty), colQty, y);
-          doc.text('$' + item.price.toLocaleString(), colPrice, y);
-          doc.text('$' + item.lineTotal.toLocaleString(), colTotal, y);
+          var items = window._priceItems;
+          items.forEach(function(item) {
+            if (y > 275) { doc.addPage(); y = 25; }
+            doc.text(String(item.label).slice(0, 35), colItem, y);
+            doc.text(String(item.qty), colQty, y);
+            doc.text('$' + item.price.toLocaleString(), colPrice, y);
+            doc.text('$' + item.lineTotal.toLocaleString(), colTotal, y);
+            y += 6;
+          });
+
+          y += 3;
+          doc.setDrawColor(99, 102, 241);
+          doc.setLineWidth(0.5);
+          doc.line(margin, y, pageWidth - margin, y);
           y += 6;
-        });
-
-        y += 3;
-        doc.setDrawColor(99, 102, 241);
-        doc.setLineWidth(0.5);
-        doc.line(margin, y, pageWidth - margin, y);
-        y += 6;
-        doc.setFontSize(12);
-        doc.setFont(undefined, 'bold');
-        doc.setTextColor(99, 102, 241);
-        doc.text('Estimated Total: $' + total.toLocaleString(), margin, y);
+          doc.setFontSize(12);
+          doc.setFont(undefined, 'bold');
+          doc.setTextColor(99, 102, 241);
+          doc.text('Estimated Total: $' + total.toLocaleString(), margin, y);
+        }
 
         // Footer
         var blob = doc.output('blob');

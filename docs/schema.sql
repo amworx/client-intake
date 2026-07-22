@@ -19,8 +19,12 @@ create table if not exists public.submissions (
   -- Contact
   full_name      text not null,
   business_name  text,
-  client_  email       text,
+  client_email   text,
   client_phone   text,
+
+  -- Pricing mode
+  pricing_mode   text default 'per-item' check (pricing_mode in ('per-item', 'bundle')),
+  bundle_tier    text check (bundle_tier in ('essential', 'growth', 'scale', 'not-sure')),
 
   -- Domain & Hosting
   domain         text check (domain in ('need', 'no-need', 'not-sure')),
@@ -367,6 +371,8 @@ begin
     business_name,
     client_email,
     client_phone,
+    pricing_mode,
+    bundle_tier,
     domain,
     domain_idea,
     domain_years,
@@ -399,6 +405,8 @@ begin
     p_data ->> 'business_name',
     p_data ->> 'client_email',
     p_data ->> 'client_phone',
+    coalesce(p_data ->> 'pricing_mode', 'per-item'),
+    p_data ->> 'bundle_tier',
     p_data ->> 'domain',
     p_data ->> 'domain_idea',
     (p_data ->> 'domain_years')::int,
