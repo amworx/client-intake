@@ -2706,15 +2706,15 @@ body {
         </div>
         <div style="margin-top:8px">
           <div class="card-grid-sm">
-            <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_need" value="need" data-price="50"><label for="ct_need"><span class="card-icon">✍️</span><span class="card-title">Need Text Content</span><span class="card-desc">We write professional copy for your site</span><span class="card-price">$50</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_have" value="have" data-price="0"><label for="ct_have"><span class="card-icon">✅</span><span class="card-title">Have Content</span><span class="card-desc">I'll provide the text myself</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_need" value="need-help" data-price="50"><label for="ct_need"><span class="card-icon">✍️</span><span class="card-title">Need Text Content</span><span class="card-desc">We write professional copy for your site</span><span class="card-price">$50</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_have" value="self" data-price="0"><label for="ct_have"><span class="card-icon">✅</span><span class="card-title">Have Content</span><span class="card-desc">I'll provide the text myself</span><span class="card-check"></span></label></div>
           </div>
         </div>
         <div style="margin-top:8px">
           <div class="card-grid-sm">
-            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_need" value="stock" data-price="25"><label for="cp_need"><span class="card-icon">📸</span><span class="card-title">Stock Photos</span><span class="card-desc">Professional stock photos for your site</span><span class="card-price">$25</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_have" value="own" data-price="0"><label for="cp_have"><span class="card-icon">✅</span><span class="card-title">Have Photos</span><span class="card-desc">I have my own photos ready</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_unsure" value="unsure" data-price="0"><label for="cp_unsure"><span class="card-icon">🤔</span><span class="card-title">Not sure yet</span><span class="card-desc">I'll decide about photos later</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_need" value="free-stock" data-price="25"><label for="cp_need"><span class="card-icon">📸</span><span class="card-title">Stock Photos</span><span class="card-desc">Professional stock photos for your site</span><span class="card-price">$25</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_have" value="my-own" data-price="0"><label for="cp_have"><span class="card-icon">✅</span><span class="card-title">Have Photos</span><span class="card-desc">I have my own photos ready</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_unsure" value="not-sure" data-price="0"><label for="cp_unsure"><span class="card-icon">🤔</span><span class="card-title">Not sure yet</span><span class="card-desc">I'll decide about photos later</span><span class="card-check"></span></label></div>
           </div>
         </div>
       </div>
@@ -4169,6 +4169,16 @@ body {
     window._priceItems = [];
     var total = 0;
 
+    // Auto-check pages included in the selected website type
+    var wtChecked = document.querySelector('[name="website_type"]:checked');
+    if (wtChecked) {
+      document.querySelectorAll('#pages-group input[type="checkbox"][data-included-in]').forEach(function(cb) {
+        var includedIn = cb.getAttribute('data-included-in') || '';
+        var types = includedIn.split(',').map(function(t) { return t.trim(); });
+        if (types.indexOf(wtChecked.value) >= 0) cb.checked = true;
+      });
+    }
+
     if (window._pricingMode === 'bundle') {
       // ---- Bundle Mode: flat monthly fee ----
       var tier = window._selectedBundle;
@@ -4705,6 +4715,13 @@ body {
       if (target.name === 'website_type') {
         var cond = document.getElementById('cond-other_website_type');
         cond.classList.toggle('visible', target.value === 'other');
+        // Auto-select pages included in this website type
+        var pageCbs = document.querySelectorAll('#pages-group input[type="checkbox"][data-included-in]');
+        pageCbs.forEach(function(cb) {
+          var includedIn = cb.getAttribute('data-included-in') || '';
+          var types = includedIn.split(',').map(function(t) { return t.trim(); });
+          cb.checked = types.indexOf(target.value) >= 0;
+        });
       }
       // Email plan conditional
       if (target.name === 'email') {
