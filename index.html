@@ -67,90 +67,6 @@ html.dark {
 }
 html.dark .welcome-shape { opacity: 0.07; }
 
-/* ---- Pricing Mode Selector ---- */
-.pricing-mode-selector {
-  margin-bottom: 24px;
-  padding: 20px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  transition: background 0.3s, border-color 0.3s;
-}
-.pricing-mode-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 14px;
-}
-.pricing-mode-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.pricing-mode-card {
-  position: relative;
-  padding: 16px;
-  border: 2px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  background: var(--bg);
-  transition: all 0.25s ease;
-  text-align: left;
-  font-family: inherit;
-}
-.pricing-mode-card:hover {
-  border-color: var(--accent);
-  background: var(--accent-light);
-}
-.pricing-mode-card.selected {
-  border-color: var(--accent);
-  background: var(--accent-light);
-  box-shadow: 0 0 0 1px var(--accent);
-}
-.pricing-mode-card .pm-icon {
-  font-size: 20px;
-  margin-bottom: 6px;
-  color: var(--accent);
-}
-.pricing-mode-card .pm-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-}
-.pricing-mode-card .pm-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 4px;
-  line-height: 1.4;
-}
-.pricing-mode-card .pm-check {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.25s ease;
-  background: var(--bg);
-}
-.pricing-mode-card.selected .pm-check {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-.pricing-mode-card.selected .pm-check::after {
-  content: '';
-  width: 6px;
-  height: 10px;
-  border: solid #fff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
-  margin-top: -2px;
-}
-
 /* ---- Bundle Tier Cards ---- */
 .bundle-grid {
   display: grid;
@@ -961,6 +877,168 @@ body {
   }
 }
 
+/* ── Pricing Mode Screen (fixed full-viewport overlay) ── */
+.pricing-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.pricing-screen.open {
+  opacity: 1;
+  visibility: visible;
+}
+.pricing-screen-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+}
+.pricing-screen-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 700px;
+  width: 100%;
+  gap: clamp(16px, 3vh, 32px);
+}
+.pricing-screen-badge {
+  display: inline-flex;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: clamp(11px, 1.2vw, 13px);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  letter-spacing: 0.3px;
+}
+.pricing-screen-heading {
+  font-size: clamp(22px, 4vw, 34px);
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.pricing-screen-sub {
+  font-size: clamp(14px, 1.5vw, 16px);
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 480px;
+}
+.pricing-screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 2vw, 20px);
+  width: 100%;
+  max-width: 640px;
+}
+.pricing-screen-card {
+  position: relative;
+  padding: clamp(20px, 3vw, 28px);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  cursor: pointer;
+  background: var(--bg);
+  text-align: left;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pricing-screen-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.pricing-screen-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(99,102,241,0.1);
+}
+.psc-icon {
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.psc-title {
+  font-size: clamp(16px, 1.8vw, 19px);
+  font-weight: 700;
+  color: var(--text);
+}
+.psc-desc {
+  font-size: clamp(13px, 1.3vw, 14px);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.psc-features {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+.psc-feature {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: clamp(12px, 1.1vw, 13px);
+  color: var(--text);
+}
+.psc-feature svg {
+  flex-shrink: 0;
+  color: var(--success);
+}
+.psc-check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  background: var(--bg);
+}
+.pricing-screen-card.selected .psc-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.pricing-screen-card.selected .psc-check::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+.pricing-screen-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Responsive: narrow screens */
+@media (max-width: 520px) {
+  .pricing-screen-grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+  }
+}
+
 /* Sections */
 .form-section {
   background: var(--bg-card);
@@ -1583,6 +1661,8 @@ body {
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.hidden { display: none; }
+
 .loading-screen {
   position: fixed; inset: 0;
   background: var(--bg);
@@ -1688,6 +1768,46 @@ body {
   </div>
 </div>
 
+<!-- Pricing Mode Screen — fixed full-viewport overlay (shown after welcome) -->
+<div class="pricing-screen hidden" id="pricingScreen">
+  <div class="pricing-screen-bg"></div>
+  <div class="pricing-screen-inner">
+    <div class="pricing-screen-badge">Step 1 of 2</div>
+    <h2 class="pricing-screen-heading">How would you like to price your project?</h2>
+    <p class="pricing-screen-sub">Choose the pricing model that works best for you. You can change this later.</p>
+    <div class="pricing-screen-grid">
+      <div class="pricing-screen-card selected" data-mode="per-item" id="pmPerItem">
+        <div class="psc-icon"><i data-lucide="list" style="width:28px;height:28px"></i></div>
+        <div class="psc-title">Per-Item Pricing</div>
+        <div class="psc-desc">Choose individual services — pay for exactly what you need, one time or monthly.</div>
+        <div class="psc-features">
+          <span class="psc-feature"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3"></i> Pick &amp; choose services</span>
+          <span class="psc-feature"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3"></i> One-time + monthly options</span>
+          <span class="psc-feature"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3"></i> Full price transparency</span>
+        </div>
+        <div class="psc-check"></div>
+      </div>
+      <div class="pricing-screen-card" data-mode="bundle" id="pmBundle">
+        <div class="psc-icon"><i data-lucide="package" style="width:28px;height:28px"></i></div>
+        <div class="psc-title">Managed Bundle</div>
+        <div class="psc-desc">All-inclusive flat monthly fee with hosting, email, maintenance, and support included.</div>
+        <div class="psc-features">
+          <span class="psc-feature"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3"></i> Everything included</span>
+          <span class="psc-feature"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3"></i> Predictable monthly bill</span>
+          <span class="psc-feature"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3"></i> We handle everything</span>
+        </div>
+        <div class="psc-check"></div>
+      </div>
+    </div>
+    <div class="pricing-screen-action">
+      <button class="btn-start" id="btnConfirmPricing">
+        <span class="btn-start-text" id="btnConfirmPricingText">Continue with Per-Item Pricing</span>
+        <i data-lucide="arrow-right" style="width:18px;height:18px;stroke-width:2.5"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="top-bar">
   <h1><span id="scrambleTitle">AM Worx — Client Intake</span></h1>
   <div class="top-bar-actions">
@@ -1709,25 +1829,7 @@ body {
 </div>
 
 <div class="main-content" id="mainContent">
-
-  <!-- Pricing Mode Selector -->
-  <div class="pricing-mode-selector" id="pricingModeSelector">
-    <div class="pricing-mode-label">How would you like to price your project?</div>
-    <div class="pricing-mode-grid">
-      <div class="pricing-mode-card selected" data-mode="per-item" id="pmPerItem">
-        <div class="pm-icon"><i data-lucide="list" style="width:20px;height:20px"></i></div>
-        <div class="pm-title">Per-Item Pricing</div>
-        <div class="pm-desc">Choose individual services — pay for exactly what you need, one time or monthly.</div>
-        <div class="pm-check"></div>
-      </div>
-      <div class="pricing-mode-card" data-mode="bundle" id="pmBundle">
-        <div class="pm-icon"><i data-lucide="package" style="width:20px;height:20px"></i></div>
-        <div class="pm-title">Managed Bundle</div>
-        <div class="pm-desc">All-inclusive flat monthly fee with hosting, email, maintenance, and support included.</div>
-        <div class="pm-check"></div>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- Bundle Selection (hidden unless bundle mode selected) -->
   <div class="pricing-bundle-only form-section" data-section="1.5" id="s-bundle">
@@ -2332,14 +2434,18 @@ body {
     if (initialDomain) updateSslRequirement(initialDomain.value);
     loadOverrides();
 
-    // Welcome screen — dismiss and scroll to form
+    // Welcome screen → Pricing Mode screen transition
     function dismissWelcome() {
-      document.getElementById('welcomeScreen').classList.add('hidden');
+      var ws = document.getElementById('welcomeScreen');
+      ws.classList.add('hidden');
       setTimeout(function() {
-        document.getElementById('welcomeScreen').style.display = 'none';
-        var firstSection = document.querySelector('.form-section');
-        if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 500);
+        ws.style.display = 'none';
+        // Show pricing screen
+        var ps = document.getElementById('pricingScreen');
+        ps.classList.remove('hidden');
+        ps.classList.add('open');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }, 400);
     }
 
     // Start Survey button
@@ -2365,7 +2471,9 @@ body {
   function setupPricingMode() {
     var perItemCard = document.getElementById('pmPerItem');
     var bundleCard = document.getElementById('pmBundle');
-    var modeSelector = document.getElementById('pricingModeSelector');
+    var pricingScreen = document.getElementById('pricingScreen');
+    var confirmBtn = document.getElementById('btnConfirmPricing');
+    var confirmText = document.getElementById('btnConfirmPricingText');
     var bundleSection = document.getElementById('s-bundle');
     var mainContent = document.getElementById('mainContent');
 
@@ -2375,6 +2483,11 @@ body {
       bundleCard.classList.toggle('selected', mode === 'bundle');
       mainContent.classList.toggle('mode-per-item', mode === 'per-item');
       mainContent.classList.toggle('mode-bundle', mode === 'bundle');
+
+      // Update confirm button text
+      confirmText.textContent = mode === 'per-item'
+        ? 'Continue with Per-Item Pricing'
+        : 'Continue with Managed Bundle';
 
       // Show/hide bundle section
       if (mode === 'bundle') {
@@ -2412,8 +2525,32 @@ body {
       });
     }
 
+    // Card clicks update selection
     perItemCard.addEventListener('click', function() { setMode('per-item'); });
     bundleCard.addEventListener('click', function() { setMode('bundle'); });
+
+    // Confirm button — dismiss pricing screen, reveal form
+    function confirmPricing() {
+      pricingScreen.classList.remove('open');
+      pricingScreen.classList.add('hidden');
+      var firstSection = document.querySelector('.form-section');
+      if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Init Lucide icons in the newly visible form
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+    confirmBtn.addEventListener('click', confirmPricing);
+
+    // Allow pressing Enter on selected card
+    perItemCard.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { setMode('per-item'); confirmPricing(); }
+    });
+    bundleCard.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { setMode('bundle'); confirmPricing(); }
+    });
+
+    // Make cards focusable for keyboard nav
+    perItemCard.setAttribute('tabindex', '0');
+    bundleCard.setAttribute('tabindex', '0');
 
     // Init with per-item
     setMode('per-item');
@@ -2639,7 +2776,8 @@ body {
 
   function hideLoading() {
     var ls = document.getElementById('loadingScreen');
-    ls.classList.add('hidden');
+    ls.style.opacity = '0';
+    ls.style.pointerEvents = 'none';
     setTimeout(function() { ls.style.display = 'none'; }, 500);
     checkDraft();
   }
