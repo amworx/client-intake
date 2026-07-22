@@ -2042,7 +2042,7 @@ body {
 .thankyou-overlay {
   position: fixed; inset: 0;
   background: var(--bg);
-  z-index: 500;
+  z-index: 99999;
   display: none;
   align-items: center; justify-content: center;
   flex-direction: column;
@@ -5230,6 +5230,11 @@ body {
   // ---- Thank You ----
   function showThankYou(name) {
     window._submitting = false;
+    // Hide all pricing overlays so thankyou is visible on top
+    document.querySelectorAll('.pricing-screen.open').forEach(function(s) {
+      s.classList.remove('open');
+      s.classList.add('hidden');
+    });
     document.getElementById('thankyouName').textContent = 'Thank You, ' + escapeHtml(name) + '!';
     document.getElementById('thankyouOverlay').classList.add('open');
 
