@@ -992,14 +992,16 @@ body {
   inset: 0;
   z-index: 9998;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 24px;
+  background: var(--bg);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.35s ease, visibility 0.35s ease;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 .pricing-screen.open {
   opacity: 1;
@@ -1008,18 +1010,13 @@ body {
 @media (max-width: 768px) {
   .pricing-screen {
     padding: 60px 16px 40px;
-    align-items: flex-start;
   }
   .pricing-screen-inner {
     gap: 18px;
   }
 }
 
-.pricing-screen-bg {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-}
+
 .pricing-screen-inner {
   position: relative;
   z-index: 1;
@@ -1029,6 +1026,8 @@ body {
   text-align: center;
   max-width: 760px;
   width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
   gap: clamp(16px, 3vh, 32px);
 }
 .pricing-screen-badge {
@@ -1519,6 +1518,9 @@ body {
   }
   .bcf-split {
     flex-direction: column;
+  }
+  .bcf-left {
+    width: 100%;
   }
   .bcf-right {
     width: 100%;
@@ -2316,7 +2318,6 @@ body {
 <!-- Pricing Mode Screen — fixed full-viewport overlay (shown after welcome) -->
 <!-- Pricing Mode Screen -->
 <div class="pricing-screen hidden" id="pricingScreen">
-  <div class="pricing-screen-bg"></div>
   <div class="pricing-screen-inner">
     <div class="pricing-screen-badge">Step 1 of 3</div>
     <h2 class="pricing-screen-heading">How would you like to price your project?</h2>
@@ -2356,7 +2357,6 @@ body {
 
 <!-- Per-Item Overview Screen (Step 2 for Per-Item) -->
 <div class="pricing-screen hidden" id="perItemScreen">
-  <div class="pricing-screen-bg"></div>
   <div class="pricing-screen-inner">
     <button class="screen-back-btn" id="perItemBack" aria-label="Back to pricing options">
       <i data-lucide="arrow-left" style="width:18px;height:18px;stroke-width:2.5"></i>
@@ -2427,7 +2427,6 @@ body {
 
 <!-- Bundle Selection Screen (Step 2 for Bundle) -->
 <div class="pricing-screen hidden" id="bundleScreen">
-  <div class="pricing-screen-bg"></div>
   <div class="pricing-screen-inner">
     <button class="screen-back-btn" id="bundleBack" aria-label="Back to pricing options">
       <i data-lucide="arrow-left" style="width:18px;height:18px;stroke-width:2.5"></i>
@@ -2458,8 +2457,7 @@ body {
 
 <!-- Bundle Confirmation Screen (two-column — no scroll needed) -->
 <div class="pricing-screen hidden" id="bundleConfirmScreen">
-  <div class="pricing-screen-bg"></div>
-    <div class="pricing-screen-inner" style="max-width:780px">
+  <div class="pricing-screen-inner" style="max-width:780px">
     <div class="pricing-screen-badge" id="bundleConfirmBadge">Managed Bundle</div>
     <h2 class="pricing-screen-heading" id="bundleConfirmHeading" style="margin-bottom:4px">You're all set</h2>
     <p class="pricing-screen-sub" id="bundleConfirmSub" style="margin-bottom:12px">Here's your selected plan — just drop your contact info and we'll get started.</p>
