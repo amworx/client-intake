@@ -1031,7 +1031,278 @@ body {
   gap: 10px;
 }
 
+/* ── Screen back button ── */
+.screen-back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.screen-back-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+/* ── Per-Item Overview Screen ── */
+.peritem-sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 560px;
+}
+.peritem-section-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: background 0.2s, border-color 0.2s;
+}
+.peritem-section-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.peritem-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+.peritem-info {
+  flex: 1;
+  min-width: 0;
+}
+.peritem-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.peritem-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.peritem-review-card .peritem-icon {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+/* ── Bundle Screen ── */
+.bundle-screen-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 700px;
+}
+.bundle-screen-not-sure {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  background: var(--bg);
+  transition: all 0.25s ease;
+  max-width: 700px;
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+.bundle-screen-not-sure:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.bundle-screen-not-sure.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.bundle-screen-not-sure .bns-icon {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+.bundle-screen-not-sure .bns-text-wrap {
+  flex: 1;
+}
+.bundle-screen-not-sure .bns-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.bundle-screen-not-sure .bns-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.bundle-screen-not-sure .bns-check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  background: var(--bg);
+}
+.bundle-screen-not-sure.selected .bns-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.bundle-screen-not-sure.selected .bns-check::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+/* Bundle card inside bundle screen (reused from inline bundle cards) */
+.bundle-screen-grid .bundle-card {
+  position: relative;
+  padding: 24px 20px 20px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  cursor: pointer;
+  background: var(--bg);
+  transition: all 0.25s ease;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bundle-screen-grid .bundle-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+.bundle-screen-grid .bundle-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(99,102,241,0.1);
+}
+.bundle-screen-grid .bundle-card .bundle-badge {
+  display: none;
+}
+.bundle-screen-grid .bundle-card .bundle-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  background: var(--bg);
+}
+.bundle-screen-grid .bundle-card.selected .bundle-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.bundle-screen-grid .bundle-card.selected .bundle-check::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+.bundle-screen-grid .bundle-card .bundle-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.bundle-screen-grid .bundle-card .bundle-icon {
+  margin-bottom: 2px;
+}
+.bundle-screen-grid .bundle-card .bundle-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+.bundle-screen-grid .bundle-card .bundle-price {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+.bundle-screen-grid .bundle-card .bundle-price-sub {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+.bundle-screen-grid .bundle-card .bundle-features {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bundle-screen-grid .bundle-card .bundle-features li {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+}
+.bundle-screen-grid .bundle-card .bundle-features li svg {
+  flex-shrink: 0;
+  color: var(--success);
+}
+
 /* Responsive: narrow screens */
+@media (max-width: 640px) {
+  .peritem-sections-grid {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+  }
+  .bundle-screen-grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+  }
+  .screen-back-btn {
+    top: 12px;
+    left: 12px;
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+}
 @media (max-width: 520px) {
   .pricing-screen-grid {
     grid-template-columns: 1fr;
@@ -1661,6 +1932,13 @@ body {
   animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
 .hidden { display: none; }
 
 .loading-screen {
@@ -1769,10 +2047,11 @@ body {
 </div>
 
 <!-- Pricing Mode Screen — fixed full-viewport overlay (shown after welcome) -->
+<!-- Pricing Mode Screen -->
 <div class="pricing-screen hidden" id="pricingScreen">
   <div class="pricing-screen-bg"></div>
   <div class="pricing-screen-inner">
-    <div class="pricing-screen-badge">Step 1 of 2</div>
+    <div class="pricing-screen-badge">Step 1 of 3</div>
     <h2 class="pricing-screen-heading">How would you like to price your project?</h2>
     <p class="pricing-screen-sub">Choose the pricing model that works best for you. You can change this later.</p>
     <div class="pricing-screen-grid">
@@ -1808,6 +2087,108 @@ body {
   </div>
 </div>
 
+<!-- Per-Item Overview Screen (Step 2 for Per-Item) -->
+<div class="pricing-screen hidden" id="perItemScreen">
+  <div class="pricing-screen-bg"></div>
+  <div class="pricing-screen-inner">
+    <button class="screen-back-btn" id="perItemBack" aria-label="Back to pricing options">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;stroke-width:2.5"></i>
+      <span>Back</span>
+    </button>
+    <div class="pricing-screen-badge">Step 2 of 3 — Per-Item Pricing</div>
+    <h2 class="pricing-screen-heading">Here's what we'll cover</h2>
+    <p class="pricing-screen-sub">We'll walk through each service category so you can choose exactly what you need.</p>
+    <div class="peritem-sections-grid">
+      <div class="peritem-section-card">
+        <div class="peritem-icon"><i data-lucide="user" style="width:22px;height:22px"></i></div>
+        <div class="peritem-info">
+          <div class="peritem-name">Contact Information</div>
+          <div class="peritem-desc">Your name, business, email &amp; phone</div>
+        </div>
+      </div>
+      <div class="peritem-section-card">
+        <div class="peritem-icon"><i data-lucide="target" style="width:22px;height:22px"></i></div>
+        <div class="peritem-info">
+          <div class="peritem-name">Your Goal</div>
+          <div class="peritem-desc">What you want your website to achieve</div>
+        </div>
+      </div>
+      <div class="peritem-section-card">
+        <div class="peritem-icon"><i data-lucide="globe" style="width:22px;height:22px"></i></div>
+        <div class="peritem-info">
+          <div class="peritem-name">Domain &amp; Hosting</div>
+          <div class="peritem-desc">Domain name, hosting plan, email setup</div>
+        </div>
+      </div>
+      <div class="peritem-section-card">
+        <div class="peritem-icon"><i data-lucide="layout" style="width:22px;height:22px"></i></div>
+        <div class="peritem-info">
+          <div class="peritem-name">Website Details</div>
+          <div class="peritem-desc">Type, pages, features &amp; functionality</div>
+        </div>
+      </div>
+      <div class="peritem-section-card">
+        <div class="peritem-icon"><i data-lucide="palette" style="width:22px;height:22px"></i></div>
+        <div class="peritem-info">
+          <div class="peritem-name">Branding &amp; Content</div>
+          <div class="peritem-desc">Logo, colors, text, photos &amp; inspiration</div>
+        </div>
+      </div>
+      <div class="peritem-section-card">
+        <div class="peritem-icon"><i data-lucide="clock" style="width:22px;height:22px"></i></div>
+        <div class="peritem-info">
+          <div class="peritem-name">Timeline &amp; Budget</div>
+          <div class="peritem-desc">Deadline, maintenance, and your investment</div>
+        </div>
+      </div>
+      <div class="peritem-section-card peritem-review-card">
+        <div class="peritem-icon"><i data-lucide="file-text" style="width:22px;height:22px"></i></div>
+        <div class="peritem-info">
+          <div class="peritem-name">Review &amp; Submit</div>
+          <div class="peritem-desc">Confirm everything before sending</div>
+        </div>
+      </div>
+    </div>
+    <div class="pricing-screen-action">
+      <button class="btn-start" id="btnStartPerItem">
+        <span class="btn-start-text">Let's get started</span>
+        <i data-lucide="arrow-right" style="width:18px;height:18px;stroke-width:2.5"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Bundle Selection Screen (Step 2 for Bundle) -->
+<div class="pricing-screen hidden" id="bundleScreen">
+  <div class="pricing-screen-bg"></div>
+  <div class="pricing-screen-inner">
+    <button class="screen-back-btn" id="bundleBack" aria-label="Back to pricing options">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;stroke-width:2.5"></i>
+      <span>Back</span>
+    </button>
+    <div class="pricing-screen-badge">Step 2 of 3 — Managed Bundle</div>
+    <h2 class="pricing-screen-heading">Choose your bundle</h2>
+    <p class="pricing-screen-sub">All bundles include hosting, SSL, backups, security, and support. Pick the tier that fits your needs.</p>
+    <div class="bundle-screen-grid" id="bundleScreenGrid">
+      <!-- Generated by JS -->
+    </div>
+    <div class="bundle-screen-not-sure" id="bundleScreenNotSure">
+      <div class="bns-icon"><i data-lucide="help-circle" style="width:22px;height:22px"></i></div>
+      <div class="bns-text-wrap">
+        <div class="bns-text">Help me choose the right plan</div>
+        <div class="bns-sub">I'm not sure which package fits my needs. Please review my requirements and recommend the best option.</div>
+      </div>
+      <div class="bns-check"></div>
+    </div>
+    <div class="pricing-screen-action">
+      <button class="btn-start" id="btnConfirmBundle">
+        <span class="btn-start-text" id="btnConfirmBundleText">Continue with Essential</span>
+        <i data-lucide="arrow-right" style="width:18px;height:18px;stroke-width:2.5"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="top-bar">
   <h1><span id="scrambleTitle">AM Worx — Client Intake</span></h1>
   <div class="top-bar-actions">
@@ -1832,7 +2213,7 @@ body {
   
 
   <!-- Bundle Selection (hidden unless bundle mode selected) -->
-  <div class="pricing-bundle-only form-section" data-section="1.5" id="s-bundle">
+  <div class="pricing-bundle-only form-section" data-section="1.5" id="s-bundle" style="display:none">
     <div class="section-title"><span class="section-icon"><i data-lucide="package" style="width:22px;height:22px"></i></span> Choose Your Bundle</div>
     <div class="section-desc">All bundles include hosting, SSL, backups, security, and support. Pick the tier that fits your needs.</div>
     <div class="bundle-grid" id="bundleGrid">
@@ -2468,14 +2849,50 @@ body {
   }
 
   // ---- Pricing Mode Setup ----
+  // ---- Pricing Mode Setup ----
   function setupPricingMode() {
     var perItemCard = document.getElementById('pmPerItem');
     var bundleCard = document.getElementById('pmBundle');
     var pricingScreen = document.getElementById('pricingScreen');
+    var perItemScreen = document.getElementById('perItemScreen');
+    var bundleScreen = document.getElementById('bundleScreen');
     var confirmBtn = document.getElementById('btnConfirmPricing');
     var confirmText = document.getElementById('btnConfirmPricingText');
+    var perItemStartBtn = document.getElementById('btnStartPerItem');
+    var bundleConfirmBtn = document.getElementById('btnConfirmBundle');
+    var bundleConfirmText = document.getElementById('btnConfirmBundleText');
+    var perItemBack = document.getElementById('perItemBack');
+    var bundleBack = document.getElementById('bundleBack');
     var bundleSection = document.getElementById('s-bundle');
     var mainContent = document.getElementById('mainContent');
+
+    // ── Show a pricing-screen overlay ──
+    function showScreen(screen) {
+      // Hide all mode screens
+      pricingScreen.classList.remove('open');
+      pricingScreen.classList.add('hidden');
+      perItemScreen.classList.remove('open');
+      perItemScreen.classList.add('hidden');
+      bundleScreen.classList.remove('open');
+      bundleScreen.classList.add('hidden');
+      // Show target
+      screen.classList.remove('hidden');
+      // Force reflow so the browser registers the display change before adding .open
+      void screen.offsetWidth;
+      screen.classList.add('open');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // ── Transition to form (hide all overlays, show main form) ──
+    function showForm() {
+      perItemScreen.classList.remove('open');
+      perItemScreen.classList.add('hidden');
+      bundleScreen.classList.remove('open');
+      bundleScreen.classList.add('hidden');
+      var firstSection = document.querySelector('.form-section');
+      if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
 
     function setMode(mode) {
       window._pricingMode = mode;
@@ -2484,19 +2901,10 @@ body {
       mainContent.classList.toggle('mode-per-item', mode === 'per-item');
       mainContent.classList.toggle('mode-bundle', mode === 'bundle');
 
-      // Update confirm button text
       confirmText.textContent = mode === 'per-item'
         ? 'Continue with Per-Item Pricing'
         : 'Continue with Managed Bundle';
 
-      // Show/hide bundle section
-      if (mode === 'bundle') {
-        bundleSection.style.display = 'block';
-      } else {
-        bundleSection.style.display = 'none';
-      }
-
-      // Hide/show sections per mode
       var domainSection = document.getElementById('s-domain');
       var maintSection = document.getElementById('s-maintenance');
       if (mode === 'bundle') {
@@ -2507,14 +2915,10 @@ body {
         if (maintSection) maintSection.style.display = '';
       }
 
-      // Rebuild timeline for this mode
       SECTIONS_CONFIG = getSectionsConfig();
       renumberSections();
       setupTimelineSidebar();
-
-      // Render Lucide icons for newly visible elements
       if (typeof lucide !== 'undefined') lucide.createIcons();
-
       calculate();
     }
 
@@ -2525,34 +2929,131 @@ body {
       });
     }
 
-    // Card clicks update selection
+    // ── Step 1 → Step 2: Pricing screen confirm ──
     perItemCard.addEventListener('click', function() { setMode('per-item'); });
     bundleCard.addEventListener('click', function() { setMode('bundle'); });
 
-    // Confirm button — dismiss pricing screen, reveal form
-    function confirmPricing() {
-      pricingScreen.classList.remove('open');
-      pricingScreen.classList.add('hidden');
-      var firstSection = document.querySelector('.form-section');
-      if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Init Lucide icons in the newly visible form
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-    confirmBtn.addEventListener('click', confirmPricing);
+    confirmBtn.addEventListener('click', function() {
+      if (window._pricingMode === 'bundle') {
+        // Render bundle cards if not already rendered
+        var bsg = document.getElementById('bundleScreenGrid');
+        if (bsg && !bsg.hasChildNodes()) renderBundleScreenCards();
+        showScreen(bundleScreen);
+      } else {
+        showScreen(perItemScreen);
+      }
+    });
 
-    // Allow pressing Enter on selected card
     perItemCard.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { setMode('per-item'); confirmPricing(); }
+      if (e.key === 'Enter') { setMode('per-item'); confirmBtn.click(); }
     });
     bundleCard.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { setMode('bundle'); confirmPricing(); }
+      if (e.key === 'Enter') { setMode('bundle'); confirmBtn.click(); }
     });
-
-    // Make cards focusable for keyboard nav
     perItemCard.setAttribute('tabindex', '0');
     bundleCard.setAttribute('tabindex', '0');
 
-    // Init with per-item
+    // ── Back buttons (Step 2 → Step 1) ──
+    perItemBack.addEventListener('click', function() { showScreen(pricingScreen); });
+    bundleBack.addEventListener('click', function() { showScreen(pricingScreen); });
+
+    // ── Per-Item: "Let's get started" → Form ──
+    perItemStartBtn.addEventListener('click', showForm);
+
+    // ── Bundle Screen: card selection + confirm ──
+    function renderBundleScreenCards() {
+      var grid = document.getElementById('bundleScreenGrid');
+      var notSure = document.getElementById('bundleScreenNotSure');
+      if (!grid) return;
+      var html = '';
+      BUNDLE_TIERS.forEach(function(tier) {
+        html += '<div class="bundle-card" data-tier="' + tier.id + '">';
+        html += '<div class="bundle-check"></div>';
+        html += '<div class="bundle-header">';
+        html += '<span class="bundle-icon"><i data-lucide="' + tier.icon + '" style="width:28px;height:28px;color:' + tier.color + '"></i></span>';
+        html += '<div class="bundle-name">' + tier.name + '</div>';
+        html += '<div class="bundle-price">$' + tier.price + '<span class="bundle-price-sub">/mo</span></div>';
+        html += '<div style="font-size:12px;color:var(--text-muted);margin-top:2px">12-month term</div>';
+        html += '</div>';
+        html += '<ul class="bundle-features">';
+        tier.features.forEach(function(f) {
+          html += '<li><i data-lucide="check" style="width:13px;height:13px;stroke-width:3"></i> ' + f + '</li>';
+        });
+        html += '</ul>';
+        html += '</div>';
+      });
+      grid.innerHTML = html;
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+
+      function updateBundleConfirm() {
+        var selectedTier = window._selectedBundle;
+        if (selectedTier && selectedTier !== 'not-sure') {
+          var tier = BUNDLE_TIERS.find(function(t) { return t.id === selectedTier; });
+          bundleConfirmText.textContent = 'Continue with ' + (tier ? tier.name : selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1));
+        } else if (selectedTier === 'not-sure') {
+          bundleConfirmText.textContent = 'Continue — I need a recommendation';
+        } else {
+          bundleConfirmText.textContent = 'Select a bundle to continue';
+        }
+      }
+
+      // Bundle card clicks
+      grid.querySelectorAll('.bundle-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          grid.querySelectorAll('.bundle-card').forEach(function(c) { c.classList.remove('selected'); });
+          notSure.classList.remove('selected');
+          this.classList.add('selected');
+          window._selectedBundle = this.getAttribute('data-tier');
+          calculate();
+          updateBundleConfirm();
+        });
+      });
+
+      // "Not sure" click
+      if (notSure) {
+        notSure.addEventListener('click', function() {
+          grid.querySelectorAll('.bundle-card').forEach(function(c) { c.classList.remove('selected'); });
+          this.classList.toggle('selected');
+          window._selectedBundle = this.classList.contains('selected') ? 'not-sure' : null;
+          calculate();
+          updateBundleConfirm();
+        });
+      }
+
+      // Pre-select if one was already chosen
+      if (window._selectedBundle) {
+        if (window._selectedBundle === 'not-sure') {
+          if (notSure) notSure.classList.add('selected');
+        } else {
+          var selectedCard = grid.querySelector('.bundle-card[data-tier="' + window._selectedBundle + '"]');
+          if (selectedCard) selectedCard.classList.add('selected');
+        }
+        updateBundleConfirm();
+      }
+    }
+
+    bundleConfirmBtn.addEventListener('click', function() {
+      if (!window._selectedBundle) {
+        bundleConfirmBtn.style.animation = 'shake 0.4s ease';
+        setTimeout(function() { bundleConfirmBtn.style.animation = ''; }, 500);
+        return;
+      }
+      // Also set the inline bundle selection for form compatibility
+      // Sync selected bundle to inline form
+      var inlineGrid = document.getElementById('bundleGrid');
+      if (inlineGrid) {
+        inlineGrid.querySelectorAll('.bundle-card').forEach(function(c) { c.classList.remove('selected'); });
+        var inlineCard = inlineGrid.querySelector('.bundle-card[data-tier="' + window._selectedBundle + '"]');
+        if (inlineCard && window._selectedBundle !== 'not-sure') inlineCard.classList.add('selected');
+      }
+      var inlineNotSure = document.getElementById('bundleNotSure');
+      if (inlineNotSure) {
+        inlineNotSure.classList.toggle('selected', window._selectedBundle === 'not-sure');
+      }
+      showForm();
+    });
+
+    // ── Init ──
     setMode('per-item');
   }
 
