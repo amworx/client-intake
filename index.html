@@ -1270,6 +1270,56 @@ body {
   font-size: 24px; font-weight: 700;
   color: var(--accent);
 }
+
+/* ---- Complexity Meter ---- */
+.complexity-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.cm-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+.cm-bar-wrap {
+  width: 60px;
+  height: 6px;
+  background: var(--bg-progress);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.cm-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease, background 0.4s ease;
+  width: 0%;
+}
+.cm-bar.level-low { background: #22c55e; }
+.cm-bar.level-medium { background: #eab308; }
+.cm-bar.level-high { background: #f97316; }
+.cm-bar.level-very-high { background: #ef4444; }
+.cm-level {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 60px;
+}
+.cm-pkg {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.cm-pkg.cm-pkg-essential { color: #22c55e; }
+.cm-pkg.cm-pkg-growth { color: var(--accent); }
+.cm-pkg.cm-pkg-scale { color: #ec4899; }
+
 .btn-breakdown {
   padding: 8px 16px;
   border: 1px solid var(--border);
@@ -1617,6 +1667,17 @@ body {
           <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_other" value="other"><label for="goal_other"><span class="card-icon">⚙️</span><span class="card-title">Something Else</span><span class="card-desc">A different goal not listed here</span><span class="card-check"></span></label></div>
         </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">What best describes your business?</label>
+        <div class="field-desc">This helps us understand your needs and recommend the right hosting, support, and growth plan for your stage.</div>
+        <div class="card-grid-sm" id="maturity-group">
+          <div class="card-option radio-card"><input type="radio" name="business_maturity" id="mat_idea" value="idea"><label for="mat_idea"><span class="card-icon">💡</span><span class="card-title">Just an Idea</span><span class="card-desc">Exploring the possibility, not yet launched</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="business_maturity" id="mat_startup" value="startup"><label for="mat_startup"><span class="card-icon">🚀</span><span class="card-title">Startup</span><span class="card-desc">Early stage, building momentum</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="business_maturity" id="mat_small" value="small-business"><label for="mat_small"><span class="card-icon">🏪</span><span class="card-title">Small Business</span><span class="card-desc">Operating with a small team</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="business_maturity" id="mat_established" value="established"><label for="mat_established"><span class="card-icon">🏢</span><span class="card-title">Established Company</span><span class="card-desc">Growing business with existing customers</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="business_maturity" id="mat_enterprise" value="enterprise"><label for="mat_enterprise"><span class="card-icon">🏛️</span><span class="card-title">Large Organization</span><span class="card-desc">Enterprise with multiple departments</span><span class="card-check"></span></label></div>
+        </div>
+      </div>
     </section>
 
     <!-- Section 3: Domain & Hosting -->
@@ -1834,20 +1895,35 @@ body {
         <label class="form-label" for="inspiration_links">Inspiration / reference websites</label>
         <input class="form-input" type="text" id="inspiration_links" name="inspiration_links" placeholder="https://example.com, https://reference.com">
       </div>
+      <div class="form-group">
+        <label class="form-label">Existing assets <span class="hint">(check what you already have)</span></label>
+        <div class="field-desc">Let us know what you already have ready. Missing items can be included in your project scope.</div>
+        <div class="card-grid-sm" id="assets-group">
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_logo" value="logo"><label for="asset_logo"><span class="card-icon">🎨</span><span class="card-title">Logo</span><span class="card-desc">Ready-to-use logo files</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_brand" value="brand-guidelines"><label for="asset_brand"><span class="card-icon">📐</span><span class="card-title">Brand Guidelines</span><span class="card-desc">Colors, fonts, brand rules</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_photos" value="photos"><label for="asset_photos"><span class="card-icon">🖼️</span><span class="card-title">Photos</span><span class="card-desc">Product or business photos</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_content" value="content"><label for="asset_content"><span class="card-icon">✍️</span><span class="card-title">Content / Copy</span><span class="card-desc">Written text for the site</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_domain" value="domain"><label for="asset_domain"><span class="card-icon">🌐</span><span class="card-title">Domain</span><span class="card-desc">Already registered</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_hosting" value="hosting"><label for="asset_hosting"><span class="card-icon">☁️</span><span class="card-title">Hosting</span><span class="card-desc">Existing hosting account</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_analytics" value="analytics"><label for="asset_analytics"><span class="card-icon">📊</span><span class="card-title">Analytics</span><span class="card-desc">Google Analytics or similar</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_social" value="social-media"><label for="asset_social"><span class="card-icon">🔗</span><span class="card-title">Social Media</span><span class="card-desc">LinkedIn, Instagram, etc.</span><span class="card-check">✓</span></label></div>
+        </div>
+      </div>
     </section>
 
     <!-- Section 5: Timeline -->
     <section class="form-section" data-section="5" id="s-timeline">
       <div class="section-title"><span class="section-icon"><i data-lucide="calendar" style="width:22px;height:22px"></i></span> Timeline</div>
-      <div class="section-desc">When are you looking to launch?</div>
+      <div class="section-desc">How flexible is your timeline?</div>
       <div class="form-group">
-        <label class="form-label">Desired timeline</label>
-        <div class="field-desc">When would you like your website to be ready? Rush timelines include an additional fee for priority scheduling.</div>
+        <label class="form-label">How flexible is your timeline?</label>
+        <div class="field-desc">Urgent projects require priority scheduling and include an additional fee. More flexible timelines allow us to plan around the best pricing.</div>
         <div class="card-grid">
-          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_1week" value="1-week" data-price="100"><label for="tl_1week"><span class="card-icon">⚡</span><span class="card-title">1 Week</span><span class="card-desc">Rush delivery — priority scheduling</span><span class="card-price">$100</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_2weeks" value="2-weeks" data-price="50"><label for="tl_2weeks"><span class="card-icon">🚀</span><span class="card-title">2 Weeks</span><span class="card-desc">Fast turnaround with express fee</span><span class="card-price">$50</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_1month" value="1-month" data-price="0"><label for="tl_1month"><span class="card-icon">📅</span><span class="card-title">1 Month</span><span class="card-desc">Standard delivery time</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_flexible" value="flexible" data-price="0"><label for="tl_flexible"><span class="card-icon">🧘</span><span class="card-title">Flexible</span><span class="card-desc">No rush — whenever it's ready</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_asap" value="asap" data-price="150"><label for="tl_asap"><span class="card-icon">⚡</span><span class="card-title">ASAP</span><span class="card-desc">I need this urgently — priority scheduling</span><span class="card-price">$150</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_2weeks" value="2-weeks" data-price="75"><label for="tl_2weeks"><span class="card-icon">🚀</span><span class="card-title">Within 2 Weeks</span><span class="card-desc">Soon but not urgent</span><span class="card-price">$75</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_1month" value="1-month" data-price="0"><label for="tl_1month"><span class="card-icon">📅</span><span class="card-title">1 Month</span><span class="card-desc">Standard delivery — no rush fee</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_3months" value="2-3-months" data-price="0"><label for="tl_3months"><span class="card-icon">🧘</span><span class="card-title">2–3 Months</span><span class="card-desc">Relaxed timeline, best value</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="timeline" id="tl_nodeadline" value="no-deadline" data-price="0"><label for="tl_nodeadline"><span class="card-icon">🌿</span><span class="card-title">No Deadline</span><span class="card-desc">No rush — whenever it's ready</span><span class="card-check"></span></label></div>
         </div>
       </div>
     </section>
@@ -1875,6 +1951,15 @@ body {
           <div class="card-option radio-card"><input type="radio" name="budget" id="budget_5k" value="5000-10000"><label for="budget_5k"><span class="card-icon">🏆</span><span class="card-title">$5K - $10K</span><span class="card-desc">Premium website with advanced features</span><span class="card-check"></span></label></div>
           <div class="card-option radio-card"><input type="radio" name="budget" id="budget_10k" value="over-10000"><label for="budget_10k"><span class="card-icon">🚀</span><span class="card-title">$10K+</span><span class="card-desc">Full-scale custom solution</span><span class="card-check"></span></label></div>
           <div class="card-option radio-card"><input type="radio" name="budget" id="budget_not_sure" value="not-sure"><label for="budget_not_sure"><span class="card-icon">🤔</span><span class="card-title">Not sure</span><span class="card-desc">Need help deciding the right fit</span><span class="card-check"></span></label></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">How fixed is your budget?</label>
+        <div class="field-desc">This helps us tailor our proposal to your financial comfort level. No pressure — we work with all budgets.</div>
+        <div class="card-grid-sm">
+          <div class="card-option radio-card"><input type="radio" name="budget_confidence" id="bc_fixed" value="fixed"><label for="bc_fixed"><span class="card-icon">🎯</span><span class="card-title">Fixed</span><span class="card-desc">I have a hard budget I need to stick to</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="budget_confidence" id="bc_flexible" value="flexible"><label for="bc_flexible"><span class="card-icon">🔄</span><span class="card-title">Flexible</span><span class="card-desc">I have a range in mind but can adjust</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="budget_confidence" id="bc_advice" value="need-advice"><label for="bc_advice"><span class="card-icon">🤝</span><span class="card-title">Need Advice</span><span class="card-desc">Not sure what this should cost — help me decide</span><span class="card-check"></span></label></div>
         </div>
       </div>
       <div class="form-group">
@@ -1936,6 +2021,14 @@ body {
   <div class="price-bar-total">
     <span>Estimated Total:</span>
     <span class="amount" id="totalAmount">$0</span>
+  </div>
+  <div class="complexity-meter" id="complexityMeter">
+    <div class="cm-label">Complexity</div>
+    <div class="cm-bar-wrap">
+      <div class="cm-bar" id="cmBar"></div>
+    </div>
+    <div class="cm-level" id="cmLevel">—</div>
+    <div class="cm-pkg" id="cmPkg"></div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
     <button class="btn-breakdown" id="btnBreakdown">View Breakdown</button>
@@ -2956,7 +3049,8 @@ body {
       var tlEl = document.querySelector('[name="timeline"]:checked');
       var tlVal = tlEl ? parseFloat(tlEl.getAttribute('data-price')) || 0 : 0;
       if (tlVal > 0) {
-        window._priceItems.push({ label: 'Rush Timeline (' + (tlEl ? tlEl.value : '') + ')', price: tlVal, qty: 1, lineTotal: tlVal });
+        var tlLabels = { 'asap': 'ASAP (rush)', '2-weeks': 'Within 2 Weeks', '1-month': '1 Month', '2-3-months': '2–3 Months', 'no-deadline': 'No Deadline' };
+        window._priceItems.push({ label: 'Timeline — ' + (tlLabels[tlEl.value] || tlEl.value), price: tlVal, qty: 1, lineTotal: tlVal });
         total += tlVal;
       }
 
@@ -3003,6 +3097,13 @@ body {
 
     if (!hasAnswers) {
       card.classList.add('rec-hidden');
+      // Reset meter
+      var cmBar = document.getElementById('cmBar');
+      var cmLevel = document.getElementById('cmLevel');
+      var cmPkg = document.getElementById('cmPkg');
+      if (cmBar) { cmBar.style.width = '0%'; cmBar.className = 'cm-bar'; }
+      if (cmLevel) cmLevel.textContent = '—';
+      if (cmPkg) cmPkg.textContent = '';
       return;
     }
     card.classList.remove('rec-hidden');
@@ -3063,10 +3164,11 @@ body {
 
     // Timeline estimate based on urgency
     var tlMap = {
-      '1-week': '1 week',
-      '2-weeks': '2 weeks',
+      'asap': '1–2 weeks (rush)',
+      '2-weeks': '2–3 weeks',
       '1-month': '3–4 weeks',
-      'flexible': '3–5 weeks'
+      '2-3-months': '2–3 months',
+      'no-deadline': 'Flexible'
     };
     var selectedTl = document.querySelector('[name="timeline"]:checked');
     if (selectedTl && tlMap[selectedTl.value]) {
@@ -3092,6 +3194,34 @@ body {
         investEl.textContent = 'Complete the form';
       }
     }
+
+    // ---- Update complexity meter ----
+    var cmBar = document.getElementById('cmBar');
+    var cmLevel = document.getElementById('cmLevel');
+    var cmPkg = document.getElementById('cmPkg');
+    if (cmBar && cmLevel && cmPkg) {
+      if (!hasAnswers) {
+        cmBar.style.width = '0%';
+        cmBar.className = 'cm-bar';
+        cmLevel.textContent = '—';
+        cmPkg.textContent = '';
+      } else {
+        var maxScore = 30;
+        var pct = Math.min(100, Math.round((score / maxScore) * 100));
+        cmBar.style.width = pct + '%';
+
+        var level, levelClass;
+        if (score <= 5) { level = 'Low'; levelClass = 'level-low'; }
+        else if (score <= 12) { level = 'Medium'; levelClass = 'level-medium'; }
+        else if (score <= 20) { level = 'High'; levelClass = 'level-high'; }
+        else { level = 'Very High'; levelClass = 'level-very-high'; }
+
+        cmBar.className = 'cm-bar ' + levelClass;
+        cmLevel.textContent = level + ' (' + score + ' pts)';
+        cmPkg.textContent = '→ ' + tierName;
+        cmPkg.className = 'cm-pkg cm-pkg-' + recommendedTier;
+      }
+    }
   }
 
   function updateReviewSummary() {
@@ -3112,10 +3242,23 @@ body {
         var goalLabels = { 'generate-leads': 'Generate Leads', 'sell-online': 'Sell Online', 'portfolio': 'Showcase Portfolio', 'booking': 'Booking & Appointments', 'personal-brand': 'Personal Brand', 'company-site': 'Company Website', 'restaurant': 'Restaurant / Menu', 'other': 'Other' };
         html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Primary Goal</td><td style="padding:3px 0">' + (goalLabels[data.primary_goal] || data.primary_goal) + '</td></tr>';
       }
+      if (data.business_maturity) {
+        var matLabels = { 'idea': 'Just an Idea', 'startup': 'Startup', 'small-business': 'Small Business', 'established': 'Established Company', 'enterprise': 'Large Organization' };
+        html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Business Stage</td><td style="padding:3px 0">' + (matLabels[data.business_maturity] || data.business_maturity) + '</td></tr>';
+      }
+      if (data.budget_confidence) {
+        var confLabels = { 'fixed': 'Fixed', 'flexible': 'Flexible', 'need-advice': 'Need Advice' };
+        html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Budget</td><td style="padding:3px 0">' + (confLabels[data.budget_confidence] || data.budget_confidence) + '</td></tr>';
+      }
       if (data.domain === 'need' && data.domain_years) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Domain</td><td style="padding:3px 0">' + data.domain_years + ' year' + (data.domain_years > 1 ? 's' : '') + '</td></tr>';
       if (data.hosting === 'need' && data.hosting_months) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Hosting</td><td style="padding:3px 0">' + data.hosting_months + ' months</td></tr>';
       if (data.website_type === 'other' && data.other_website_type) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Website Type</td><td style="padding:3px 0">Custom: ' + escapeHtml(data.other_website_type) + '</td></tr>';
       if (data.has_profile_file) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Profile</td><td style="padding:3px 0">Company profile attached</td></tr>';
+      if (data.existing_assets && data.existing_assets.length > 0) {
+        var assetLabels = { 'logo': 'Logo', 'brand-guidelines': 'Brand Guidelines', 'photos': 'Photos', 'content': 'Content', 'domain': 'Domain', 'hosting': 'Hosting', 'analytics': 'Analytics', 'social-media': 'Social Media' };
+        var assetTags = data.existing_assets.map(function(a) { return assetLabels[a] || a; }).join(', ');
+        html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Assets</td><td style="padding:3px 0">' + assetTags + '</td></tr>';
+      }
       html += '</table></div>';
     }
 
@@ -3180,7 +3323,7 @@ body {
     var data = {};
     data.pricing_mode = window._pricingMode;
     data.bundle_tier = window._pricingMode === 'bundle' ? window._selectedBundle : null;
-    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'primary_goal', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'extra_notes'];
+    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'primary_goal', 'business_maturity', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'budget_confidence', 'extra_notes'];
 
     fields.forEach(function(f) {
       var el = document.querySelector('[name="' + f + '"]');
@@ -3211,6 +3354,7 @@ body {
     // Pages and features as arrays
     data.pages = Array.from(document.querySelectorAll('[name="pages"]:checked')).map(function(cb) { return cb.value; });
     data.features = Array.from(document.querySelectorAll('[name="features"]:checked')).map(function(cb) { return cb.value; });
+    data.existing_assets = Array.from(document.querySelectorAll('[name="existing_assets"]:checked')).map(function(cb) { return cb.value; });
 
     return data;
   }
@@ -3501,6 +3645,9 @@ body {
         client_phone: data.client_phone || null,
         pricing_mode: data.pricing_mode || 'per-item',
         bundle_tier: data.bundle_tier || null,
+        primary_goal: data.primary_goal || null,
+        business_maturity: data.business_maturity || null,
+        budget_confidence: data.budget_confidence || null,
         domain: data.domain || null,
         domain_idea: data.domain_idea || null,
         domain_years: data.domain === 'need' ? (parseInt(data.domain_years) || 1) : null,
@@ -3513,6 +3660,7 @@ body {
         pages: data.pages || [],
         other_pages: data.other_pages || null,
         features: data.features || [],
+        existing_assets: data.existing_assets || [],
         logo: data.logo || null,
         content_text: data.content_text || null,
         content_photos: data.content_photos || null,
