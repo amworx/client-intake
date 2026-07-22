@@ -1686,6 +1686,7 @@ body {
   transition: all 0.2s;
 }
 .btn-otp:hover { background: var(--accent); color: #fff; }
+.btn-back-secondary:hover { opacity: 0.8; }
 .btn-otp:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* File Upload */
@@ -2184,6 +2185,79 @@ body {
       <button class="btn-start" id="btnConfirmBundle">
         <span class="btn-start-text" id="btnConfirmBundleText">Continue with Essential</span>
         <i data-lucide="arrow-right" style="width:18px;height:18px;stroke-width:2.5"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Bundle Confirmation Screen (shown after bundle selection, replaces full form) -->
+<div class="pricing-screen hidden" id="bundleConfirmScreen">
+  <div class="pricing-screen-bg"></div>
+  <div class="pricing-screen-inner" style="max-width:560px">
+    <div class="pricing-screen-badge" id="bundleConfirmBadge">Managed Bundle</div>
+    <h2 class="pricing-screen-heading" id="bundleConfirmHeading" style="margin-bottom:4px">You're all set</h2>
+    <p class="pricing-screen-sub" id="bundleConfirmSub" style="margin-bottom:20px">Here's your selected plan — just drop your contact info and we'll get started.</p>
+    
+    <!-- Bundle summary card -->
+    <div id="bundleConfirmSummary" style="width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;text-align:left">
+      <!-- Dynamically filled -->
+    </div>
+
+    <!-- Period selector -->
+    <div id="bundlePeriodRow" style="width:100%;text-align:left;margin-bottom:16px;display:none">
+      <div class="form-group" style="margin-bottom:4px">
+        <label class="form-label" for="bcfMonths" style="font-size:13px">Subscription Period</label>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <button type="button" id="bcfMonthsDec" style="width:40px;height:42px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;transition:background 0.2s" aria-label="Decrease months">&minus;</button>
+          <input type="number" id="bcfMonths" value="12" min="1" max="60" style="width:64px;height:42px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);background:transparent;color:var(--text);text-align:center;font-size:16px;font-weight:600;outline:none;-moz-appearance:textfield">
+          <button type="button" id="bcfMonthsInc" style="width:40px;height:42px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;transition:background 0.2s" aria-label="Increase months">+</button>
+        </div>
+        <span style="font-size:14px;color:var(--text-muted)">months</span>
+        <span id="bcfTotalDisplay" style="margin-left:auto;font-size:18px;font-weight:700;color:var(--primary)"></span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <button type="button" class="period-quick" data-months="6" style="padding:4px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.2s">6 months</button>
+        <button type="button" class="period-quick" data-months="12" style="padding:4px 14px;border:1px solid var(--primary);border-radius:20px;background:var(--primary);color:#fff;font-size:12px;cursor:pointer;transition:all 0.2s">12 months</button>
+        <button type="button" class="period-quick" data-months="18" style="padding:4px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.2s">18 months</button>
+        <button type="button" class="period-quick" data-months="24" style="padding:4px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.2s">24 months</button>
+      </div>
+    </div>
+
+    <!-- Minimal form -->
+    <div style="width:100%;text-align:left">
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="form-label" for="bcf_name" style="font-size:13px">Full Name <span class="hint">*</span></label>
+        <input class="form-input" type="text" id="bcf_name" required minlength="2" placeholder="John Doe" style="padding:10px 14px;font-size:14px">
+      </div>
+      <div class="form-group" style="margin-bottom:12px">
+        <label class="form-label" for="bcf_email" style="font-size:13px">Email Address <span class="hint">*</span></label>
+        <div style="display:flex;gap:8px">
+          <input class="form-input" type="email" id="bcf_email" required placeholder="john@example.com" style="flex:1;padding:10px 14px;font-size:14px" autocomplete="email">
+          <button type="button" class="btn-otp" id="bcfBtnSendOtp" style="white-space:nowrap;padding:10px 16px;font-size:13px">Send Code</button>
+        </div>
+        <div class="otp-row" style="margin-top:8px;gap:8px">
+          <input class="form-input" type="text" id="bcfOtpInput" inputmode="numeric" maxlength="6" placeholder="000000" style="width:120px;display:none;padding:10px 14px;font-size:14px">
+          <button type="button" class="btn-otp" id="bcfBtnVerifyOtp" style="display:none;padding:10px 16px;font-size:13px">Verify</button>
+          <span class="otp-verified" id="bcfOtpVerified" style="display:none;">&#10003; Verified</span>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:8px">
+        <label class="form-label" for="bcf_phone" style="font-size:13px">Phone Number</label>
+        <input class="form-input" type="tel" id="bcf_phone" placeholder="(555) 123-4567" style="padding:10px 14px;font-size:14px">
+      </div>
+      <div id="bcfError" style="display:none;color:var(--error);font-size:13px;margin-bottom:12px"></div>
+    </div>
+
+    <div class="pricing-screen-action" style="margin-top:4px">
+      <button class="btn-start" id="btnSubmitBundle">
+        <span class="btn-start-text">Submit Request</span>
+        <i data-lucide="arrow-right" style="width:18px;height:18px;stroke-width:2.5"></i>
+      </button>
+      <button class="btn-back-secondary" id="bcfBack" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:13px;margin-top:8px">
+        <i data-lucide="arrow-left" style="width:14px;height:14px;display:inline;vertical-align:middle"></i>
+        Back to bundle selection
       </button>
     </div>
   </div>
@@ -2856,6 +2930,7 @@ body {
     var pricingScreen = document.getElementById('pricingScreen');
     var perItemScreen = document.getElementById('perItemScreen');
     var bundleScreen = document.getElementById('bundleScreen');
+    var bundleConfirmScreen = document.getElementById('bundleConfirmScreen');
     var confirmBtn = document.getElementById('btnConfirmPricing');
     var confirmText = document.getElementById('btnConfirmPricingText');
     var perItemStartBtn = document.getElementById('btnStartPerItem');
@@ -2875,6 +2950,8 @@ body {
       perItemScreen.classList.add('hidden');
       bundleScreen.classList.remove('open');
       bundleScreen.classList.add('hidden');
+      bundleConfirmScreen.classList.remove('open');
+      bundleConfirmScreen.classList.add('hidden');
       // Show target
       screen.classList.remove('hidden');
       // Force reflow so the browser registers the display change before adding .open
@@ -2892,6 +2969,86 @@ body {
       var firstSection = document.querySelector('.form-section');
       if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    // ── Bundle Confirmation Screen (replaces full form for bundle clients) ──
+    function updateBundleTotal() {
+      var tier = window._selectedBundle;
+      if (tier === 'not-sure' || !tier) return;
+      var t = BUNDLE_TIERS.find(function(x) { return x.id === tier; });
+      if (!t) return;
+      var monthsInput = document.getElementById('bcfMonths');
+      var months = parseInt(monthsInput ? monthsInput.value : 12, 10);
+      if (isNaN(months) || months < 1) months = 12;
+      var total = t.price * months;
+      var display = document.getElementById('bcfTotalDisplay');
+      if (display) display.textContent = '$' + total.toLocaleString();
+      // Update the total in the summary card too
+      var summaryTotal = document.getElementById('bcfSummaryTotal');
+      var summaryTerm = document.getElementById('bcfSummaryTerm');
+      if (summaryTotal) summaryTotal.textContent = '$' + total.toLocaleString();
+      if (summaryTerm) summaryTerm.textContent = months + '-month total';
+    }
+
+    function showBundleConfirmation() {
+      var tier = window._selectedBundle;
+      var summary = document.getElementById('bundleConfirmSummary');
+      var periodRow = document.getElementById('bundlePeriodRow');
+      if (tier === 'not-sure') {
+        if (periodRow) periodRow.style.display = 'none';
+        summary.innerHTML = '' +
+          '<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">' +
+            '<span style="width:44px;height:44px;border-radius:12px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
+              '<i data-lucide="help-circle" style="width:22px;height:22px;color:var(--accent)"></i>' +
+            '</span>' +
+            '<div><div style="font-weight:600;font-size:16px">Help Me Choose</div><div style="font-size:13px;color:var(--text-muted)">We\'ll review your needs and recommend the best plan</div></div>' +
+          '</div>' +
+          '<div style="font-size:13px;color:var(--text-muted);line-height:1.5;padding:12px;background:var(--bg);border-radius:var(--radius-md)">' +
+            'Tell us a bit about your project and we\'ll get back to you with a personalized recommendation within 1 business day.' +
+          '</div>';
+        document.getElementById('bundleConfirmHeading').textContent = 'Tell us about your project';
+        document.getElementById('bundleConfirmSub').textContent = 'We\'ll review your needs and recommend the perfect bundle for you.';
+      } else {
+        var t = BUNDLE_TIERS.find(function(x) { return x.id === tier; });
+        if (!t) return;
+        var featuresHtml = '';
+        t.features.forEach(function(f) {
+          featuresHtml += '<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px">' +
+            '<i data-lucide="check" style="width:14px;height:14px;stroke-width:3;color:' + t.color + ';flex-shrink:0"></i>' +
+            '<span>' + f + '</span></div>';
+        });
+        var monthsInput = document.getElementById('bcfMonths');
+        var months = parseInt(monthsInput ? monthsInput.value : 12, 10);
+        if (isNaN(months) || months < 1) months = 12;
+        var total = t.price * months;
+        summary.innerHTML = '' +
+          '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">' +
+            '<span style="width:48px;height:48px;border-radius:14px;background:' + t.color + '1a;display:flex;align-items:center;justify-content:center;flex-shrink:0">' +
+              '<i data-lucide="' + t.icon + '" style="width:24px;height:24px;color:' + t.color + '"></i>' +
+            '</span>' +
+            '<div><div style="font-weight:700;font-size:18px">' + t.name + '</div>' +
+            '<div style="font-size:22px;font-weight:800;margin-top:2px">$' + t.price + '<span style="font-size:13px;font-weight:400;color:var(--text-muted)">/mo</span></div></div>' +
+          '</div>' +
+          '<div style="font-size:14px;font-weight:600;margin-bottom:4px">What\'s included</div>' +
+          '<div>' + featuresHtml + '</div>' +
+          '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:15px">' +
+            '<span id="bcfSummaryTerm" style="color:var(--text-muted)">' + months + '-month total</span>' +
+            '<span id="bcfSummaryTotal" style="font-weight:700">$' + total.toLocaleString() + '</span>' +
+          '</div>';
+        document.getElementById('bundleConfirmHeading').textContent = 'You\'ve chosen ' + t.name;
+        document.getElementById('bundleConfirmSub').textContent = 'Your managed bundle includes everything below. Just drop your contact info and we\'ll get started.';
+        if (periodRow) periodRow.style.display = '';
+        updateBundleTotal();
+      }
+      showScreen(bundleConfirmScreen);
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      // Pre-fill name/email/phone from main form if already entered
+      var mainName = document.getElementById('full_name');
+      var mainEmail = document.getElementById('client_email');
+      var mainPhone = document.getElementById('client_phone');
+      if (mainName && mainName.value) document.getElementById('bcf_name').value = mainName.value;
+      if (mainEmail && mainEmail.value) document.getElementById('bcf_email').value = mainEmail.value;
+      if (mainPhone && mainPhone.value) document.getElementById('bcf_phone').value = mainPhone.value;
     }
 
     function setMode(mode) {
@@ -3038,20 +3195,56 @@ body {
         setTimeout(function() { bundleConfirmBtn.style.animation = ''; }, 500);
         return;
       }
-      // Also set the inline bundle selection for form compatibility
-      // Sync selected bundle to inline form
-      var inlineGrid = document.getElementById('bundleGrid');
-      if (inlineGrid) {
-        inlineGrid.querySelectorAll('.bundle-card').forEach(function(c) { c.classList.remove('selected'); });
-        var inlineCard = inlineGrid.querySelector('.bundle-card[data-tier="' + window._selectedBundle + '"]');
-        if (inlineCard && window._selectedBundle !== 'not-sure') inlineCard.classList.add('selected');
-      }
-      var inlineNotSure = document.getElementById('bundleNotSure');
-      if (inlineNotSure) {
-        inlineNotSure.classList.toggle('selected', window._selectedBundle === 'not-sure');
-      }
-      showForm();
+      showBundleConfirmation();
     });
+
+    // ── Bundle confirmation back button ──
+    document.getElementById('bcfBack').addEventListener('click', function() {
+      showScreen(bundleScreen);
+    });
+
+    // ── Bundle confirmation submit ──
+    document.getElementById('btnSubmitBundle').addEventListener('click', submitBundleForm);
+
+    // ── Bundle months recalculation ──
+    (function() {
+      var monthsInput = document.getElementById('bcfMonths');
+      if (!monthsInput) return;
+      function recalc() {
+        var val = parseInt(monthsInput.value, 10);
+        if (isNaN(val) || val < 1) { monthsInput.value = 1; val = 1; }
+        if (val > 60) { monthsInput.value = 60; val = 60; }
+        updateBundleTotal();
+        // Highlight active quick-select
+        document.querySelectorAll('.period-quick').forEach(function(b) {
+          var m = parseInt(b.getAttribute('data-months'), 10);
+          if (m === val) {
+            b.style.borderColor = 'var(--primary)';
+            b.style.background = 'var(--primary)';
+            b.style.color = '#fff';
+          } else {
+            b.style.borderColor = 'var(--border)';
+            b.style.background = 'transparent';
+            b.style.color = 'var(--text-muted)';
+          }
+        });
+      }
+      monthsInput.addEventListener('input', recalc);
+      document.getElementById('bcfMonthsInc').addEventListener('click', function() {
+        monthsInput.value = Math.min(parseInt(monthsInput.value, 10) + 1, 60);
+        recalc();
+      });
+      document.getElementById('bcfMonthsDec').addEventListener('click', function() {
+        monthsInput.value = Math.max(parseInt(monthsInput.value, 10) - 1, 1);
+        recalc();
+      });
+      document.querySelectorAll('.period-quick').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          monthsInput.value = this.getAttribute('data-months');
+          recalc();
+        });
+      });
+    })();
 
     // ── Init ──
     setMode('per-item');
@@ -3493,6 +3686,83 @@ body {
     otpInput.addEventListener('input', function() {
       this.value = this.value.replace(/\D/g, '').slice(0, 6);
     });
+
+    // ── Bundle Confirmation OTP ──
+    (function() {
+      var bcfBtnSend = document.getElementById('bcfBtnSendOtp');
+      var bcfBtnVerify = document.getElementById('bcfBtnVerifyOtp');
+      var bcfOtpInput = document.getElementById('bcfOtpInput');
+      var bcfOtpVerified = document.getElementById('bcfOtpVerified');
+      var bcfEmailInput = document.getElementById('bcf_email');
+      var bcfSendCooldown = false;
+
+      if (!bcfBtnSend) return;
+
+      bcfBtnSend.addEventListener('click', function() {
+        if (bcfSendCooldown) { showToast('Please wait before requesting another code.', 'error'); return; }
+        var email = bcfEmailInput.value.trim();
+        if (!email || !isValidEmail(email)) { showToast('Please enter a valid email first.', 'error'); return; }
+        var code = String(Math.floor(100000 + Math.random() * 900000));
+        var expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+        supabaseClient.from('otp_codes').insert({ email: email, code: code, expires_at: expiresAt, used: false })
+        .then(function(res) {
+          if (res.error) { showToast('Failed to send code: ' + res.error.message, 'error'); return; }
+          fetch(SUPABASE_EDGE_URL + '/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+            body: JSON.stringify({ email: email, code: code })
+          }).then(function(otpRes) {
+            return otpRes.json().then(function(otpData) {
+              if (otpData.skipped) showToast('Email delivery not configured.', 'error');
+            });
+          }).catch(function() {
+            bcfSendCooldown = false; bcfBtnSend.disabled = false;
+            showToast('Failed to send verification email.', 'error');
+          });
+          bcfSendCooldown = true; bcfBtnSend.disabled = true;
+          var sec = 60;
+          bcfBtnSend.textContent = 'Resend (' + sec + 's)';
+          var t = setInterval(function() {
+            sec--;
+            if (sec > 0) { bcfBtnSend.textContent = 'Resend (' + sec + 's)'; }
+            else { clearInterval(t); bcfSendCooldown = false; bcfBtnSend.disabled = false; bcfBtnSend.textContent = 'Resend Code'; }
+          }, 1000);
+          showToast('Verification code sent to ' + email, 'success');
+          bcfOtpInput.style.display = 'inline-block';
+          bcfBtnVerify.style.display = 'inline-block';
+          bcfOtpInput.focus();
+        }).catch(function() {
+          bcfSendCooldown = false; bcfBtnSend.disabled = false;
+          showToast('Failed to send code.', 'error');
+        });
+      });
+
+      bcfBtnVerify.addEventListener('click', function() {
+        var code = bcfOtpInput.value.trim();
+        var email = bcfEmailInput.value.trim();
+        if (!code || code.length !== 6) { showToast('Please enter the 6-digit code.', 'error'); return; }
+        supabaseClient.rpc('verify_otp', { p_email: email, p_code: code }).then(function(res) {
+          if (res.error) { showToast('Verification failed.', 'error'); return; }
+          if (res.data && res.data.success) {
+            window._emailVerified = true;
+            window._verifiedEmail = email;
+            bcfOtpVerified.style.display = 'inline';
+            bcfBtnSend.style.display = 'none';
+            bcfOtpInput.style.display = 'none';
+            bcfBtnVerify.style.display = 'none';
+            bcfEmailInput.readOnly = true;
+            showToast('Email verified!', 'success');
+          } else {
+            showToast(res.data?.message || 'Invalid or expired code.', 'error');
+          }
+        }).catch(function() { showToast('Verification failed.', 'error'); });
+      });
+
+      bcfOtpInput.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').slice(0, 6);
+      });
+    })();
   }
 
   // ---- File Upload ----
@@ -4480,6 +4750,77 @@ body {
     });
   }
 
+  // ---- Bundle Form Submit (lightweight — no files, no PDF, no full form) ----
+  function submitBundleForm() {
+    if (window._submitting) return;
+    var name = document.getElementById('bcf_name').value.trim();
+    var email = document.getElementById('bcf_email').value.trim();
+    var phone = document.getElementById('bcf_phone').value.trim();
+    var errEl = document.getElementById('bcfError');
+
+    // Validate
+    var errors = [];
+    if (!name || name.length < 2) errors.push('Please enter your full name.');
+    if (!email || !isValidEmail(email)) errors.push('Please enter a valid email address.');
+    if (!window._emailVerified) errors.push('Please verify your email with the code sent.');
+
+    if (errors.length > 0) {
+      errEl.innerHTML = errors.map(function(e) { return '\u26A0 ' + escapeHtml(e); }).join('<br>');
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+
+    window._submitting = true;
+    var btn = document.getElementById('btnSubmitBundle');
+    btn.disabled = true;
+    btn.querySelector('.btn-start-text').textContent = 'Submitting...';
+
+    var tier = window._selectedBundle;
+    var tierData = tier && tier !== 'not-sure' ? BUNDLE_TIERS.find(function(t) { return t.id === tier; }) : null;
+    var monthlyPrice = tierData ? tierData.price : 0;
+    var monthsEl = document.getElementById('bcfMonths');
+    var months = monthsEl ? parseInt(monthsEl.value, 10) : 12;
+    if (isNaN(months) || months < 1) months = 12;
+    var total = monthlyPrice * months;
+    var priceBreakdown = tierData ? [{
+      label: tierData.name + ' Bundle (\u00D7' + months + ' months)',
+      price: monthlyPrice,
+      qty: months,
+      lineTotal: total,
+      isBundle: true,
+      bundleMonthly: monthlyPrice
+    }] : [];
+
+    var submissionData = {
+      full_name: name,
+      client_email: email,
+      client_phone: phone || null,
+      pricing_mode: 'bundle',
+      bundle_tier: tier === 'not-sure' ? 'not-sure' : tier,
+      price_breakdown: priceBreakdown,
+      estimated_total: total,
+      file_urls: [],
+      request_time: new Date().toISOString()
+    };
+
+    var submitEmail = window._verifiedEmail || email;
+    var rpcParams = { p_data: submissionData, p_email: submitEmail };
+
+    supabaseClient.rpc('submit_submission', rpcParams).then(function(res) {
+      if (res.error) throw res.error;
+      if (res.data && !res.data.success) throw new Error(res.data.message || 'Submission rejected');
+      showThankYou(name);
+    }).catch(function(err) {
+      console.error('Bundle submit error:', err);
+      errEl.textContent = '\u26A0 ' + (err.message || 'Submission failed');
+      errEl.style.display = 'block';
+      window._submitting = false;
+      btn.disabled = false;
+      btn.querySelector('.btn-start-text').textContent = 'Submit Request';
+    });
+  }
+
   // ---- PDF Generation ----
   function generatePdf(data, total) {
     return new Promise(function(resolve, reject) {
@@ -4718,6 +5059,8 @@ body {
       if (data.full_name) {
         var nameInput = document.getElementById('full_name');
         if (nameInput) nameInput.value = data.full_name;
+        var bcfName = document.getElementById('bcf_name');
+        if (bcfName) bcfName.value = data.full_name;
       }
 
       // Show welcome banner
