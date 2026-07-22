@@ -2491,6 +2491,10 @@ body {
           <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_restaurant" value="restaurant"><label for="goal_restaurant"><span class="card-icon">🍽️</span><span class="card-title">Restaurant / Menu</span><span class="card-desc">Showcase your menu, hours, and location</span><span class="card-check"></span></label></div>
           <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_other" value="other"><label for="goal_other"><span class="card-icon">⚙️</span><span class="card-title">Something Else</span><span class="card-desc">A different goal not listed here</span><span class="card-check"></span></label></div>
         </div>
+        <div class="conditional" id="cond-other_goal" style="margin-top:8px;">
+          <label class="form-label" for="other_goal">Please specify your goal</label>
+          <input class="form-input" type="text" id="other_goal" name="other_goal" placeholder="Tell us what you're looking for...">
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">What best describes your business?</label>
@@ -2525,7 +2529,7 @@ body {
             <div class="card-option radio-card"><input type="radio" name="domain_years" id="dy_3" value="3" data-renewal-price="18"><label for="dy_3"><span class="card-icon">3️⃣</span><span class="card-title">3 Years</span><span class="card-desc">Three years — max savings vs renewing</span><span class="card-price">$45</span><span class="card-check"></span></label></div>
           </div>
           <div class="notice-warn" style="margin-top:10px;padding:8px 12px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;line-height:1.5;">
-            ⚠️ <strong>Renewal Notice:</strong> Domain renews at <strong>$18/yr</strong> after the initial term. Multi-year registration locks in today's rate and avoids the price increase.
+            ⚠️ <strong>Renewal Notice:</strong> Domain renews at a <strong>higher rate</strong> after the initial term (typically around <strong>$20–25/yr</strong>). Multi-year registration locks in today's rate and avoids the price increase.
           </div>
           <label class="form-label" for="domain_idea">Domain Idea (if you have one)</label>
           <input class="form-input" type="text" id="domain_idea" name="domain_idea" placeholder="mybusiness.com">
@@ -2547,7 +2551,7 @@ body {
             <div class="card-option radio-card"><input type="radio" name="hosting_months" id="hm_48" value="48"><label for="hm_48"><span class="card-icon">📅</span><span class="card-title">48 months</span><span class="card-desc">Four years — maximum savings</span><span class="card-price">$960</span><span class="card-check"></span></label></div>
           </div>
           <div class="notice-warn" style="margin-top:10px;padding:8px 12px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;line-height:1.5;">
-            ⚠️ <strong>Renewal Notice:</strong> Hosting renews at <strong>$20/mo</strong> after the initial term. Multi-month prepayment locks in today's rate.
+            ⚠️ <strong>Renewal Notice:</strong> Hosting renews at a <strong>higher rate</strong> after the initial term. Prices typically increase by approximately <strong>30–50%</strong> upon renewal. Multi-month prepayment locks in today's rate.
           </div>
         </div>
       </div>
@@ -2562,27 +2566,15 @@ body {
 
         <div class="conditional" id="cond-email_plan" style="margin-top:12px;">
           <label class="form-label">Choose your email plan</label>
-          <div class="field-desc">Bundle plans include <strong>1GB storage</strong> per mailbox. Custom plans include <strong>20GB storage</strong> per mailbox.</div>
+          <div class="field-desc">All prices are per year. Renewal adds 90% for each additional year (e.g., 2 years = $47.50, 3 years = $68.75).</div>
           <div class="card-grid-sm" id="email-plan-group">
-            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_2" value="2-bundle" data-price="25"><label for="ep_2"><span class="card-icon"><i data-lucide="inbox" style="width:20px;height:20px"></i></span><span class="card-title">2 Mailboxes</span><span class="card-desc">1GB storage each — perfect for small teams</span><span class="card-price">$25/mo</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_100" value="100-bundle" data-price="150"><label for="ep_100"><span class="card-icon"><i data-lucide="layers" style="width:20px;height:20px"></i></span><span class="card-title">100 Mailboxes</span><span class="card-desc">1GB storage each — for growing businesses</span><span class="card-price">$150/mo</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_unlimited" value="unlimited" data-price="300"><label for="ep_unlimited"><span class="card-icon"><i data-lucide="infinity" style="width:20px;height:20px"></i></span><span class="card-title">Unlimited</span><span class="card-desc">1GB storage each — no user limits</span><span class="card-price">$300/mo</span><span class="card-check"></span></label></div>
-            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_custom" value="custom" data-price="2.5"><label for="ep_custom"><span class="card-icon"><i data-lucide="sliders" style="width:20px;height:20px"></i></span><span class="card-title">Custom</span><span class="card-desc">20GB storage each — $2.50/mailbox</span><span class="card-price">$2.50/box</span><span class="card-check"></span></label></div>
-          </div>
-
-          <div class="conditional" id="cond-email_custom" style="margin-top:10px;">
-            <label class="form-label">Number of mailboxes</label>
-            <div class="stepper-wrap">
-              <button type="button" class="stepper-btn" id="emailMinus" aria-label="Decrease">&minus;</button>
-              <input type="number" class="stepper-input" id="emailCountInput" value="3" min="1" max="500" step="1" readonly>
-              <button type="button" class="stepper-btn" id="emailPlus" aria-label="Increase">+</button>
-              <span class="stepper-total" id="emailTotalLabel">$7.50/mo</span>
-            </div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">20GB storage per mailbox</div>
+            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_2" value="2-bundle" data-price="25"><label for="ep_2"><span class="card-icon"><i data-lucide="inbox" style="width:20px;height:20px"></i></span><span class="card-title">2 Mailboxes (2 GB Total)</span><span class="card-desc">2 mailboxes with 1GB each — perfect for small teams</span><span class="card-price">$25/yr</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_100" value="100-bundle" data-price="200"><label for="ep_100"><span class="card-icon"><i data-lucide="layers" style="width:20px;height:20px"></i></span><span class="card-title">100 Mailboxes (100 GB Total)</span><span class="card-desc">100 mailboxes with 1GB each — for growing businesses</span><span class="card-price">$200/yr</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="email_plan" id="ep_unlimited" value="unlimited" data-price="300"><label for="ep_unlimited"><span class="card-icon"><i data-lucide="infinity" style="width:20px;height:20px"></i></span><span class="card-title">Unlimited</span><span class="card-desc">Unlimited mailboxes — no user limits</span><span class="card-price">$300/yr</span><span class="card-check"></span></label></div>
           </div>
 
           <div class="notice-warn" style="margin-top:12px;padding:10px 14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;line-height:1.5;">
-            ⚠️ <strong>Renewal Notice:</strong> The renewal price for business email is significantly higher than the initial purchase price and may cost more than <strong>2x</strong> the first-time price. Please plan your budget accordingly.
+            ⚠️ <strong>Renewal Notice:</strong> Email plans renew at the same rate each year. There are no hidden price increases — your first-year price is the same as renewal. However, promotional discounts may apply to the first term only.
           </div>
         </div>
       </div>
@@ -2616,15 +2608,15 @@ body {
         <label class="form-label">What type of website do you need?</label>
         <div class="field-desc">Choose the category that best describes your project. Each type includes core features suited for that purpose.</div>
         <div class="card-grid" id="website_type_group">
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_simple" value="simple" data-price="200"><label for="wt_simple"><span class="card-icon">📄</span><span class="card-title">Simple</span><span class="card-desc">1-3 pages ideal for a basic online presence</span><span class="card-price">$200</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_business" value="business" data-price="350"><label for="wt_business"><span class="card-icon">🏢</span><span class="card-title">Business</span><span class="card-desc">Multi-page site for established companies</span><span class="card-price">$350</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_portfolio" value="portfolio" data-price="280"><label for="wt_portfolio"><span class="card-icon">🎨</span><span class="card-title">Portfolio</span><span class="card-desc">Showcase your work, projects, or creations</span><span class="card-price">$280</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_blog" value="blog" data-price="220"><label for="wt_blog"><span class="card-icon">✍️</span><span class="card-title">Blog</span><span class="card-desc">Share articles, news, and updates regularly</span><span class="card-price">$220</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_eco_small" value="ecommerce-small" data-price="500"><label for="wt_eco_small"><span class="card-icon">🛍️</span><span class="card-title">Ecom (Small)</span><span class="card-desc">Small online store with up to 20 products</span><span class="card-price">$500</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_eco_large" value="ecommerce-large" data-price="1000"><label for="wt_eco_large"><span class="card-icon">🏪</span><span class="card-title">Ecom (Large)</span><span class="card-desc">Full online store with unlimited products</span><span class="card-price">$1,000</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_booking" value="booking" data-price="450"><label for="wt_booking"><span class="card-icon">📅</span><span class="card-title">Booking</span><span class="card-desc">Appointment scheduling and reservation system</span><span class="card-price">$450</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_membership" value="membership" data-price="600"><label for="wt_membership"><span class="card-icon">🔐</span><span class="card-title">Membership</span><span class="card-desc">Paid or free member-only content area</span><span class="card-price">$600</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_directory" value="directory" data-price="400"><label for="wt_directory"><span class="card-icon">📖</span><span class="card-title">Directory</span><span class="card-desc">Searchable listings of businesses or items</span><span class="card-price">$400</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_simple" value="simple" data-price="150"><label for="wt_simple"><span class="card-icon">📄</span><span class="card-title">Simple</span><span class="card-desc">1-3 pages ideal for a basic online presence</span><span class="card-price">$150</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_business" value="business" data-price="300"><label for="wt_business"><span class="card-icon">🏢</span><span class="card-title">Business</span><span class="card-desc">Multi-page site for established companies</span><span class="card-price">$300</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_portfolio" value="portfolio" data-price="230"><label for="wt_portfolio"><span class="card-icon">🎨</span><span class="card-title">Portfolio</span><span class="card-desc">Showcase your work, projects, or creations</span><span class="card-price">$230</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_blog" value="blog" data-price="170"><label for="wt_blog"><span class="card-icon">✍️</span><span class="card-title">Blog</span><span class="card-desc">Share articles, news, and updates regularly</span><span class="card-price">$170</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_eco_small" value="ecommerce-small" data-price="450"><label for="wt_eco_small"><span class="card-icon">🛍️</span><span class="card-title">Ecom (Small)</span><span class="card-desc">Small online store with up to 20 products</span><span class="card-price">$450</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_eco_large" value="ecommerce-large" data-price="950"><label for="wt_eco_large"><span class="card-icon">🏪</span><span class="card-title">Ecom (Large)</span><span class="card-desc">Full online store with unlimited products</span><span class="card-price">$950</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_booking" value="booking" data-price="400"><label for="wt_booking"><span class="card-icon">📅</span><span class="card-title">Booking</span><span class="card-desc">Appointment scheduling and reservation system</span><span class="card-price">$400</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_membership" value="membership" data-price="550"><label for="wt_membership"><span class="card-icon">🔐</span><span class="card-title">Membership</span><span class="card-desc">Paid or free member-only content area</span><span class="card-price">$550</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_directory" value="directory" data-price="350"><label for="wt_directory"><span class="card-icon">📖</span><span class="card-title">Directory</span><span class="card-desc">Searchable listings of businesses or items</span><span class="card-price">$350</span><span class="card-check"></span></label></div>
           <div class="card-option radio-card"><input type="radio" name="website_type" id="wt_other" value="other" data-price="0"><label for="wt_other"><span class="card-icon">⚙️</span><span class="card-title">Other</span><span class="card-desc">Something unique — tell us below</span><span class="card-price">Custom</span><span class="card-check"></span></label></div>
         </div>
         <div class="conditional" id="cond-other_website_type" style="margin-top:8px;">
@@ -2635,12 +2627,12 @@ body {
       <div class="form-group">
         <label class="form-label">Pages needed <span class="hint">(select all that apply)</span></label>
         <div class="card-grid-sm" id="pages-group">
-          <div class="card-option"><input type="checkbox" name="pages" id="page_home" value="home" data-price="45"><label for="page_home"><span class="card-icon">🏠</span><span class="card-title">Home</span><span class="card-desc">Main landing page for your site</span><span class="card-price">$45</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="pages" id="page_about" value="about" data-price="35"><label for="page_about"><span class="card-icon">👤</span><span class="card-title">About</span><span class="card-desc">Tell your story and introduce your team</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="pages" id="page_services" value="services" data-price="35"><label for="page_services"><span class="card-icon">⚡</span><span class="card-title">Services</span><span class="card-desc">List what you offer your clients</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="pages" id="page_portfolio" value="portfolio" data-price="35"><label for="page_portfolio"><span class="card-icon">🎨</span><span class="card-title">Portfolio</span><span class="card-desc">Showcase your completed projects</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="pages" id="page_blog" value="blog" data-price="35"><label for="page_blog"><span class="card-icon">✍️</span><span class="card-title">Blog</span><span class="card-desc">Post articles and news updates</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="pages" id="page_contact" value="contact" data-price="25"><label for="page_contact"><span class="card-icon">📧</span><span class="card-title">Contact</span><span class="card-desc">Let visitors get in touch with you</span><span class="card-price">$25</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="pages" id="page_home" value="home" data-price="45" data-included-in="simple,business,portfolio,blog,ecommerce-small,ecommerce-large,booking,membership,directory"><label for="page_home"><span class="card-icon">🏠</span><span class="card-title">Home</span><span class="card-desc">Main landing page — included in your plan</span><span class="card-price">$45</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="pages" id="page_about" value="about" data-price="35" data-included-in="business,portfolio,blog,booking"><label for="page_about"><span class="card-icon">👤</span><span class="card-title">About</span><span class="card-desc">About your business — included in some plans</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="pages" id="page_services" value="services" data-price="35" data-included-in="business"><label for="page_services"><span class="card-icon">⚡</span><span class="card-title">Services</span><span class="card-desc">List what you offer your clients</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="pages" id="page_portfolio" value="portfolio" data-price="35" data-included-in="portfolio"><label for="page_portfolio"><span class="card-icon">🎨</span><span class="card-title">Portfolio</span><span class="card-desc">Showcase your completed projects</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="pages" id="page_blog" value="blog" data-price="35" data-included-in="blog"><label for="page_blog"><span class="card-icon">✍️</span><span class="card-title">Blog</span><span class="card-desc">Post articles and news updates</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="pages" id="page_contact" value="contact" data-price="25" data-included-in="business,portfolio,booking"><label for="page_contact"><span class="card-icon">📧</span><span class="card-title">Contact</span><span class="card-desc">Contact form/page — included in some plans</span><span class="card-price">$25</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="pages" id="page_gallery" value="gallery" data-price="35"><label for="page_gallery"><span class="card-icon">🖼️</span><span class="card-title">Gallery</span><span class="card-desc">Display images in an organized grid</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="pages" id="page_faq" value="faq" data-price="25"><label for="page_faq"><span class="card-icon">❓</span><span class="card-title">FAQ</span><span class="card-desc">Answer common client questions</span><span class="card-price">$25</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="pages" id="page_testimonials" value="testimonials" data-price="25"><label for="page_testimonials"><span class="card-icon">⭐</span><span class="card-title">Testimonials</span><span class="card-desc">Share reviews and client success</span><span class="card-price">$25</span><span class="card-check">✓</span></label></div>
@@ -2657,7 +2649,7 @@ body {
         <label class="form-label">Features needed <span class="hint">(select all that apply)</span></label>
         <div class="field-desc">Additional functionality to enhance your website. Hover over each card for more details.</div>
         <div class="card-grid" id="features-group">
-          <div class="card-option"><input type="checkbox" name="features" id="feat_contact_form" value="contact-form" data-price="35"><label for="feat_contact_form"><span class="card-icon">✉️</span><span class="card-title">Contact Form</span><span class="card-desc">Visitors can send you messages directly from your site</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="features" id="feat_contact_form" value="contact-form" data-price="0" data-free="true" checked><label for="feat_contact_form"><span class="card-icon">✉️</span><span class="card-title">Contact Form</span><span class="card-desc">Visitors can send you messages directly from your site</span><span class="card-price">Free</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_live_chat" value="live-chat" data-price="70"><label for="feat_live_chat"><span class="card-icon">💬</span><span class="card-title">Live Chat</span><span class="card-desc">Real-time chat so visitors can talk to you instantly</span><span class="card-price">$70</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_newsletter" value="newsletter" data-price="45"><label for="feat_newsletter"><span class="card-icon">📬</span><span class="card-title">Newsletter</span><span class="card-desc">Let visitors subscribe to email updates and news</span><span class="card-price">$45</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_social_media" value="social-media" data-price="20"><label for="feat_social_media"><span class="card-icon">🔗</span><span class="card-title">Social Media</span><span class="card-desc">Connect Instagram, Facebook, LinkedIn to your site</span><span class="card-price">$20</span><span class="card-check">✓</span></label></div>
@@ -2670,13 +2662,16 @@ body {
           <div class="card-option"><input type="checkbox" name="features" id="feat_ecommerce" value="ecommerce" data-price="280"><label for="feat_ecommerce"><span class="card-icon">🛒</span><span class="card-title">Ecommerce</span><span class="card-desc">Sell products online with cart and checkout system</span><span class="card-price">$280</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_payment_gateway" value="payment-gateway" data-price="120"><label for="feat_payment_gateway"><span class="card-icon">💳</span><span class="card-title">Payment Gateway</span><span class="card-desc">Accept credit cards, PayPal, and online payments</span><span class="card-price">$120</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_multi_language" value="multi-language" data-price="180"><label for="feat_multi_language"><span class="card-icon">🌐</span><span class="card-title">Multi-Language</span><span class="card-desc">Make your site available in multiple languages</span><span class="card-price">$180</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="features" id="feat_search" value="search" data-price="70"><label for="feat_search"><span class="card-icon">🔎</span><span class="card-title">Site Search</span><span class="card-desc">Let visitors search content on your site quickly</span><span class="card-price">$70</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="features" id="feat_image_optimization" value="image-optimization" data-price="45"><label for="feat_image_optimization"><span class="card-icon">🖼️</span><span class="card-title">Image Optimization</span><span class="card-desc">Compress images for faster loading without quality loss</span><span class="card-price">$45</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="features" id="feat_speed_optimization" value="speed-optimization" data-price="70"><label for="feat_speed_optimization"><span class="card-icon">⚡</span><span class="card-title">Speed Optimization</span><span class="card-desc">Faster page loads through caching and performance tuning</span><span class="card-price">$70</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="features" id="feat_search" value="search" data-price="0" data-free="true" checked><label for="feat_search"><span class="card-icon">🔎</span><span class="card-title">Site Search</span><span class="card-desc">Let visitors search content on your site quickly</span><span class="card-price">Free</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="features" id="feat_image_optimization" value="image-optimization" data-price="0" data-free="true" checked><label for="feat_image_optimization"><span class="card-icon">🖼️</span><span class="card-title">Image Optimization</span><span class="card-desc">Compress images for faster loading without quality loss</span><span class="card-price">Free</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="features" id="feat_speed_optimization" value="speed-optimization" data-price="0" data-free="true" checked><label for="feat_speed_optimization"><span class="card-icon">⚡</span><span class="card-title">Speed Optimization</span><span class="card-desc">Faster page loads through caching and performance tuning</span><span class="card-price">Free</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_cms" value="cms" data-price="120"><label for="feat_cms"><span class="card-icon">📝</span><span class="card-title">CMS Integration</span><span class="card-desc">Edit text and images yourself without technical skills</span><span class="card-price">$120</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_backup" value="backup" data-price="45"><label for="feat_backup"><span class="card-icon">💾</span><span class="card-title">Backup Solution</span><span class="card-desc">Automatic regular backups so nothing is ever lost</span><span class="card-price">$45</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="features" id="feat_ssl" value="ssl" data-price="35"><label for="feat_ssl"><span class="card-icon">🔒</span><span class="card-title">SSL Certificate</span><span class="card-desc">Padlock icon &amp; encryption. Required for security &amp; SEO</span><span class="card-price">$35</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="features" id="feat_ssl" value="ssl" data-price="0" data-free="true" checked><label for="feat_ssl"><span class="card-icon">🔒</span><span class="card-title">SSL Certificate</span><span class="card-desc">Padlock icon &amp; encryption. Required for security &amp; SEO</span><span class="card-price">Free</span><span class="card-check">✓</span></label></div>
           <div class="card-option"><input type="checkbox" name="features" id="feat_custom_feature" value="custom-feature" data-price="100"><label for="feat_custom_feature"><span class="card-icon">⚙️</span><span class="card-title">Custom Feature</span><span class="card-desc">Something unique not listed? We'll build it for you</span><span class="card-price">$100</span><span class="card-check">✓</span></label></div>
+          <div class="conditional custom-feature-input" style="margin-top:6px;margin-left:20px;display:none">
+            <input class="form-input" type="text" id="custom_feature_desc" placeholder="Describe the custom feature you need..." style="font-size:13px;padding:6px 10px">
+          </div>
         </div>
       </div>
     </section>
@@ -2684,55 +2679,56 @@ body {
     <!-- Section 4: Branding & Content -->
     <section class="form-section" data-section="4" id="s-branding">
       <div class="section-title"><span class="section-icon"><i data-lucide="palette" style="width:22px;height:22px"></i></span> Branding &amp; Content</div>
-      <div class="section-desc">Share your brand assets and content preferences.</div>
+      <div class="section-desc">Tell us what you already have and what you need help with.</div>
+
       <div class="form-group">
-        <label class="form-label">Do you have a logo?</label>
-        <div class="field-desc">Your logo is the face of your brand. If you need one, our designers can create a professional logo that matches your vision.</div>
+        <label class="form-label">What existing assets do you have?</label>
+        <div class="field-desc">Check everything you already have ready to use.</div>
+        <div class="card-grid-sm" id="assets-group">
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_logo" value="logo"><label for="asset_logo"><span class="card-icon">🎨</span><span class="card-title">Logo</span><span class="card-desc">I have a logo file ready</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_brand" value="brand-guidelines"><label for="asset_brand"><span class="card-icon">📋</span><span class="card-title">Brand Guidelines</span><span class="card-desc">Colors, fonts, brand rules</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_photos" value="photos"><label for="asset_photos"><span class="card-icon">📸</span><span class="card-title">Photos / Images</span><span class="card-desc">Photos ready for the website</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_content" value="content"><label for="asset_content"><span class="card-icon">📝</span><span class="card-title">Text Content</span><span class="card-desc">Written copy ready to use</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_domain" value="domain"><label for="asset_domain"><span class="card-icon">🌐</span><span class="card-title">Domain Name</span><span class="card-desc">Already have a domain</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_hosting" value="hosting"><label for="asset_hosting"><span class="card-icon">🖥️</span><span class="card-title">Hosting</span><span class="card-desc">Already have hosting</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_analytics" value="analytics"><label for="asset_analytics"><span class="card-icon">📊</span><span class="card-title">Analytics</span><span class="card-desc">Google Analytics or similar</span><span class="card-check">✓</span></label></div>
+          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_social" value="social-media"><label for="asset_social"><span class="card-icon">🔗</span><span class="card-title">Social Media</span><span class="card-desc">Linked social media accounts</span><span class="card-check">✓</span></label></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">What do you need us to create?</label>
+        <div class="field-desc">We can fill in the gaps. Select what you'd like us to handle.</div>
         <div class="card-grid-sm">
-          <div class="card-option radio-card"><input type="radio" name="logo" id="logo_yes" value="yes" data-price="100"><label for="logo_yes"><span class="card-icon">🎨</span><span class="card-title">Need a logo</span><span class="card-desc">Our designers will create a professional logo</span><span class="card-price">$100</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="logo" id="logo_have" value="have" data-price="0"><label for="logo_have"><span class="card-icon">✅</span><span class="card-title">Have a logo</span><span class="card-desc">I have an existing logo ready to use</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="logo" id="logo_yes" value="yes" data-price="50"><label for="logo_yes"><span class="card-icon">🎨</span><span class="card-title">Logo Design</span><span class="card-desc">Professional logo created for your brand</span><span class="card-price">$50</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="logo" id="logo_have" value="have" data-price="0"><label for="logo_have"><span class="card-icon">✅</span><span class="card-title">Have a logo</span><span class="card-desc">I already have a logo</span><span class="card-check"></span></label></div>
           <div class="card-option radio-card"><input type="radio" name="logo" id="logo_later" value="later" data-price="0"><label for="logo_later"><span class="card-icon">⏰</span><span class="card-title">Decide later</span><span class="card-desc">I'll decide about a logo later</span><span class="card-check"></span></label></div>
         </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Website text content</label>
-        <div class="field-desc">Every website needs written content — headlines, descriptions, about text, and more. Choose the option that fits your situation.</div>
-        <div class="card-grid-sm">
-          <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_self" value="self" data-price="0"><label for="ct_self"><span class="card-icon">✍️</span><span class="card-title">I'll provide it</span><span class="card-desc">I'll write the website copy myself</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_need_help" value="need-help" data-price="100"><label for="ct_need_help"><span class="card-icon">📝</span><span class="card-title">Need help writing</span><span class="card-desc">Professional copywriting service</span><span class="card-price">$100</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_ready" value="ready" data-price="0"><label for="ct_ready"><span class="card-icon">✅</span><span class="card-title">Already written</span><span class="card-desc">My content is ready and finalized</span><span class="card-check"></span></label></div>
+        <div style="margin-top:8px">
+          <div class="card-grid-sm">
+            <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_need" value="need" data-price="50"><label for="ct_need"><span class="card-icon">✍️</span><span class="card-title">Need Text Content</span><span class="card-desc">We write professional copy for your site</span><span class="card-price">$50</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_text" id="ct_have" value="have" data-price="0"><label for="ct_have"><span class="card-icon">✅</span><span class="card-title">Have Content</span><span class="card-desc">I'll provide the text myself</span><span class="card-check"></span></label></div>
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <div class="card-grid-sm">
+            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_need" value="stock" data-price="25"><label for="cp_need"><span class="card-icon">📸</span><span class="card-title">Stock Photos</span><span class="card-desc">Professional stock photos for your site</span><span class="card-price">$25</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_have" value="own" data-price="0"><label for="cp_have"><span class="card-icon">✅</span><span class="card-title">Have Photos</span><span class="card-desc">I have my own photos ready</span><span class="card-check"></span></label></div>
+            <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_unsure" value="unsure" data-price="0"><label for="cp_unsure"><span class="card-icon">🤔</span><span class="card-title">Not sure yet</span><span class="card-desc">I'll decide about photos later</span><span class="card-check"></span></label></div>
+          </div>
         </div>
       </div>
+
       <div class="form-group">
-        <label class="form-label">Photos / imagery</label>
-        <div class="field-desc">Images make your website visually appealing. You can use your own photos, or we can provide professional stock images.</div>
-        <div class="card-grid-sm">
-          <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_my_own" value="my-own" data-price="0"><label for="cp_my_own"><span class="card-icon">🖼️</span><span class="card-title">My own photos</span><span class="card-desc">I have photos to use on the site</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_free_stock" value="free-stock" data-price="25"><label for="cp_free_stock"><span class="card-icon">📸</span><span class="card-title">Need stock photos</span><span class="card-desc">Professional stock images for your site</span><span class="card-price">$25</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="content_photos" id="cp_not_sure" value="not-sure" data-price="0"><label for="cp_not_sure"><span class="card-icon">🤔</span><span class="card-title">Not sure yet</span><span class="card-desc">I'll decide about images later</span><span class="card-check"></span></label></div>
-        </div>
+        <label class="form-label">Brand Colors</label>
+        <div class="field-desc">If you have brand colors, share them. Otherwise we can suggest a palette.</div>
+        <input class="form-input" type="text" id="brand_colors" name="brand_colors" placeholder="e.g., #6366f1 (primary), #0f172a (dark), or describe: 'Blue and white corporate'">
       </div>
+
       <div class="form-group">
-        <label class="form-label" for="brand_colors">Brand colors (hex codes, comma separated)</label>
-        <input class="form-input" type="text" id="brand_colors" name="brand_colors" placeholder="#6366f1, #ec4899, #0f172a">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="inspiration_links">Inspiration / reference websites</label>
-        <input class="form-input" type="text" id="inspiration_links" name="inspiration_links" placeholder="https://example.com, https://reference.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Existing assets <span class="hint">(check what you already have)</span></label>
-        <div class="field-desc">Let us know what you already have ready. Missing items can be included in your project scope.</div>
-        <div class="card-grid-sm" id="assets-group">
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_logo" value="logo"><label for="asset_logo"><span class="card-icon">🎨</span><span class="card-title">Logo</span><span class="card-desc">Ready-to-use logo files</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_brand" value="brand-guidelines"><label for="asset_brand"><span class="card-icon">📐</span><span class="card-title">Brand Guidelines</span><span class="card-desc">Colors, fonts, brand rules</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_photos" value="photos"><label for="asset_photos"><span class="card-icon">🖼️</span><span class="card-title">Photos</span><span class="card-desc">Product or business photos</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_content" value="content"><label for="asset_content"><span class="card-icon">✍️</span><span class="card-title">Content / Copy</span><span class="card-desc">Written text for the site</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_domain" value="domain"><label for="asset_domain"><span class="card-icon">🌐</span><span class="card-title">Domain</span><span class="card-desc">Already registered</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_hosting" value="hosting"><label for="asset_hosting"><span class="card-icon">☁️</span><span class="card-title">Hosting</span><span class="card-desc">Existing hosting account</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_analytics" value="analytics"><label for="asset_analytics"><span class="card-icon">📊</span><span class="card-title">Analytics</span><span class="card-desc">Google Analytics or similar</span><span class="card-check">✓</span></label></div>
-          <div class="card-option"><input type="checkbox" name="existing_assets" id="asset_social" value="social-media"><label for="asset_social"><span class="card-icon">🔗</span><span class="card-title">Social Media</span><span class="card-desc">LinkedIn, Instagram, etc.</span><span class="card-check">✓</span></label></div>
-        </div>
+        <label class="form-label">Inspiration &amp; References</label>
+        <div class="field-desc">Share links to websites you like. This helps us understand your taste.</div>
+        <input class="form-input" type="text" id="inspiration_links" name="inspiration_links" placeholder="e.g., https://example.com — I like their style">
       </div>
     </section>
 
@@ -2758,13 +2754,13 @@ body {
       <div class="section-title"><span class="section-icon"><i data-lucide="wrench" style="width:22px;height:22px"></i></span> Maintenance &amp; Budget</div>
       <div class="section-desc">Tell us about ongoing maintenance needs and your budget.</div>
       <div class="form-group">
-        <label class="form-label">Monthly maintenance plan</label>
-        <div class="field-desc">Keep your website secure, up-to-date, and running smoothly with a maintenance plan. Covers updates, backups, security monitoring, and support.</div>
+        <label class="form-label">Maintenance plan</label>
+        <div class="field-desc">Keep your site secure, fast, and up to date with an annual maintenance plan.</div>
         <div class="card-grid">
-          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_no" value="no" data-price="0"><label for="maint_no"><span class="card-icon">⏸️</span><span class="card-title">None</span><span class="card-desc">No ongoing maintenance needed</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_basic" value="basic" data-price="20"><label for="maint_basic"><span class="card-icon">🔧</span><span class="card-title">Basic</span><span class="card-desc">Monthly updates &amp; backups</span><span class="card-price">$20/mo</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_standard" value="standard" data-price="40"><label for="maint_standard"><span class="card-icon">🛡️</span><span class="card-title">Standard</span><span class="card-desc">Updates, backups &amp; security monitoring</span><span class="card-price">$40/mo</span><span class="card-check"></span></label></div>
-          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_premium" value="premium" data-price="80"><label for="maint_premium"><span class="card-icon">⭐</span><span class="card-title">Premium</span><span class="card-desc">Full coverage with priority support</span><span class="card-price">$80/mo</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_no" value="none" data-price="0"><label for="maint_no"><span class="card-icon">🚫</span><span class="card-title">No Maintenance</span><span class="card-desc">I'll handle updates myself</span><span class="card-price">$0</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_basic" value="basic" data-price="100"><label for="maint_basic"><span class="card-icon">🔧</span><span class="card-title">Basic — Annual</span><span class="card-desc">Monthly updates, security patches, backups, and uptime monitoring</span><span class="card-price">$100/yr</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_standard" value="standard" data-price="200"><label for="maint_standard"><span class="card-icon">⚡</span><span class="card-title">Standard — Annual</span><span class="card-desc">Everything in Basic plus content updates (up to 2/mo), performance checks, and monthly reports</span><span class="card-price">$200/yr</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="maintenance" id="maint_premium" value="premium" data-price="350"><label for="maint_premium"><span class="card-icon">🌟</span><span class="card-title">Premium — Annual</span><span class="card-desc">Everything in Standard plus unlimited updates, SEO monitoring, priority support, and monthly strategy call</span><span class="card-price">$350/yr</span><span class="card-check"></span></label></div>
         </div>
       </div>
       <div class="form-group">
@@ -2903,10 +2899,16 @@ body {
   const { createClient } = supabase;
   const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  function sanitizeFilename(name) {
+    // Remove non-ASCII characters and replace spaces/special chars with underscore
+    return name.replace(/[^a-zA-Z0-9._-]/g, '_').replace(/_+/g, '_');
+  }
+
   window._selectedFiles = [];
   window._emailVerified = false;
   window._verifiedEmail = null;
   window._priceItems = [];
+  window._renewalNotes = [];
   window._settingsOverrides = null;
   window._submitting = false;
 
@@ -4200,7 +4202,7 @@ body {
         // Renewal cost notice
         var renewalPrice = domainYearsEl ? parseFloat(domainYearsEl.getAttribute('data-renewal-price')) || 0 : 0;
         if (renewalPrice > 0 && renewalPrice !== domainVal) {
-          window._priceItems.push({ label: '↳ Domain Renewal (per year after initial term)', price: renewalPrice, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: 'Renews at $' + renewalPrice + '/yr' });
+          window._priceItems.push({ label: '↳ Domain Renewal (per year after initial term)', price: renewalPrice, qty: 1, lineTotal: 0, isRenewal: true, renewalNote: 'Domain renews at a higher rate (~$20–25/yr)' });
         }
       }
 
@@ -4223,16 +4225,9 @@ body {
         var planEl = document.querySelector('[name="email_plan"]:checked');
         if (planEl) {
           var planPrice = parseFloat(planEl.getAttribute('data-price')) || 0;
-          if (planEl.value === 'custom') {
-            var customQty = parseInt(document.getElementById('emailCountInput').value) || 1;
-            var emailTotal = planPrice * customQty;
-            window._priceItems.push({ label: 'Business Email (' + customQty + ' mailboxes @ $2.50)', price: planPrice, qty: customQty, lineTotal: emailTotal });
-            total += emailTotal;
-          } else {
-            var labelMap = { '2-bundle': '2 Mailboxes Bundle', '100-bundle': '100 Mailboxes Bundle', 'unlimited': 'Unlimited Mailboxes' };
-            window._priceItems.push({ label: 'Business Email - ' + (labelMap[planEl.value] || planEl.value), price: planPrice, qty: 1, lineTotal: planPrice });
-            total += planPrice;
-          }
+          var labelMap = { '2-bundle': '2 Mailboxes Bundle (Annual)', '100-bundle': '100 Mailboxes Bundle (Annual)', 'unlimited': 'Unlimited Mailboxes (Annual)' };
+          window._priceItems.push({ label: 'Business Email - ' + (labelMap[planEl.value] || planEl.value), price: planPrice, qty: 1, lineTotal: planPrice });
+          total += planPrice;
         }
       }
 
@@ -4252,24 +4247,36 @@ body {
         total += wtVal;
       }
 
-      // Pages (checkboxes)
+      // Pages (checkboxes) — free if included in selected website type
       var pageCbs = document.querySelectorAll('[name="pages"]:checked');
+      var selectedWT = document.querySelector('[name="website_type"]:checked');
+      var wtVal = selectedWT ? selectedWT.value : '';
       pageCbs.forEach(function(cb) {
         var p = parseFloat(cb.getAttribute('data-price')) || 0;
-        if (p > 0) {
-          var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
+        var includedAttr = cb.getAttribute('data-included-in');
+        var isIncluded = includedAttr && includedAttr.split(',').indexOf(wtVal) !== -1;
+        var label = cb.closest('.card-option') ? cb.closest('.card-option').querySelector('.card-title')?.textContent?.trim() : cb.value;
+        if (isIncluded) {
+          window._priceItems.push({ label: 'Page: ' + (label || cb.value) + ' (included)', price: 0, qty: 1, lineTotal: 0 });
+        } else if (p > 0) {
           window._priceItems.push({ label: 'Page: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
           total += p;
         }
       });
 
-      // Features (checkboxes)
+      // Features (checkboxes) — skip data-free items, handle custom feature
       var featCbs = document.querySelectorAll('[name="features"]:checked');
       featCbs.forEach(function(cb) {
+        if (cb.getAttribute('data-free') === 'true') return;
         var p = parseFloat(cb.getAttribute('data-price')) || 0;
         if (p > 0) {
-          var label = cb.closest('.checkbox-option') ? cb.closest('.checkbox-option').querySelector('label')?.textContent?.trim() : cb.value;
-          window._priceItems.push({ label: 'Feature: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
+          var label = cb.closest('.card-option') ? cb.closest('.card-option').querySelector('.card-title')?.textContent?.trim() : cb.value;
+          if (cb.id === 'feat_custom_feature') {
+            var desc = document.getElementById('custom_feature_desc')?.value?.trim() || 'Custom Feature';
+            window._priceItems.push({ label: 'Feature: ' + desc, price: p, qty: 1, lineTotal: p });
+          } else {
+            window._priceItems.push({ label: 'Feature: ' + (label || cb.value), price: p, qty: 1, lineTotal: p });
+          }
           total += p;
         }
       });
@@ -4555,11 +4562,18 @@ body {
         });
         html += '<div style="display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border);padding-top:8px;margin-top:6px"><span>Estimated Total (Initial Term)</span><span>$' + subtotal.toLocaleString() + '</span></div>';
         if (renewalNotes.length > 0) {
+          window._renewalNotes = renewalNotes.map(function(n) { return n.renewalNote || n.label; });
           html += '<div style="margin-top:8px;padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e;line-height:1.5">';
           html += '<strong>↻ Renewal Pricing:</strong><br>';
-          renewalNotes.forEach(function(n) {
-            html += escapeHtml(n.label) + '<br>';
-          });
+          if (window._renewalNotes && window._renewalNotes.length) {
+            window._renewalNotes.forEach(function(note) {
+              html += '<span style="font-size:12px;color:var(--text-muted)">↳ ' + note + '</span><br>';
+            });
+          }
+          html += '<div style="font-size:11px;color:var(--text-muted);margin-top:4px;padding:6px 8px;background:#fef3c7;border-radius:4px;">';
+          html += '⚠️ Renewal prices are approximate and may change. We will confirm exact renewal rates before your term ends.';
+          html += ' Domain typically renews at ~$20–25/yr, hosting at ~$26–30/mo, and email at the same annual rate.';
+          html += '</div>';
           html += '</div>';
         }
         html += '</div>';
@@ -4577,7 +4591,7 @@ body {
     var data = {};
     data.pricing_mode = window._pricingMode;
     data.bundle_tier = window._pricingMode === 'bundle' ? window._selectedBundle : null;
-    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'primary_goal', 'business_maturity', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'budget_confidence', 'extra_notes'];
+    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'primary_goal', 'other_goal', 'business_maturity', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'budget_confidence', 'extra_notes'];
 
     fields.forEach(function(f) {
       var el = document.querySelector('[name="' + f + '"]');
@@ -4592,9 +4606,6 @@ body {
         data[f] = el.value;
       }
     });
-
-    // Email count
-    data.email_count = Math.min(100, Math.max(1, parseInt(document.getElementById('emailCountInput').value) || 1));
 
     // Hosting months
     data.hosting_months = parseInt((document.querySelector('[name="hosting_months"]:checked') || {}).value) || 12;
@@ -4658,8 +4669,10 @@ body {
       if (renewalInfo.length > 0) {
         html += '<tr><td colspan="4" style="padding:10px 8px 2px;font-size:12px;color:#92400e;background:#fef3c7;font-weight:600">↻ Renewal Pricing (after initial term)</td></tr>';
         renewalInfo.forEach(function(item) {
-          html += '<tr><td colspan="4" style="padding:2px 8px;font-size:12px;color:#92400e;background:#fef3c7">' + escapeHtml(item.label) + '</td></tr>';
+          var note = item.renewalNote || item.label;
+          html += '<tr><td colspan="4" style="padding:2px 8px;font-size:12px;color:#92400e;background:#fef3c7">↳ ' + escapeHtml(note) + '</td></tr>';
         });
+        html += '<tr><td colspan="4" style="padding:8px;font-size:11px;color:var(--text-muted);background:#fef3c7">⚠️ Renewal prices are approximate and may change. Domain typically renews at ~$20–25/yr, hosting at ~$26–30/mo, and email at the same annual rate.</td></tr>';
       }
     }
     tbody.innerHTML = html;
@@ -4683,6 +4696,11 @@ body {
         var cond = document.getElementById('cond-hosting_months');
         cond.classList.toggle('visible', target.value === 'need');
       }
+      // Primary goal conditional
+      if (target.name === 'primary_goal') {
+        var cond = document.getElementById('cond-other_goal');
+        if (cond) cond.classList.toggle('visible', target.value === 'other');
+      }
       // Other website type conditional
       if (target.name === 'website_type') {
         var cond = document.getElementById('cond-other_website_type');
@@ -4693,10 +4711,10 @@ body {
         var cond = document.getElementById('cond-email_plan');
         cond.classList.toggle('visible', target.value === 'need');
       }
-      // Email custom stepper conditional
-      if (target.name === 'email_plan') {
-        var cond = document.getElementById('cond-email_custom');
-        cond.classList.toggle('visible', target.value === 'custom');
+      // Custom feature checkbox conditional
+      if (target.id === 'feat_custom_feature') {
+        var inputDiv = target.closest('.card-grid').querySelector('.custom-feature-input');
+        if (inputDiv) inputDiv.style.display = target.checked ? 'block' : 'none';
       }
       calculate();
     });
@@ -4704,30 +4722,7 @@ body {
       calculate();
     });
 
-    // Email custom stepper ($2.50/mailbox, shown only when custom plan selected)
-    var emailCountInput = document.getElementById('emailCountInput');
-    var emailTotalLabel = document.getElementById('emailTotalLabel');
-    function updateEmailTotal() {
-      var v = parseInt(emailCountInput.value) || 1;
-      emailTotalLabel.textContent = '$' + (v * 2.5).toFixed(2) + '/mo';
-    }
-    document.getElementById('emailMinus').addEventListener('click', function() {
-      var v = parseInt(emailCountInput.value) || 1;
-      if (v > 1) { emailCountInput.value = v - 1; updateEmailTotal(); calculate(); }
-    });
-    document.getElementById('emailPlus').addEventListener('click', function() {
-      var v = parseInt(emailCountInput.value) || 1;
-      if (v < 500) { emailCountInput.value = v + 1; updateEmailTotal(); calculate(); }
-    });
-    emailCountInput.addEventListener('input', function() {
-      var v = parseInt(this.value) || 1;
-      if (v < 1) { this.value = 1; v = 1; }
-      if (v > 500) { this.value = 500; v = 500; }
-      emailTotalLabel.textContent = '$' + (v * 2.5).toFixed(2) + '/mo';
-      calculate();
-    });
-    // Init email total
-    updateEmailTotal();
+
 
     // Submit
     document.getElementById('btnSubmit').addEventListener('click', function(e) {
@@ -4868,7 +4863,7 @@ body {
       // Upload files
       window._selectedFiles.forEach(function(file, idx) {
         if (file instanceof File) {
-          var path = 'submissions/' + timestamp + '_' + file.name;
+          var path = 'submissions/' + timestamp + '_' + sanitizeFilename(file.name);
           var promise = supabaseClient.storage.from('submissions').upload(path, file, {
             cacheControl: '3600',
             upsert: false
@@ -4883,7 +4878,7 @@ body {
 
       // Upload company profile if provided
       if (window._profileFile) {
-        var profilePath = 'submissions/' + timestamp + '_company_profile_' + window._profileFile.name;
+        var profilePath = 'submissions/' + timestamp + '_company_profile_' + sanitizeFilename(window._profileFile.name);
         var profilePromise = supabaseClient.storage.from('submissions').upload(profilePath, window._profileFile, {
           cacheControl: '3600',
           upsert: false
@@ -4927,7 +4922,7 @@ body {
           domain_years: data.domain === 'need' ? (parseInt(data.domain_years) || 1) : null,
           hosting: data.hosting || null,
           email: data.email || null,
-          email_count: data.email === 'need' ? data.email_count : null,
+          email_count: data.email === 'need' ? (data.email_plan === '2-bundle' ? 2 : data.email_plan === '100-bundle' ? 100 : data.email_plan === 'unlimited' ? 999 : 1) : null,
           setup_help: data.setup_help || null,
           business_desc: data.business_desc || null,
           website_type: data.website_type || null,
@@ -5117,7 +5112,8 @@ body {
           if (data.domain_idea) field('Domain Idea', data.domain_idea);
         }
         field('Hosting', data.hosting ? { 'need': 'Need hosting' + (data.hosting_months ? ' (' + data.hosting_months + ' months)' : ''), 'no-need': 'Have hosting', 'not-sure': 'Not sure' }[data.hosting] : '');
-        field('Business Email', data.email ? { 'need': 'Need (' + (data.email_count || 1) + ' mailboxes)', 'no-need': 'Have email', 'not-sure': 'Not sure' }[data.email] : '');
+        var emailCount = data.email_plan === '2-bundle' ? 2 : data.email_plan === '100-bundle' ? 100 : data.email_plan === 'unlimited' ? 'Unlimited' : 1;
+        field('Business Email', data.email ? { 'need': 'Need (' + emailCount + ' mailboxes)', 'no-need': 'Have email', 'not-sure': 'Not sure' }[data.email] : '');
         field('Setup Help', data.setup_help === 'yes' ? 'Yes' : 'No');
         y += 4;
 
