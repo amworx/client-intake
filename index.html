@@ -883,11 +883,9 @@ body {
   inset: 0;
   z-index: 9998;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: clamp(24px, 5vh, 60px) 24px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  padding: 24px;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.35s ease, visibility 0.35s ease;
@@ -1117,6 +1115,21 @@ body {
   width: 100%;
   max-width: 760px;
 }
+.bcf-split {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+  text-align: left;
+}
+.bcf-left {
+  flex: 1;
+  min-width: 0;
+}
+.bcf-right {
+  width: 280px;
+  flex-shrink: 0;
+}
 .bundle-screen-not-sure {
   display: flex;
   align-items: center;
@@ -1297,6 +1310,12 @@ body {
   .bundle-screen-grid {
     grid-template-columns: 1fr;
     max-width: 400px;
+  }
+  .bcf-split {
+    flex-direction: column;
+  }
+  .bcf-right {
+    width: 100%;
   }
   .screen-back-btn {
     top: 12px;
@@ -2192,75 +2211,79 @@ body {
   </div>
 </div>
 
-<!-- Bundle Confirmation Screen (shown after bundle selection, replaces full form) -->
+<!-- Bundle Confirmation Screen (two-column — no scroll needed) -->
 <div class="pricing-screen hidden" id="bundleConfirmScreen">
   <div class="pricing-screen-bg"></div>
-  <div class="pricing-screen-inner" style="max-width:580px">
+  <div class="pricing-screen-inner" style="max-width:720px">
     <div class="pricing-screen-badge" id="bundleConfirmBadge">Managed Bundle</div>
     <h2 class="pricing-screen-heading" id="bundleConfirmHeading" style="margin-bottom:4px">You're all set</h2>
-    <p class="pricing-screen-sub" id="bundleConfirmSub" style="margin-bottom:20px">Here's your selected plan — just drop your contact info and we'll get started.</p>
-    
-    <!-- Bundle summary card -->
-    <div id="bundleConfirmSummary" style="width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;text-align:left">
-      <!-- Dynamically filled -->
-    </div>
+    <p class="pricing-screen-sub" id="bundleConfirmSub" style="margin-bottom:12px">Here's your selected plan — just drop your contact info and we'll get started.</p>
 
-    <!-- Period selector -->
-    <div id="bundlePeriodRow" style="width:100%;text-align:left;margin-bottom:16px;display:none">
-      <div class="form-group" style="margin-bottom:4px">
-        <label class="form-label" for="bcfMonths" style="font-size:13px">Subscription Period</label>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="display:flex;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
-          <button type="button" id="bcfMonthsDec" style="width:40px;height:42px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;transition:background 0.2s" aria-label="Decrease months">&minus;</button>
-          <input type="number" id="bcfMonths" value="12" min="1" max="60" style="width:64px;height:42px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);background:transparent;color:var(--text);text-align:center;font-size:16px;font-weight:600;outline:none;-moz-appearance:textfield">
-          <button type="button" id="bcfMonthsInc" style="width:40px;height:42px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;transition:background 0.2s" aria-label="Increase months">+</button>
+    <div class="bcf-split">
+      <!-- Left column: summary + period -->
+      <div class="bcf-left">
+        <div id="bundleConfirmSummary" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:left">
+          <!-- Dynamically filled -->
         </div>
-        <span style="font-size:14px;color:var(--text-muted)">months</span>
-        <span id="bcfTotalDisplay" style="margin-left:auto;font-size:18px;font-weight:700;color:var(--primary)"></span>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-        <button type="button" class="period-quick" data-months="6" style="padding:4px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.2s">6 months</button>
-        <button type="button" class="period-quick" data-months="12" style="padding:4px 14px;border:1px solid var(--primary);border-radius:20px;background:var(--primary);color:#fff;font-size:12px;cursor:pointer;transition:all 0.2s">12 months</button>
-        <button type="button" class="period-quick" data-months="18" style="padding:4px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.2s">18 months</button>
-        <button type="button" class="period-quick" data-months="24" style="padding:4px 14px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.2s">24 months</button>
-      </div>
-    </div>
 
-    <!-- Minimal form -->
-    <div style="width:100%;text-align:left">
-      <div class="form-group" style="margin-bottom:12px">
-        <label class="form-label" for="bcf_name" style="font-size:13px">Full Name <span class="hint">*</span></label>
-        <input class="form-input" type="text" id="bcf_name" required minlength="2" placeholder="John Doe" style="padding:10px 14px;font-size:14px">
-      </div>
-      <div class="form-group" style="margin-bottom:12px">
-        <label class="form-label" for="bcf_email" style="font-size:13px">Email Address <span class="hint">*</span></label>
-        <div style="display:flex;gap:8px">
-          <input class="form-input" type="email" id="bcf_email" required placeholder="john@example.com" style="flex:1;padding:10px 14px;font-size:14px" autocomplete="email">
-          <button type="button" class="btn-otp" id="bcfBtnSendOtp" style="white-space:nowrap;padding:10px 16px;font-size:13px">Send Code</button>
-        </div>
-        <div class="otp-row" style="margin-top:8px;gap:8px">
-          <input class="form-input" type="text" id="bcfOtpInput" inputmode="numeric" maxlength="6" placeholder="000000" style="width:120px;display:none;padding:10px 14px;font-size:14px">
-          <button type="button" class="btn-otp" id="bcfBtnVerifyOtp" style="display:none;padding:10px 16px;font-size:13px">Verify</button>
-          <span class="otp-verified" id="bcfOtpVerified" style="display:none;">&#10003; Verified</span>
+        <!-- Period selector -->
+        <div id="bundlePeriodRow" style="text-align:left;margin-top:14px;display:none">
+          <label class="form-label" for="bcfMonths" style="font-size:12px;margin-bottom:6px">Subscription Period</label>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div style="display:flex;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+              <button type="button" id="bcfMonthsDec" style="width:34px;height:36px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;transition:background 0.2s" aria-label="Decrease months">&minus;</button>
+              <input type="number" id="bcfMonths" value="12" min="1" max="60" style="width:52px;height:36px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);background:transparent;color:var(--text);text-align:center;font-size:14px;font-weight:600;outline:none;-moz-appearance:textfield">
+              <button type="button" id="bcfMonthsInc" style="width:34px;height:36px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;transition:background 0.2s" aria-label="Increase months">+</button>
+            </div>
+            <span style="font-size:13px;color:var(--text-muted)">months</span>
+            <span id="bcfTotalDisplay" style="font-size:16px;font-weight:700;color:var(--primary)"></span>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <button type="button" class="period-quick" data-months="6" style="padding:3px 12px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:11px;cursor:pointer;transition:all 0.2s">6 mo</button>
+            <button type="button" class="period-quick" data-months="12" style="padding:3px 12px;border:1px solid var(--primary);border-radius:20px;background:var(--primary);color:#fff;font-size:11px;cursor:pointer;transition:all 0.2s">12 mo</button>
+            <button type="button" class="period-quick" data-months="18" style="padding:3px 12px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:11px;cursor:pointer;transition:all 0.2s">18 mo</button>
+            <button type="button" class="period-quick" data-months="24" style="padding:3px 12px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text-muted);font-size:11px;cursor:pointer;transition:all 0.2s">24 mo</button>
+          </div>
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:8px">
-        <label class="form-label" for="bcf_phone" style="font-size:13px">Phone Number</label>
-        <input class="form-input" type="tel" id="bcf_phone" placeholder="(555) 123-4567" style="padding:10px 14px;font-size:14px">
-      </div>
-      <div id="bcfError" style="display:none;color:var(--error);font-size:13px;margin-bottom:12px"></div>
-    </div>
 
-    <div class="pricing-screen-action" style="margin-top:4px">
-      <button class="btn-start" id="btnSubmitBundle">
-        <span class="btn-start-text">Submit Request</span>
-        <i data-lucide="arrow-right" style="width:18px;height:18px;stroke-width:2.5"></i>
-      </button>
-      <button class="btn-back-secondary" id="bcfBack" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:13px;margin-top:8px">
-        <i data-lucide="arrow-left" style="width:14px;height:14px;display:inline;vertical-align:middle"></i>
-        Back to bundle selection
-      </button>
+      <!-- Right column: form + action -->
+      <div class="bcf-right">
+        <div style="text-align:left">
+          <div class="form-group" style="margin-bottom:10px">
+            <label class="form-label" for="bcf_name" style="font-size:12px">Full Name <span class="hint">*</span></label>
+            <input class="form-input" type="text" id="bcf_name" required minlength="2" placeholder="John Doe" style="padding:9px 12px;font-size:13px">
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label class="form-label" for="bcf_email" style="font-size:12px">Email Address <span class="hint">*</span></label>
+            <div style="display:flex;gap:6px">
+              <input class="form-input" type="email" id="bcf_email" required placeholder="john@example.com" style="flex:1;padding:9px 12px;font-size:13px" autocomplete="email">
+              <button type="button" class="btn-otp" id="bcfBtnSendOtp" style="white-space:nowrap;padding:9px 12px;font-size:12px">Send Code</button>
+            </div>
+            <div class="otp-row" style="margin-top:6px;gap:6px">
+              <input class="form-input" type="text" id="bcfOtpInput" inputmode="numeric" maxlength="6" placeholder="000000" style="width:100px;display:none;padding:9px 12px;font-size:13px">
+              <button type="button" class="btn-otp" id="bcfBtnVerifyOtp" style="display:none;padding:9px 12px;font-size:12px">Verify</button>
+              <span class="otp-verified" id="bcfOtpVerified" style="display:none;font-size:12px">&#10003; Verified</span>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label class="form-label" for="bcf_phone" style="font-size:12px">Phone Number</label>
+            <input class="form-input" type="tel" id="bcf_phone" placeholder="(555) 123-4567" style="padding:9px 12px;font-size:13px">
+          </div>
+          <div id="bcfError" style="display:none;color:var(--error);font-size:12px;margin-bottom:8px"></div>
+        </div>
+
+        <div class="pricing-screen-action" style="margin-top:4px">
+          <button class="btn-start" id="btnSubmitBundle" style="width:100%;justify-content:center">
+            <span class="btn-start-text">Submit Request</span>
+            <i data-lucide="arrow-right" style="width:16px;height:16px;stroke-width:2.5"></i>
+          </button>
+          <button class="btn-back-secondary" id="bcfBack" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:12px;margin-top:8px;width:100%;text-align:center">
+            <i data-lucide="arrow-left" style="width:13px;height:13px;display:inline;vertical-align:middle"></i>
+            Back to bundle selection
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
