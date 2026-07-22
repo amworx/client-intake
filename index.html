@@ -65,6 +65,7 @@ html.dark {
   --toast-bg: #334155;
   --file-zone-border: #475569;
 }
+html.dark .welcome-shape { opacity: 0.07; }
 
 /* ---- Pricing Mode Selector ---- */
 .pricing-mode-selector {
@@ -745,98 +746,224 @@ body {
 }
 
 /* ---- Welcome Screen ---- */
+/* ── Welcome Screen (fixed full-viewport overlay) ── */
 .welcome-screen {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 9999;
   background: var(--bg);
-  border-radius: var(--radius-lg);
-  padding: 60px 40px;
-  max-width: 900px;
-  margin: 0 auto;
+  overflow: hidden;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  padding: 24px;
   opacity: 1;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
-  min-height: 500px;
+  visibility: visible;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 .welcome-screen.hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-.welcome-screen h1 {
-  font-size: 32px;
+
+/* Decorative background shapes */
+.welcome-bg-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.welcome-shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.04;
+}
+.welcome-shape-1 {
+  width: 600px; height: 600px;
+  background: var(--accent);
+  top: -200px; right: -150px;
+}
+.welcome-shape-2 {
+  width: 400px; height: 400px;
+  background: var(--accent);
+  bottom: -100px; left: -100px;
+}
+.welcome-shape-3 {
+  width: 200px; height: 200px;
+  background: #22d3ee;
+  top: 40%; left: 10%;
+}
+
+/* Content wrapper — fills viewport height, no overflow */
+.welcome-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+  height: 100dvh;
+  height: 100vh;
+  gap: clamp(12px, 2.5vh, 28px);
+  padding: clamp(16px, 3vh, 40px) 0;
+}
+
+/* Badge */
+.welcome-badge {
+  display: inline-flex;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: clamp(11px, 1.2vw, 13px);
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+/* Headline */
+.welcome-inner h1 {
+  font-size: clamp(24px, 4.5vw, 40px);
   font-weight: 700;
   color: var(--text);
-  margin: 0 0 12px;
-  line-height: 1.2;
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
-.welcome-screen .welcome-sub {
-  font-size: 16px;
+
+/* Subtitle */
+.welcome-inner .welcome-sub {
+  font-size: clamp(14px, 1.6vw, 16px);
   color: var(--text-muted);
-  margin: 0 0 32px;
+  margin: 0;
   line-height: 1.6;
-  max-width: 540px;
+  max-width: 500px;
+  flex-shrink: 0;
 }
+
+/* Deliverables grid — compact horizontal wrap */
 .welcome-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  max-width: 480px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(6px, 1vw, 10px);
+  max-width: 460px;
   width: 100%;
-  margin-bottom: 36px;
+  flex-shrink: 0;
 }
 .welcome-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: 6px;
+  padding: clamp(8px, 1.2vh, 12px) clamp(12px, 1.8vw, 18px);
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  font-size: 14px;
+  font-size: clamp(12px, 1.3vw, 14px);
   color: var(--text);
-  text-align: left;
-  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
 .welcome-item:hover {
   border-color: var(--accent);
   background: var(--accent-light);
+  transform: translateY(-1px);
 }
 .welcome-item svg {
   flex-shrink: 0;
   color: var(--accent);
 }
+
+/* CTA Button */
 .btn-start {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 16px 40px;
-  font-size: 17px;
+  gap: clamp(6px, 1vw, 10px);
+  padding: clamp(12px, 1.8vh, 18px) clamp(28px, 4vw, 48px);
+  font-size: clamp(15px, 1.6vw, 18px);
   font-weight: 600;
   color: #fff;
   background: var(--accent);
   border: none;
-  border-radius: var(--radius);
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   font-family: inherit;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.25);
 }
 .btn-start:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(99,102,241,0.35);
 }
 .btn-start:active {
   transform: translateY(0);
+  box-shadow: 0 2px 12px rgba(99,102,241,0.2);
 }
+
+/* Meta text */
 .welcome-meta {
-  font-size: 13px;
+  font-size: clamp(12px, 1.2vw, 13px);
   color: var(--text-light);
-  margin-top: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.welcome-meta::before {
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  opacity: 0.6;
+}
+
+/* Responsive: very short viewports */
+@media (max-height: 550px) {
+  .welcome-inner {
+    gap: 8px;
+  }
+  .welcome-inner h1 {
+    font-size: 20px;
+  }
+  .welcome-grid {
+    gap: 5px;
+  }
+  .welcome-item {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  .btn-start {
+    padding: 8px 20px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+  .welcome-badge {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+}
+
+/* Responsive: very narrow screens */
+@media (max-width: 420px) {
+  .welcome-screen {
+    padding: 16px;
+  }
+  .welcome-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .welcome-item {
+    white-space: normal;
+    width: 100%;
+    max-width: 260px;
+  }
 }
 
 /* Sections */
@@ -1541,6 +1668,31 @@ body {
   <span style="color:var(--text-muted);font-size:14px">Loading intake form...</span>
 </div>
 
+<!-- Welcome Screen — fixed full-viewport overlay -->
+<div class="welcome-screen" id="welcomeScreen">
+  <div class="welcome-bg-shapes">
+    <div class="welcome-shape welcome-shape-1"></div>
+    <div class="welcome-shape welcome-shape-2"></div>
+    <div class="welcome-shape welcome-shape-3"></div>
+  </div>
+  <div class="welcome-inner">
+    <div class="welcome-badge">Web Design &amp; Development</div>
+    <h1>Let's build the right website for your business</h1>
+    <p class="welcome-sub">Answer a few smart questions and we'll prepare a tailored recommendation with pricing, timeline, and a project outline — no commitment required.</p>
+    <div class="welcome-grid">
+      <div class="welcome-item"><i data-lucide="file-text" style="width:16px;height:16px"></i> Project estimate</div>
+      <div class="welcome-item"><i data-lucide="gift" style="width:16px;height:16px"></i> Recommended package</div>
+      <div class="welcome-item"><i data-lucide="calendar" style="width:16px;height:16px"></i> Timeline estimate</div>
+      <div class="welcome-item"><i data-lucide="send" style="width:16px;height:16px"></i> Custom proposal (optional)</div>
+    </div>
+    <button class="btn-start" id="btnStartSurvey">
+      <span class="btn-start-text">Start Survey</span>
+      <i data-lucide="arrow-right" style="width:18px;height:18px;stroke-width:2.5"></i>
+    </button>
+    <div class="welcome-meta">Takes about 5–8 minutes</div>
+  </div>
+</div>
+
 <div class="top-bar">
   <h1><span id="scrambleTitle">AM Worx — Client Intake</span></h1>
   <div class="top-bar-actions">
@@ -1562,21 +1714,6 @@ body {
 </div>
 
 <div class="main-content" id="mainContent">
-  <!-- Welcome Screen -->
-  <div class="welcome-screen" id="welcomeScreen">
-    <h1>Let's build the right website for your business</h1>
-    <div class="welcome-sub">Answer a few questions and we'll prepare a tailored recommendation with pricing, timeline, and a project outline — no commitment required.</div>
-    <div class="welcome-grid">
-      <div class="welcome-item"><i data-lucide="file-text" style="width:18px;height:18px"></i> Project estimate</div>
-      <div class="welcome-item"><i data-lucide="gift" style="width:18px;height:18px"></i> Recommended package</div>
-      <div class="welcome-item"><i data-lucide="calendar" style="width:18px;height:18px"></i> Timeline estimate</div>
-      <div class="welcome-item"><i data-lucide="send" style="width:18px;height:18px"></i> Custom proposal (optional)</div>
-    </div>
-    <button class="btn-start" id="btnStartSurvey">
-      <i data-lucide="arrow-right" style="width:20px;height:20px"></i> Start Survey
-    </button>
-    <div class="welcome-meta">Takes about 5–8 minutes</div>
-  </div>
 
   <!-- Pricing Mode Selector -->
   <div class="pricing-mode-selector" id="pricingModeSelector">
