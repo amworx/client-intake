@@ -305,16 +305,64 @@ html.dark .welcome-shape { opacity: 0.07; }
 
 /* ---- Recommendation Card ---- */
 .recommendation-card {
-  background: var(--accent-light);
+  background: linear-gradient(135deg, var(--accent-light) 0%, #ffffff 100%);
   border: 1px solid var(--accent);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin-bottom: 20px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  animation: rec-card-in 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.recommendation-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent) 0%, #818cf8 50%, var(--accent) 100%);
+  background-size: 200% 100%;
+  animation: rec-shimmer 3s ease-in-out infinite;
+}
+@keyframes rec-card-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes rec-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
 }
 .recommendation-card.rec-hidden {
   display: none;
+}
+.rec-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.rec-header-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.rec-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.rec-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 .rec-badge {
   display: inline-flex;
@@ -323,48 +371,56 @@ html.dark .welcome-shape { opacity: 0.07; }
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  padding: 4px 12px;
-  border-radius: 12px;
-  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.rec-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
 }
 .rec-badge.rec-essential {
   background: #dcfce7;
   color: #15803d;
 }
+.rec-badge.rec-essential .rec-badge-dot { background: #15803d; }
 .rec-badge.rec-growth {
   background: #e0e7ff;
   color: #4338ca;
 }
+.rec-badge.rec-growth .rec-badge-dot { background: #4338ca; }
 .rec-badge.rec-scale {
   background: #fce7f3;
   color: #be185d;
 }
+.rec-badge.rec-scale .rec-badge-dot { background: #be185d; }
 .rec-badge.rec-custom {
   background: #fef3c7;
   color: #92400e;
 }
-.rec-header {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-.rec-sub {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 18px;
-}
+.rec-badge.rec-custom .rec-badge-dot { background: #92400e; }
 .rec-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 .rec-item {
   background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px;
-  text-align: center;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+.rec-item:hover {
+  border-color: var(--accent);
+  transform: translateX(2px);
 }
 .rec-item .rec-label {
   font-size: 11px;
@@ -372,12 +428,13 @@ html.dark .welcome-shape { opacity: 0.07; }
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-light);
-  margin-bottom: 4px;
 }
 .rec-item .rec-value {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text);
+  text-align: right;
+  word-break: break-word;
 }
 .rec-item .rec-value.rec-value-green {
   color: var(--success);
@@ -388,12 +445,20 @@ html.dark .welcome-shape { opacity: 0.07; }
 .rec-note {
   font-size: 12px;
   color: var(--text-muted);
-  margin-top: 14px;
+  margin-top: 16px;
   line-height: 1.5;
   text-align: center;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  border: 1px dashed var(--border);
 }
 .mode-bundle .recommendation-card {
   border-color: #22c55e;
+}
+.mode-bundle .recommendation-card::before {
+  background: linear-gradient(90deg, #22c55e 0%, #4ade80 50%, #22c55e 100%);
+  background-size: 200% 100%;
 }
 
 
@@ -2854,26 +2919,29 @@ body {
     </div>
     <aside class="right-sidebar" id="rightSidebar">
       <div class="recommendation-card rec-hidden" id="recCard">
-        <div class="rec-header">Based on your answers</div>
+        <div class="rec-header">
+          <i data-lucide="sparkles" class="rec-header-icon"></i>
+          <span>Based on your answers</span>
+        </div>
         <div class="rec-sub">Here's our preliminary recommendation. Adjust your selections above and it will update automatically.</div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap">
-          <span class="rec-badge" id="recBadge">—</span>
+        <div class="rec-badge-row">
+          <span class="rec-badge" id="recBadge"><span class="rec-badge-dot"></span>—</span>
         </div>
         <div class="rec-grid">
           <div class="rec-item">
-            <div class="rec-label">Recommended Package</div>
+            <div class="rec-label">Package</div>
             <div class="rec-value rec-value-brand" id="recPackage">—</div>
           </div>
           <div class="rec-item">
-            <div class="rec-label">Estimated Timeline</div>
+            <div class="rec-label">Timeline</div>
             <div class="rec-value rec-value-green" id="recTimeline">—</div>
           </div>
           <div class="rec-item">
-            <div class="rec-label">Estimated Investment</div>
+            <div class="rec-label">Investment</div>
             <div class="rec-value" id="recInvestment">—</div>
           </div>
         </div>
-        <div class="rec-note">This is a preliminary estimate. Final pricing will be confirmed after our consultation.</div>
+        <div class="rec-note">Preliminary estimate — final pricing confirmed after consultation</div>
       </div>
     </aside>
   </div>
@@ -3866,33 +3934,36 @@ body {
               showToast(otpData.error || 'Failed to send verification email. Please try again.', 'error');
               return;
             }
+            // Success — Edge Function confirmed the email was sent
+            // Only NOW start the cooldown, show the OTP input, and show success toast
+            showToast('Verification code sent to ' + email, 'success');
+            otpInput.style.display = 'inline-block';
+            btnVerify.style.display = 'inline-block';
+            otpInput.focus();
           });
+        }).then(function() {
+          // Rate limit: 60-second cooldown on Send Code button (only after Edge Function succeeds)
+          sendCooldown = true;
+          btnSend.disabled = true;
+          var cooldownSec = 60;
+          btnSend.textContent = 'Resend (' + cooldownSec + 's)';
+          var cooldownTimer = setInterval(function() {
+            cooldownSec--;
+            if (cooldownSec > 0) {
+              btnSend.textContent = 'Resend (' + cooldownSec + 's)';
+            } else {
+              clearInterval(cooldownTimer);
+              sendCooldown = false;
+              btnSend.disabled = false;
+              btnSend.textContent = 'Resend Code';
+            }
+          }, 1000);
         }).catch(function() {
           // Edge Function failure — fail loudly, never expose the code
           sendCooldown = false;
           btnSend.disabled = false;
           showToast('Failed to send verification email. Please try again or contact support.', 'error');
         });
-        // Rate limit: 60-second cooldown on Send Code button
-        sendCooldown = true;
-        btnSend.disabled = true;
-        var cooldownSec = 60;
-        btnSend.textContent = 'Resend (' + cooldownSec + 's)';
-        var cooldownTimer = setInterval(function() {
-          cooldownSec--;
-          if (cooldownSec > 0) {
-            btnSend.textContent = 'Resend (' + cooldownSec + 's)';
-          } else {
-            clearInterval(cooldownTimer);
-            sendCooldown = false;
-            btnSend.disabled = false;
-            btnSend.textContent = 'Resend Code';
-          }
-        }, 1000);
-        showToast('Verification code sent to ' + email, 'success');
-        otpInput.style.display = 'inline-block';
-        btnVerify.style.display = 'inline-block';
-        otpInput.focus();
       }).catch(function(err) {
         sendCooldown = false;
         btnSend.disabled = false;
@@ -3968,23 +4039,27 @@ body {
                 showToast(otpData.error || 'Failed to send verification email.', 'error');
                 return;
               }
+              // Success — Edge Function confirmed the email was sent
+              // Only NOW show the OTP input + success toast
+              showToast('Verification code sent to ' + email, 'success');
+              bcfOtpInput.style.display = 'inline-block';
+              bcfBtnVerify.style.display = 'inline-block';
+              bcfOtpInput.focus();
             });
+          }).then(function() {
+            // Rate limit cooldown (only after Edge Function succeeds)
+            bcfSendCooldown = true; bcfBtnSend.disabled = true;
+            var sec = 60;
+            bcfBtnSend.textContent = 'Resend (' + sec + 's)';
+            var t = setInterval(function() {
+              sec--;
+              if (sec > 0) { bcfBtnSend.textContent = 'Resend (' + sec + 's)'; }
+              else { clearInterval(t); bcfSendCooldown = false; bcfBtnSend.disabled = false; bcfBtnSend.textContent = 'Resend Code'; }
+            }, 1000);
           }).catch(function() {
             bcfSendCooldown = false; bcfBtnSend.disabled = false;
             showToast('Failed to send verification email.', 'error');
           });
-          bcfSendCooldown = true; bcfBtnSend.disabled = true;
-          var sec = 60;
-          bcfBtnSend.textContent = 'Resend (' + sec + 's)';
-          var t = setInterval(function() {
-            sec--;
-            if (sec > 0) { bcfBtnSend.textContent = 'Resend (' + sec + 's)'; }
-            else { clearInterval(t); bcfSendCooldown = false; bcfBtnSend.disabled = false; bcfBtnSend.textContent = 'Resend Code'; }
-          }, 1000);
-          showToast('Verification code sent to ' + email, 'success');
-          bcfOtpInput.style.display = 'inline-block';
-          bcfBtnVerify.style.display = 'inline-block';
-          bcfOtpInput.focus();
         }).catch(function() {
           bcfSendCooldown = false; bcfBtnSend.disabled = false;
           showToast('Failed to send code.', 'error');
@@ -4912,6 +4987,7 @@ body {
     btn.textContent = 'Submitting...';
 
     // Wrap everything in a promise chain so synchronous throws become rejections
+    var submissionData; // hoisted so accessible across .then() callbacks
     Promise.resolve().then(function() {
       var data = collectFormData();
       var total = window._priceItems.reduce(function(s, i) { return s + i.lineTotal; }, 0);
@@ -4966,7 +5042,7 @@ body {
         pdfUrl = SUPABASE_URL + '/storage/v1/object/public/submissions/' + path;
         return Promise.all(uploadPromises);
       }).then(function() {
-        var submissionData = {
+        submissionData = {
           full_name: data.full_name,
           business_name: data.business_name || null,
           client_email: data.client_email,
