@@ -3368,8 +3368,18 @@ body {
             '</span>' +
             '<div><div style="font-weight:600;font-size:16px">Help Me Choose</div><div style="font-size:13px;color:var(--text-muted)">We\'ll review your needs and recommend the best plan</div></div>' +
           '</div>' +
-          '<div style="font-size:13px;color:var(--text-muted);line-height:1.5;padding:12px;background:var(--bg);border-radius:var(--radius-md)">' +
-            'Tell us a bit about your project and we\'ll get back to you with a personalized recommendation within 1 business day.' +
+          '<div style="margin-bottom:10px">' +
+            '<label style="font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:4px">Describe your project</label>' +
+            '<textarea id="bcf_description" placeholder="Tell us about your project, your goals, what you need help with..." style="display:block;width:100%;min-height:100px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;resize:vertical;font-family:inherit;box-sizing:border-box"></textarea>' +
+          '</div>' +
+          '<div>' +
+            '<label style="font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:4px">Attach files (optional)</label>' +
+            '<div class="file-zone" id="bcfFileZone">' +
+              '<div class="file-zone-icon">&#128206;</div>' +
+              '<div class="file-zone-text">Drag &amp; drop files here or <strong>click to browse</strong></div>' +
+              '<input type="file" id="bcfFileInput" multiple style="display:none" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.svg">' +
+            '</div>' +
+            '<div class="file-list" id="bcfFileList"></div>' +
           '</div>';
         document.getElementById('bundleConfirmHeading').textContent = 'Tell us about your project';
         document.getElementById('bundleConfirmSub').textContent = 'We\'ll review your needs and recommend the perfect bundle for you.';
@@ -3429,6 +3439,10 @@ body {
       }
       showScreen(bundleConfirmScreen);
       if (typeof lucide !== 'undefined') lucide.createIcons();
+      // Initialize bundle file upload for "not-sure" screen
+      if (tier === 'not-sure') {
+        setupBundleFileUpload();
+      }
       // Pre-fill name/email/phone from main form if already entered
       var mainName = document.getElementById('full_name');
       var mainEmail = document.getElementById('client_email');
@@ -5155,7 +5169,99 @@ body {
     });
   }
 
-  // ---- Bundle Form Submit (lightweight — no files, no PDF, no full form) ----
+  // ---- Bundle Confirmation File Upload (for "not-sure" screen) ----
+  window._bcfFiles = [];
+
+  function setupBundleFileUpload() {
+    var zone = document.getElementById('bcfFileZone');
+    var input = document.getElementById('bcfFileInput');
+    var list = document.getElementById('bcfFileList');
+    if (!zone) return;
+
+    // Reset files each time the screen opens
+    window._bcfFiles = [];
+
+    zone.addEventListener('click', function() { input.click(); });
+
+    input.addEventListener('change', function() {
+      addBcfFiles(this.files);
+      this.value = '';
+    });
+
+    zone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', function() {
+      zone.classList.remove('dragover');
+    });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      addBcfFiles(e.dataTransfer.files);
+    });
+  }
+
+  function addBcfFiles(fileList) {
+    var allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'image/png', 'image/jpeg', 'image/gif', 'image/svg+xml',
+      'text/plain'
+    ];
+    var totalSize = window._bcfFiles.reduce(function(sum, f) { return sum + (f.size || 0); }, 0);
+    var newTotal = totalSize;
+    var toAdd = [];
+    for (var i = 0; i < fileList.length; i++) {
+      var file = fileList[i];
+      if (allowedTypes.indexOf(file.type) === -1) {
+        showToast('File type not allowed: ' + (file.name || file.type), 'error');
+        continue;
+      }
+      newTotal += file.size;
+      toAdd.push(file);
+    }
+    if (newTotal > 25 * 1024 * 1024) {
+      showToast('Total file size exceeds 25MB limit.', 'error');
+      return;
+    }
+    for (var j = 0; j < toAdd.length; j++) {
+      window._bcfFiles.push(toAdd[j]);
+    }
+    renderBcfFileList();
+  }
+
+  function renderBcfFileList() {
+    var list = document.getElementById('bcfFileList');
+    if (!list) return;
+    if (window._bcfFiles.length === 0) {
+      list.innerHTML = '';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < window._bcfFiles.length; i++) {
+      var f = window._bcfFiles[i];
+      var icon = getFileIcon(f.type || f.name);
+      var size = formatSize(f.size);
+      html += '<div class="file-item" data-index="' + i + '">';
+      html += '<span class="file-icon">' + icon + '</span>';
+      html += '<span class="file-name">' + escapeHtml(f.name) + '</span>';
+      html += '<span class="file-size">' + size + '</span>';
+      html += '<button class="file-remove" data-index="' + i + '" type="button">&times;</button>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+    list.querySelectorAll('.file-remove').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-index'));
+        window._bcfFiles.splice(idx, 1);
+        renderBcfFileList();
+      });
+    });
+  }
+
+  // ---- Bundle Form Submit ----
   function submitBundleForm() {
     if (window._submitting) return;
     var name = document.getElementById('bcf_name').value.trim();
@@ -5199,29 +5305,52 @@ body {
         bundleMonthly: monthlyPrice
       }] : [];
 
-      var submissionData = {
-        full_name: name,
-        client_email: email,
-        client_phone: phone || null,
-        pricing_mode: 'bundle',
-        bundle_tier: tier === 'not-sure' ? 'not-sure' : tier,
-        price_breakdown: priceBreakdown,
-        estimated_total: total,
-        file_urls: [],
-        request_time: new Date().toISOString()
-      };
+      // Read description from textarea (only for "not-sure")
+      var description = tier === 'not-sure' && document.getElementById('bcf_description')
+        ? document.getElementById('bcf_description').value.trim()
+        : '';
 
-      var submitEmail = window._verifiedEmail || email;
-      var rpcParams = { p_data: submissionData, p_email: submitEmail };
-
-      return supabaseClient.rpc('submit_submission', rpcParams).then(function(res) {
-        if (res.error) throw res.error;
-        if (res.data && !res.data.success) throw new Error(res.data.message || 'Submission rejected');
-        if (res.data && res.data.submission_id) {
-          submissionData.submission_id = res.data.submission_id;
+      // Upload files if any
+      var fileUrls = [];
+      var uploadPromises = [];
+      window._bcfFiles.forEach(function(file) {
+        if (file instanceof File) {
+          var path = 'submissions/' + Date.now() + '_' + sanitizeFilename(file.name);
+          var p = supabaseClient.storage.from('submissions').upload(path, file, {
+            cacheControl: '3600', upsert: false
+          }).then(function(res) {
+            if (res.error) throw res.error;
+            fileUrls.push(SUPABASE_URL + '/storage/v1/object/public/submissions/' + path);
+          });
+          uploadPromises.push(p);
         }
-        showThankYou(name);
-        sendNotificationEmails(submissionData);
+      });
+
+      return Promise.all(uploadPromises).then(function() {
+        var submissionData = {
+          full_name: name,
+          client_email: email,
+          client_phone: phone || null,
+          pricing_mode: 'bundle',
+          bundle_tier: tier === 'not-sure' ? 'not-sure' : tier,
+          business_desc: tier === 'not-sure' ? (description || null) : null,
+          price_breakdown: priceBreakdown,
+          estimated_total: total,
+          file_urls: fileUrls,
+          request_time: new Date().toISOString()
+        };
+
+        var submitEmail = window._verifiedEmail || email;
+        var rpcParams = { p_data: submissionData, p_email: submitEmail };
+        return supabaseClient.rpc('submit_submission', rpcParams).then(function(res) {
+          if (res.error) throw res.error;
+          if (res.data && !res.data.success) throw new Error(res.data.message || 'Submission rejected');
+          if (res.data && res.data.submission_id) {
+            submissionData.submission_id = res.data.submission_id;
+          }
+          showThankYou(name);
+          sendNotificationEmails(submissionData);
+        });
       });
     }).catch(function(err) {
       console.error('Bundle submit error:', err);
