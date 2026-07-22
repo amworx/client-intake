@@ -5229,25 +5229,39 @@ body {
 
   // ---- Thank You ----
   function showThankYou(name) {
-    window._submitting = false;
-    // Hide all pricing overlays so thankyou is visible on top
-    document.querySelectorAll('.pricing-screen.open').forEach(function(s) {
-      s.classList.remove('open');
-      s.classList.add('hidden');
-    });
-    document.getElementById('thankyouName').textContent = 'Thank You, ' + escapeHtml(name) + '!';
-    document.getElementById('thankyouOverlay').classList.add('open');
-
-    // Animate status
-    setTimeout(function() {
-      document.getElementById('statusFiles').classList.remove('pending');
-    }, 500);
-    setTimeout(function() {
-      document.getElementById('statusPdf').classList.remove('pending');
-    }, 1000);
-    setTimeout(function() {
-      document.getElementById('statusDb').classList.remove('pending');
-    }, 1500);
+    console.log('showThankYou called for:', name);
+    try {
+      window._submitting = false;
+      // Reset per-item submit button
+      var submitBtn = document.getElementById('btnSubmit');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Request'; }
+      // Reset bundle submit button
+      var bundleBtn = document.getElementById('btnSubmitBundle');
+      if (bundleBtn) { bundleBtn.disabled = false; var t = bundleBtn.querySelector('.btn-start-text'); if (t) t.textContent = 'Submit Request'; }
+      // Force-hide ALL pricing screens
+      document.querySelectorAll('.pricing-screen').forEach(function(s) {
+        s.classList.remove('open');
+        s.style.display = 'none';
+      });
+      // Force-show thankyou overlay
+      var tyOverlay = document.getElementById('thankyouOverlay');
+      if (tyOverlay) {
+        tyOverlay.style.display = 'flex';
+        tyOverlay.classList.add('open');
+      }
+      var tyName = document.getElementById('thankyouName');
+      if (tyName) tyName.textContent = 'Thank You, ' + escapeHtml(name) + '!';
+      // Animate status
+      setTimeout(function() { var el = document.getElementById('statusFiles'); if (el) el.classList.remove('pending'); }, 500);
+      setTimeout(function() { var el = document.getElementById('statusPdf'); if (el) el.classList.remove('pending'); }, 1000);
+      setTimeout(function() { var el = document.getElementById('statusDb'); if (el) el.classList.remove('pending'); }, 1500);
+    } catch (e) {
+      console.error('showThankYou error:', e);
+      // Last resort fallback — blow away the page and show a simple message
+      try {
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;font-family:sans-serif;background:#0f172a;color:#fff"><h1>Thank You, ' + escapeHtml(name) + '!</h1><p style="color:#94a3b8">Your submission was received. We\'ll be in touch soon.</p></div>';
+      } catch(_) {}
+    }
   }
 
   // ---- Toast ----
