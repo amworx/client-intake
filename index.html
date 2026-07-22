@@ -1120,7 +1120,92 @@ body {
   gap: 20px;
   width: 100%;
   align-items: flex-start;
-  text-align: left;
+}
+
+/* ── Period selector cards (uiverse-inspired) ── */
+.bcf-period-wrapper {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.bcf-period-card {
+  position: relative;
+  flex: 1;
+  min-height: 72px;
+  background: var(--bg);
+  border-radius: 10px;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+.bcf-period-card:hover {
+  transform: scale(1.04);
+}
+.bcf-period-input {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%; width: 100%;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  z-index: 10;
+  background: transparent;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.06), -1px -1px 6px rgba(255,255,255,0.8);
+  transition: border-color 0.25s;
+  margin: 0;
+}
+.bcf-period-input:checked {
+  border: 1.5px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(99,102,241,0.2);
+}
+.bcf-period-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-card);
+  transition: all 0.25s;
+  z-index: 5;
+}
+.bcf-period-input:checked + .bcf-period-check {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+.bcf-period-input:checked + .bcf-period-check::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 8px; height: 8px;
+  background: #fff;
+  border-radius: 50%;
+}
+.bcf-period-label {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  pointer-events: none;
+  padding: 6px;
+}
+.bcf-period-label .bpl-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+.bcf-period-label .bpl-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 1px;
 }
 .bcf-left {
   flex: 1;
@@ -1316,6 +1401,9 @@ body {
   }
   .bcf-right {
     width: 100%;
+  }
+  .bcf-period-wrapper {
+    gap: 6px;
   }
   .screen-back-btn {
     top: 12px;
@@ -2997,32 +3085,23 @@ body {
 
     function setupBundlePeriodControls() {
       var monthsInput = document.getElementById('bcfMonths');
+      var radios = document.querySelectorAll('.bcf-period-input');
       if (!monthsInput) return;
       if (monthsInput.dataset.bound) return;
       monthsInput.dataset.bound = '1';
+
+      function syncRadios(val) {
+        radios.forEach(function(r) {
+          r.checked = parseInt(r.getAttribute('data-months'), 10) === val;
+        });
+      }
 
       function recalc() {
         var val = parseInt(monthsInput.value, 10);
         if (isNaN(val) || val < 1) { monthsInput.value = 1; val = 1; }
         if (val > 60) { monthsInput.value = 60; val = 60; }
         updateBundleTotal();
-        // Update card-style period buttons
-        document.querySelectorAll('.period-quick').forEach(function(b) {
-          var m = parseInt(b.getAttribute('data-months'), 10);
-          if (m === val) {
-            b.style.borderColor = 'var(--primary)';
-            b.style.background = 'var(--primary)';
-            b.style.color = '#fff';
-            b.style.boxShadow = '0 2px 8px rgba(99,102,241,0.25)';
-            b.style.fontWeight = '600';
-          } else {
-            b.style.borderColor = 'var(--border)';
-            b.style.background = 'var(--bg)';
-            b.style.color = 'var(--text)';
-            b.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
-            b.style.fontWeight = '500';
-          }
-        });
+        syncRadios(val);
       }
 
       monthsInput.addEventListener('input', recalc);
@@ -3036,10 +3115,12 @@ body {
         monthsInput.value = Math.max(parseInt(monthsInput.value, 10) - 1, 1);
         recalc();
       });
-      document.querySelectorAll('.period-quick').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          monthsInput.value = this.getAttribute('data-months');
-          recalc();
+      radios.forEach(function(r) {
+        r.addEventListener('change', function() {
+          if (this.checked) {
+            monthsInput.value = this.getAttribute('data-months');
+            updateBundleTotal();
+          }
         });
       });
     }
@@ -3079,24 +3160,38 @@ body {
             '<div><div style="font-weight:700;font-size:18px">' + t.name + '</div>' +
             '<div style="font-size:22px;font-weight:800;margin-top:2px">$' + t.price + '<span style="font-size:13px;font-weight:400;color:var(--text-muted)">/mo</span></div></div>' +
           '</div>' +
-          // Period selector — card-style buttons inspired by uiverse design
+          // Period selector — uiverse card-style radio design
           '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;margin-bottom:14px">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">' +
               '<span style="font-size:13px;font-weight:600;color:var(--text)">Subscription Period</span>' +
-              '<span id="bcfTotalDisplay" style="font-size:17px;font-weight:700;color:var(--primary);white-space:nowrap">$' + total.toLocaleString() + '</span>' +
-            '</div>' +
-            '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">' +
-              '<div style="display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden">' +
-                '<button type="button" id="bcfMonthsDec" style="width:32px;height:34px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;transition:background 0.15s" aria-label="Decrease">&minus;</button>' +
-                '<input type="number" id="bcfMonths" value="12" min="1" max="60" style="width:46px;height:34px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);background:transparent;color:var(--text);text-align:center;font-size:14px;font-weight:600;outline:none;-moz-appearance:textfield">' +
-                '<button type="button" id="bcfMonthsInc" style="width:32px;height:34px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;transition:background 0.15s" aria-label="Increase">+</button>' +
+              '<div style="display:flex;align-items:center;gap:8px">' +
+                '<div style="display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden">' +
+                  '<button type="button" id="bcfMonthsDec" style="width:30px;height:32px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:background 0.15s;padding:0" aria-label="Decrease">&minus;</button>' +
+                  '<input type="number" id="bcfMonths" value="12" min="1" max="60" style="width:40px;height:32px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);background:transparent;color:var(--text);text-align:center;font-size:13px;font-weight:600;outline:none;-moz-appearance:textfield;padding:0">' +
+                  '<button type="button" id="bcfMonthsInc" style="width:30px;height:32px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:background 0.15s;padding:0" aria-label="Increase">+</button>' +
+                '</div>' +
+                '<span style="font-size:13px;color:var(--text-muted)">months</span>' +
               '</div>' +
-              '<span style="font-size:13px;color:var(--text-muted)">months</span>' +
             '</div>' +
-            '<div style="display:flex;gap:8px">' +
-              '<button type="button" class="period-quick" data-months="12" style="flex:1;padding:10px 6px;border:1.5px solid var(--primary);border-radius:10px;background:var(--primary);color:#fff;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(99,102,241,0.25)">12 months</button>' +
-              '<button type="button" class="period-quick" data-months="24" style="flex:1;padding:10px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.06)">24 months</button>' +
-              '<button type="button" class="period-quick" data-months="48" style="flex:1;padding:10px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.06)">48 months</button>' +
+            '<div class="bcf-period-wrapper">' +
+              '<div class="bcf-period-card">' +
+                '<input type="radio" class="bcf-period-input period-quick" name="bcfPeriod" value="12" data-months="12" checked>' +
+                '<div class="bcf-period-check"></div>' +
+                '<div class="bcf-period-label"><div class="bpl-title">12</div><div class="bpl-sub">months</div></div>' +
+              '</div>' +
+              '<div class="bcf-period-card">' +
+                '<input type="radio" class="bcf-period-input period-quick" name="bcfPeriod" value="24" data-months="24">' +
+                '<div class="bcf-period-check"></div>' +
+                '<div class="bcf-period-label"><div class="bpl-title">24</div><div class="bpl-sub">months</div></div>' +
+              '</div>' +
+              '<div class="bcf-period-card">' +
+                '<input type="radio" class="bcf-period-input period-quick" name="bcfPeriod" value="48" data-months="48">' +
+                '<div class="bcf-period-check"></div>' +
+                '<div class="bcf-period-label"><div class="bpl-title">48</div><div class="bpl-sub">months</div></div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="display:flex;justify-content:flex-end;margin-top:8px">' +
+              '<span id="bcfTotalDisplay" style="font-size:16px;font-weight:700;color:var(--primary)">$' + total.toLocaleString() + '</span>' +
             '</div>' +
           '</div>' +
           '<div style="font-size:14px;font-weight:600;margin-bottom:4px">What\'s included</div>' +
