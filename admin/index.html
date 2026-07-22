@@ -358,9 +358,18 @@ input[type=number]{-moz-appearance:textfield}
 .prop-bullet{margin:1px 0 1px 8px;font-size:13px}
 .proposal-actions{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--border);flex-shrink:0}
 .proposal-actions-left,.proposal-actions-right{display:flex;align-items:center;gap:8px}
+[x-cloak]{display:none!important}
+/* Bulk actions */
+.bulk-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius);margin-bottom:12px;font-size:13px;color:var(--accent);transition:opacity .2s}
+.bulk-bar.hidden{display:none}
+.bulk-bar .count{font-weight:600;margin-right:4px}
+.bulk-bar-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.checkbox-col{width:36px;text-align:center!important}
+.checkbox-col input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--accent);vertical-align:middle}
+.checkbox-col input[type=checkbox]:disabled{opacity:.4;cursor:not-allowed}
 </style>
 </head>
-<body x-bind:class="darkMode && 'dark'"><div x-data="dashboardApp" x-init="init" class="flex h-100vh">
+<body x-data="dashboardApp" x-init="init" x-bind:class="darkMode && 'dark'" class="flex h-100vh">
 
 <!-- LOGIN SCREEN -->
 <template x-if="!authenticated && !authLoading">
@@ -605,6 +614,17 @@ input[type=number]{-moz-appearance:textfield}
           </div>
           <span class="text-base text-sec nowrap"><span x-text="filteredSubmissions.length"></span> of <span x-text="submissions.length"></span></span>
         </div>
+        <!-- Bulk actions bar -->
+        <div class="bulk-bar" :class="selectedSubmissions.length === 0 && 'hidden'">
+          <i class="fas fa-check-circle"></i>
+          <span><span class="count" x-text="selectedCount"></span> selected</span>
+          <div class="bulk-bar-actions">
+            <button class="btn btn-sm" style="background:var(--accent);color:#fff" @click="doBulkSetStatus('New')">Mark New</button>
+            <button class="btn btn-sm" style="background:#22c55e;color:#fff" @click="doBulkSetStatus('Reviewed')">Mark Reviewed</button>
+            <button class="btn btn-sm" style="background:#ef4444;color:#fff" @click="bulkDeleteModalOpen = true">Delete</button>
+            <button class="btn btn-ghost btn-sm" @click="clearSelection">Clear</button>
+          </div>
+        </div>
         <div class="table-wrap table-scroll">
           <template x-if="filteredSubmissions.length === 0">
           <div class="empty-state">
@@ -615,10 +635,13 @@ input[type=number]{-moz-appearance:textfield}
           </template>
           <template x-if="filteredSubmissions.length > 0">
           <table>
-            <thead><tr><th>Name</th><th>Business</th><th>Email</th><th>Date</th><th>Estimate</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th class="checkbox-col"><input type="checkbox" :checked="selectAll" @change="toggleSelectAll"></th><th>Name</th><th>Business</th><th>Email</th><th>Date</th><th>Estimate</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
               <template x-for="s in filteredSubmissions" :key="s.id">
               <tr class="striped row-clickable" @click="openDetail(s)">
+                <td class="checkbox-col" @click.stop>
+                  <input type="checkbox" :checked="isSelected(s.id)" @change="toggleSelect(s.id)">
+                </td>
                 <td>
                   <div class="flex items-center gap-10">
                     <div class="avatar-circle" :style="`background:${avatarColor(s.full_name)}`" x-text="getInitials(s.full_name)"></div>
@@ -1303,8 +1326,8 @@ input[type=number]{-moz-appearance:textfield}
         <i class="fas fa-link" :class="detailSubmission._sharing && 'fa-spin'"></i>
         <span x-text="detailSubmission._shareUrl ? 'Copied!' : 'Share Link'"></span>
       </button>
-      <button class="btn btn-accent btn-sm" @click="generateProposal(detailSubmission)" :disabled="detailSubmission._proposing">
-        <i class="fas fa-file-alt" :class="detailSubmission._proposing && 'fa-spin'"></i>
+      <button class="btn btn-accent btn-sm" @click="generateProposal(detailSubmission)" :disabled="isProposing">
+        <i class="fas fa-file-alt" :class="isProposing && 'fa-spin'"></i>
         Proposal
       </button>
       <button class="btn btn-danger btn-sm" @click="confirmDelete(detailSubmission)"><i class="fas fa-trash-alt"></i> Delete</button>
@@ -1329,6 +1352,21 @@ input[type=number]{-moz-appearance:textfield}
       <button class="btn btn-danger" @click="doDelete" :disabled="deleteLoading">
         <span x-show="deleteLoading"><span class="spinner-btn"></span></span>
         <span x-text="deleteLoading ? 'Deleting...' : 'Delete'"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- BULK DELETE MODAL -->
+<div class="modal-overlay" :class="bulkDeleteModalOpen && 'open'" @click.self="bulkDeleteModalOpen=false">
+  <div class="modal-box">
+    <h3 class="modal-title"><span class="modal-icon-box"><i class="fas fa-trash-alt"></i></span> Delete <span x-text="selectedCount"></span> Submission<span x-show="selectedCount !== 1">s</span></h3>
+    <p class="modal-desc">Are you sure? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" @click="bulkDeleteModalOpen=false">Cancel</button>
+      <button class="btn btn-danger" @click="doBulkDelete" :disabled="bulkDeleteLoading">
+        <span x-show="bulkDeleteLoading"><span class="spinner-btn"></span></span>
+        <span x-text="bulkDeleteLoading ? 'Deleting...' : 'Delete All'"></span>
       </button>
     </div>
   </div>
@@ -1392,8 +1430,6 @@ input[type=number]{-moz-appearance:textfield}
   </div>
   </template>
 </div>
-
-</div>
 <script>
 const SUPABASE_URL = 'https://jyqjkkcenuapssmstmze.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp5cWpra2NlbnVhcHNzbXN0bXplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODk4ODMsImV4cCI6MjA5OTk2NTg4M30.tuPesgd2yCsize4z3jdLAWbxmbQQ_Sv8ChV6lNISaFg';
@@ -1447,10 +1483,18 @@ document.addEventListener('alpine:init', () => {
     detailOpen: false,
     detailSubmission: null,
 
+    // Bulk selection
+    selectedSubmissions: [],
+    selectAll: false,
+
     // Delete modal
     deleteModalOpen: false,
     deleteTarget: null,
     deleteLoading: false,
+
+    // Bulk delete modal
+    bulkDeleteModalOpen: false,
+    bulkDeleteLoading: false,
 
     // Reset modal
     resetModalOpen: false,
@@ -1712,6 +1756,10 @@ document.addEventListener('alpine:init', () => {
     },
 
     openDetail(s) {
+      // Ensure transient state properties exist for Alpine reactivity
+      if (s._proposing === undefined) s._proposing = false;
+      if (s._loading === undefined) s._loading = false;
+      if (s._sharing === undefined) s._sharing = false;
       this.detailSubmission = s;
       this.detailOpen = true;
     },
@@ -1719,6 +1767,81 @@ document.addEventListener('alpine:init', () => {
     closeDetail() {
       this.detailOpen = false;
       this.$nextTick(() => { this.detailSubmission = null; });
+    },
+
+    // ── Bulk Selection ──────────────────────────────────────────
+    get selectedCount() {
+      return this.selectedSubmissions.length;
+    },
+
+    toggleSelectAll() {
+      if (this.selectedSubmissions.length === this.filteredSubmissions.length) {
+        this.selectedSubmissions = [];
+        this.selectAll = false;
+      } else {
+        this.selectedSubmissions = this.filteredSubmissions.map(s => s.id);
+        this.selectAll = true;
+      }
+    },
+
+    toggleSelect(id) {
+      const idx = this.selectedSubmissions.indexOf(id);
+      if (idx >= 0) {
+        this.selectedSubmissions = this.selectedSubmissions.filter(x => x !== id);
+      } else {
+        this.selectedSubmissions = [...this.selectedSubmissions, id];
+      }
+      this.selectAll = this.selectedSubmissions.length === this.filteredSubmissions.length;
+    },
+
+    isSelected(id) {
+      return this.selectedSubmissions.indexOf(id) >= 0;
+    },
+
+    clearSelection() {
+      this.selectedSubmissions = [];
+      this.selectAll = false;
+    },
+
+    async doBulkDelete() {
+      if (this.selectedSubmissions.length === 0) return;
+      this.bulkDeleteLoading = true;
+      try {
+        const ids = this.selectedSubmissions;
+        const { error } = await supabaseClient
+          .from('submissions')
+          .delete()
+          .in('id', ids);
+        if (error) throw error;
+        this.submissions = this.submissions.filter(s => ids.indexOf(s.id) < 0);
+        this.selectedSubmissions = [];
+        this.selectAll = false;
+        this.bulkDeleteModalOpen = false;
+        this.showToast('Deleted ' + ids.length + ' submission(s)', 'ok');
+      } catch (e) {
+        this.showToast('Bulk delete failed: ' + e.message, 'error');
+      } finally {
+        this.bulkDeleteLoading = false;
+      }
+    },
+
+    async doBulkSetStatus(status) {
+      if (this.selectedSubmissions.length === 0) return;
+      const ids = this.selectedSubmissions;
+      try {
+        const { error } = await supabaseClient
+          .from('submissions')
+          .update({ status: status })
+          .in('id', ids);
+        if (error) throw error;
+        // Update local state
+        this.submissions.forEach(s => {
+          if (ids.indexOf(s.id) >= 0) s.status = status;
+        });
+        this.showToast('Set ' + ids.length + ' submission(s) to ' + status, 'ok');
+      } catch (e) {
+        this.showToast('Bulk status update failed: ' + e.message, 'error');
+      }
     },
 
     async toggleStatus(s) {
@@ -1942,6 +2065,7 @@ document.addEventListener('alpine:init', () => {
     proposalModalOpen: false,
     proposalData: null,
     proposalGenerating: false,
+    isProposing: false,
     proposalExporting: false,
     proposalContent: '',
     proposalEditing: false,
@@ -1966,8 +2090,8 @@ document.addEventListener('alpine:init', () => {
     },
 
     async generateProposal(s) {
-      if (!s) return;
-      s._proposing = true;
+      if (!s || this.isProposing) return;
+      this.isProposing = true;
       this.proposalData = s;
 
       const name = s.full_name || 'Client';
@@ -2053,11 +2177,12 @@ ${this.settingsForm.studio_email || ''}`;
       this.proposalEditing = false;
       this.proposalTitle = `Proposal — ${name}${business ? ' — ' + business : ''}`;
       this.proposalModalOpen = true;
-      s._proposing = false;
+      this.isProposing = false;
     },
 
     closeProposalModal() {
       this.proposalModalOpen = false;
+      this.isProposing = false;
       this.$nextTick(() => {
         this.proposalData = null;
         this.proposalContent = '';

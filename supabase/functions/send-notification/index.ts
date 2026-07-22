@@ -56,6 +56,10 @@ function buildAdminHtml(data: Record<string, unknown>): string {
     ).join('')
   }
 
+  const submissionId = data.submission_id
+    ? `#${String(data.submission_id)}`
+    : ''
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -66,6 +70,7 @@ function buildAdminHtml(data: Record<string, unknown>): string {
     .header { background: #0f172a; color: #fff; padding: 24px; }
     .header h1 { margin: 0 0 4px; font-size: 20px; }
     .header p { margin: 0; opacity: 0.7; font-size: 14px; }
+    .header .submission-id { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 4px; background: rgba(99,102,241,.2); color: #a5b4fc; font-size: 12px; font-weight: 600; }
     .body { padding: 24px; }
     .section-title { font-size: 14px; font-weight: 700; color: #0f172a; margin: 16px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
     .field { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
@@ -81,8 +86,9 @@ function buildAdminHtml(data: Record<string, unknown>): string {
 <body>
   <div class="card">
     <div class="header">
-      <h1>New Intake Submission</h1>
+      <h1>New Intake Submission${submissionId}</h1>
       <p>${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+      ${submissionId ? `<div class="submission-id">ID: ${escapeHtml(String(data.submission_id))}</div>` : ''}
     </div>
     <div class="body">
       <div class="section-title">Contact Information</div>
@@ -158,7 +164,11 @@ function buildClientHtml(data: Record<string, unknown>): string {
       </div>
       <div class="detail-box">
         <div class="detail-row">
-          <span class="dr-label">Submission</span>
+          <span class="dr-label">Submission ID</span>
+          <span class="dr-value">${data.submission_id ? '#' + escapeHtml(String(data.submission_id)) : '—'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="dr-label">Date</span>
           <span class="dr-value">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
         </div>
         <div class="detail-row">

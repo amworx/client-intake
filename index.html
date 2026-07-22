@@ -2887,7 +2887,6 @@ body {
   <p style="font-size:13px;color:var(--text-muted)">We'll review your information and get back to you within 1-2 business days.</p>
   <div class="status-row">
     <div class="status-item" id="statusFiles">&#10003; Files uploaded</div>
-    <div class="status-item" id="statusPdf">&#10003; PDF generated</div>
     <div class="status-item" id="statusDb">&#10003; Record saved</div>
   </div>
 </div>
@@ -4969,6 +4968,9 @@ body {
         if (subRes.data && !subRes.data.success) {
           throw new Error(subRes.data.message || 'Submission rejected');
         }
+        if (subRes.data && subRes.data.submission_id) {
+          submissionData.submission_id = subRes.data.submission_id;
+        }
         localStorage.removeItem('intake_draft');
         showThankYou(data.full_name);
         sendNotificationEmails(submissionData);
@@ -5044,6 +5046,9 @@ body {
       return supabaseClient.rpc('submit_submission', rpcParams).then(function(res) {
         if (res.error) throw res.error;
         if (res.data && !res.data.success) throw new Error(res.data.message || 'Submission rejected');
+        if (res.data && res.data.submission_id) {
+          submissionData.submission_id = res.data.submission_id;
+        }
         showThankYou(name);
         sendNotificationEmails(submissionData);
       });
@@ -5253,8 +5258,7 @@ body {
       if (tyName) tyName.textContent = 'Thank You, ' + escapeHtml(name) + '!';
       // Animate status
       setTimeout(function() { var el = document.getElementById('statusFiles'); if (el) el.classList.remove('pending'); }, 500);
-      setTimeout(function() { var el = document.getElementById('statusPdf'); if (el) el.classList.remove('pending'); }, 1000);
-      setTimeout(function() { var el = document.getElementById('statusDb'); if (el) el.classList.remove('pending'); }, 1500);
+      setTimeout(function() { var el = document.getElementById('statusDb'); if (el) el.classList.remove('pending'); }, 1000);
     } catch (e) {
       console.error('showThankYou error:', e);
       // Last resort fallback — blow away the page and show a simple message
