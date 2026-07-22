@@ -866,6 +866,7 @@ body {
   font-size: clamp(12px, 1.3vw, 14px);
   color: var(--text);
   white-space: nowrap;
+  cursor: pointer;
   transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
 .welcome-item:hover {
@@ -1680,10 +1681,10 @@ body {
     <h1>Let's build the right website for your business</h1>
     <p class="welcome-sub">Answer a few smart questions and we'll prepare a tailored recommendation with pricing, timeline, and a project outline — no commitment required.</p>
     <div class="welcome-grid">
-      <div class="welcome-item"><i data-lucide="file-text" style="width:16px;height:16px"></i> Project estimate</div>
-      <div class="welcome-item"><i data-lucide="gift" style="width:16px;height:16px"></i> Recommended package</div>
-      <div class="welcome-item"><i data-lucide="calendar" style="width:16px;height:16px"></i> Timeline estimate</div>
-      <div class="welcome-item"><i data-lucide="send" style="width:16px;height:16px"></i> Custom proposal (optional)</div>
+      <div class="welcome-item" data-start-survey><i data-lucide="file-text" style="width:16px;height:16px"></i> Project estimate</div>
+      <div class="welcome-item" data-start-survey><i data-lucide="gift" style="width:16px;height:16px"></i> Recommended package</div>
+      <div class="welcome-item" data-start-survey><i data-lucide="calendar" style="width:16px;height:16px"></i> Timeline estimate</div>
+      <div class="welcome-item" data-start-survey><i data-lucide="send" style="width:16px;height:16px"></i> Custom proposal (optional)</div>
     </div>
     <button class="btn-start" id="btnStartSurvey">
       <span class="btn-start-text">Start Survey</span>
@@ -2337,14 +2338,21 @@ body {
     if (initialDomain) updateSslRequirement(initialDomain.value);
     loadOverrides();
 
-    // Welcome screen — Start Survey button
-    document.getElementById('btnStartSurvey').addEventListener('click', function() {
+    // Welcome screen — dismiss and scroll to form
+    function dismissWelcome() {
       document.getElementById('welcomeScreen').classList.add('hidden');
       setTimeout(function() {
         document.getElementById('welcomeScreen').style.display = 'none';
         var firstSection = document.querySelector('.form-section');
         if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 500);
+    }
+
+    // Start Survey button
+    document.getElementById('btnStartSurvey').addEventListener('click', dismissWelcome);
+    // Grid items (Project estimate, Recommended package, etc.)
+    document.querySelectorAll('[data-start-survey]').forEach(function(el) {
+      el.addEventListener('click', dismissWelcome);
     });
   }
 
