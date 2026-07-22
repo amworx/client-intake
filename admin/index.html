@@ -10,6 +10,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -335,6 +336,28 @@ input[type=number]{-moz-appearance:textfield}
 .textarea-v-resize{resize:vertical}
 .flex-checkbox{display:flex;align-items:center;gap:8px;margin-top:4px}
 .flex-checkbox span{font-size:13px}
+
+/* ── Proposal Modal ──────────────────────────────────── */
+.btn-accent{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;transition:background .2s,transform .1s;display:inline-flex;align-items:center;gap:6px}
+.btn-accent:hover{background:var(--accent-hover,#5b5bd7)}
+.btn-accent:disabled{opacity:.5;cursor:not-allowed}
+.proposal-overlay{align-items:flex-start;padding-top:40px}
+.proposal-box{width:780px;max-width:94vw;max-height:90vh;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.proposal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.proposal-header .modal-title{font-size:15px;margin:0}
+.proposal-body{flex:1;overflow-y:auto;padding:20px;min-height:300px;background:var(--bg-card);max-height:60vh}
+.proposal-content{font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-wrap:break-word;font-family:'Inter',system-ui,sans-serif}
+.proposal-editor{width:100%;min-height:400px;padding:14px;border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.7;font-family:'SF Mono','Fira Code','Consolas',monospace;resize:vertical;background:var(--bg-input,#fafafa);color:var(--text)}
+.dark .proposal-editor{background:var(--bg-card,#1e1e2e);color:#e0e0e0}
+.prop-section-title{font-weight:700;font-size:15px;margin-top:14px;margin-bottom:6px;color:var(--accent)}
+.prop-hr{border:none;border-top:2px solid var(--accent);margin:12px 0}
+.prop-hr-light{border:none;border-top:1px solid var(--border);margin:10px 0}
+.prop-line{margin:2px 0;font-size:13px}
+.prop-prep{margin-bottom:6px}
+.prop-label{font-weight:600;color:var(--text-muted,#888)}
+.prop-bullet{margin:1px 0 1px 8px;font-size:13px}
+.proposal-actions{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--border);flex-shrink:0}
+.proposal-actions-left,.proposal-actions-right{display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body x-bind:class="darkMode && 'dark'"><div x-data="dashboardApp" x-init="init" class="flex h-100vh">
@@ -1280,6 +1303,10 @@ input[type=number]{-moz-appearance:textfield}
         <i class="fas fa-link" :class="detailSubmission._sharing && 'fa-spin'"></i>
         <span x-text="detailSubmission._shareUrl ? 'Copied!' : 'Share Link'"></span>
       </button>
+      <button class="btn btn-accent btn-sm" @click="generateProposal(detailSubmission)" :disabled="detailSubmission._proposing">
+        <i class="fas fa-file-alt" :class="detailSubmission._proposing && 'fa-spin'"></i>
+        Proposal
+      </button>
       <button class="btn btn-danger btn-sm" @click="confirmDelete(detailSubmission)"><i class="fas fa-trash-alt"></i> Delete</button>
       <button class="btn btn-ghost btn-sm" @click="closeDetail">Close</button>
     </div>
@@ -1318,6 +1345,39 @@ input[type=number]{-moz-appearance:textfield}
         <span x-show="resetting"><span class="spinner-btn"></span></span>
         <span x-text="resetting ? 'Resetting...' : 'Yes, Reset'"></span>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- PROPOSAL MODAL -->
+<div class="modal-overlay proposal-overlay" :class="proposalModalOpen && 'open'" @click.self="closeProposalModal">
+  <div class="modal-box proposal-box">
+    <div class="modal-header proposal-header">
+      <h3 class="modal-title"><span class="modal-icon-box"><i class="fas fa-file-alt"></i></span> <span x-text="proposalTitle || 'Proposal'"></span></h3>
+      <button class="btn btn-ghost btn-xs" @click="closeProposalModal"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="proposal-body">
+      <template x-if="!proposalEditing">
+        <div class="proposal-content" x-html="proposalContentHTML"></div>
+      </template>
+      <template x-if="proposalEditing">
+        <textarea class="proposal-editor" x-model="proposalContent"></textarea>
+      </template>
+    </div>
+    <div class="modal-actions proposal-actions">
+      <div class="proposal-actions-left">
+        <button class="btn btn-ghost btn-sm" @click="closeProposalModal">Close</button>
+      </div>
+      <div class="proposal-actions-right">
+        <button class="btn btn-ghost btn-sm" @click="toggleProposalEdit">
+          <i class="fas" :class="proposalEditing ? 'fa-eye' : 'fa-pen'"></i>
+          <span x-text="proposalEditing ? 'Preview' : 'Edit'"></span>
+        </button>
+        <button class="btn btn-primary btn-sm" @click="exportProposalPDF" :disabled="proposalExporting">
+          <i class="fas fa-file-pdf" :class="proposalExporting && 'fa-spin'"></i>
+          <span x-text="proposalExporting ? 'Exporting...' : 'Export PDF'"></span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -1876,6 +1936,240 @@ document.addEventListener('alpine:init', () => {
       let hash = 0;
       if (name) for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
       return colors[Math.abs(hash) % colors.length];
+    },
+
+    // ── Proposal Generator ──────────────────────────────────────────────
+    proposalModalOpen: false,
+    proposalData: null,
+    proposalGenerating: false,
+    proposalExporting: false,
+    proposalContent: '',
+    proposalEditing: false,
+    proposalTitle: '',
+
+    get proposalContentHTML() {
+      if (!this.proposalContent) return '';
+      return this.proposalContent
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/^PROPOSAL$/gm, '<div class="prop-section-title">PROPOSAL</div>')
+        .replace(/^={4,}$/gm, '<hr class="prop-hr">')
+        .replace(/^-{3,}$/gm, '<hr class="prop-hr-light">')
+        .replace(/^Prepared for: (.+)$/gm, '<div class="prop-line prop-prep"><span class="prop-label">Prepared for:</span> $1</div>')
+        .replace(/^(Business|Email|Phone|Date): (.+)$/gm, '<div class="prop-line"><span class="prop-label">$1:</span> $2</div>')
+        .replace(/^PROJECT SCOPE$/gm, '<div class="prop-section-title">PROJECT SCOPE</div>')
+        .replace(/^INVESTMENT$/gm, '<div class="prop-section-title">INVESTMENT</div>')
+        .replace(/^TIMELINE$/gm, '<div class="prop-section-title">TIMELINE</div>')
+        .replace(/^• (.+)$/gm, '<div class="prop-bullet">• $1</div>')
+        .replace(/\n/g, '<br>');
+    },
+
+    async generateProposal(s) {
+      if (!s) return;
+      s._proposing = true;
+      this.proposalData = s;
+
+      const name = s.full_name || 'Client';
+      const business = s.business_name || '';
+      const email = s.client_email || '';
+      const phone = s.client_phone || '';
+
+      // Scope items
+      const scopeItems = [];
+      if (s.primary_goal) scopeItems.push(`Primary Goal: ${s.primary_goal.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}`);
+      if (s.website_type) scopeItems.push(`Website Type: ${s.website_type}`);
+      if (s.pages && s.pages.length) {
+        let pagesStr = s.pages.join(', ');
+        if (s.other_pages) pagesStr += ' (+ ' + s.other_pages + ')';
+        scopeItems.push(`Pages: ${pagesStr}`);
+      }
+      if (s.features && s.features.length) {
+        const req = s.features.filter(f => !f.endsWith('(nice-to-have)'));
+        const nth = s.features.filter(f => f.endsWith('(nice-to-have)'));
+        if (req.length) scopeItems.push(`Required Features: ${req.join(', ')}`);
+        if (nth.length) scopeItems.push(`Nice-to-Have Features: ${nth.map(f => f.replace(/\s*\(nice-to-have\)$/, '')).join(', ')}`);
+      }
+      if (s.business_maturity) scopeItems.push(`Business Stage: ${s.business_maturity.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}`);
+      if (s.logo) scopeItems.push(`Logo: ${s.logo}`);
+      if (s.content_text) scopeItems.push(`Text Content: ${s.content_text}`);
+      if (s.content_photos) scopeItems.push(`Photos: ${s.content_photos}`);
+      if (s.brand_colors) scopeItems.push(`Brand Colors: ${s.brand_colors}`);
+      if (s.inspiration_links) scopeItems.push(`Inspiration: ${s.inspiration_links}`);
+      if (s.domain) scopeItems.push(`Domain: ${s.domain}${s.domain_years ? ' (' + s.domain_years + ' yrs)' : ''}`);
+      if (s.domain_idea) scopeItems.push(`Domain Idea: ${s.domain_idea}`);
+      if (s.hosting) scopeItems.push(`Hosting: ${s.hosting}`);
+      if (s.email) scopeItems.push(`Email: ${s.email}${s.email_count ? ' (' + s.email_count + ' boxes)' : ''}`);
+      if (s.setup_help) scopeItems.push(`Setup Help: ${s.setup_help}`);
+      if (s.maintenance) scopeItems.push(`Maintenance: ${s.maintenance}`);
+      if (s.existing_assets && s.existing_assets.length) scopeItems.push(`Existing Assets: ${s.existing_assets.join(', ')}`);
+      if (s.extra_notes) scopeItems.push(`Notes: ${s.extra_notes}`);
+
+      // Pricing
+      let pricingLine;
+      if (s.pricing_mode === 'bundle') {
+        if (s.bundle_tier && s.bundle_tier !== 'not-sure') {
+          const tier = s.bundle_tier.charAt(0).toUpperCase() + s.bundle_tier.slice(1);
+          pricingLine = `${tier} Bundle — ${this.formatCurrency(s.estimated_total)}/yr (${this.formatCurrency(s.estimated_total / 12)}/mo, 12-month term)`;
+        } else {
+          pricingLine = `TBD — Client requested recommendation`;
+        }
+      } else {
+        pricingLine = this.formatCurrency(s.estimated_total) + ' (itemized estimate)';
+      }
+
+      const timeline = s.timeline || 'TBD';
+      const budgetConfidence = s.budget_confidence || '';
+
+      const proposal = `PROPOSAL
+========
+
+Prepared for: ${name}
+${business ? 'Business: ' + business + '\n' : ''}Email: ${email}${phone ? '\nPhone: ' + phone : ''}
+Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+
+---
+
+PROJECT SCOPE
+
+${scopeItems.map(item => '• ' + item).join('\n')}
+
+---
+
+INVESTMENT
+
+${pricingLine}${budgetConfidence ? '\nBudget: ' + budgetConfidence.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
+
+TIMELINE
+
+${timeline}
+
+---
+
+Prepared by ${this.settingsForm.studio_name || 'AM Worx'}
+${this.settingsForm.studio_email || ''}`;
+
+      this.proposalContent = proposal;
+      this.proposalEditing = false;
+      this.proposalTitle = `Proposal — ${name}${business ? ' — ' + business : ''}`;
+      this.proposalModalOpen = true;
+      s._proposing = false;
+    },
+
+    closeProposalModal() {
+      this.proposalModalOpen = false;
+      this.$nextTick(() => {
+        this.proposalData = null;
+        this.proposalContent = '';
+        this.proposalEditing = false;
+        this.proposalTitle = '';
+      });
+    },
+
+    toggleProposalEdit() {
+      this.proposalEditing = !this.proposalEditing;
+    },
+
+    async exportProposalPDF() {
+      if (!this.proposalContent) return;
+      this.proposalExporting = true;
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        const margin = 20;
+        const contentW = 170;
+        let y = 25;
+
+        // Title
+        doc.setFontSize(22);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Proposal', margin, y);
+        y += 11;
+
+        // Client name
+        const clientName = this.proposalData?.business_name || this.proposalData?.full_name || '';
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text(clientName, margin, y);
+        y += 7;
+
+        // Date
+        doc.setFontSize(8);
+        doc.setTextColor(130, 130, 130);
+        doc.text('Prepared: ' + new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), margin, y);
+        y += 7;
+
+        // Separator
+        doc.setDrawColor(210, 210, 210);
+        doc.line(margin, y, margin + contentW, y);
+        y += 7;
+
+        doc.setTextColor(50, 50, 50);
+        doc.setFontSize(10);
+
+        const lines = this.proposalContent.split('\n');
+        for (const line of lines) {
+          if (y > 278) {
+            doc.addPage();
+            y = 20;
+          }
+
+          const trimmed = line.trim();
+
+          if (trimmed === '---' || trimmed === '========') {
+            doc.setDrawColor(200, 200, 200);
+            doc.line(margin, y, margin + contentW, y);
+            y += 5;
+            continue;
+          }
+
+          if (trimmed === 'PROPOSAL' || trimmed === 'PROJECT SCOPE' || trimmed === 'INVESTMENT' || trimmed === 'TIMELINE') {
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(13);
+            doc.text(trimmed, margin, y);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            y += 7;
+            continue;
+          }
+
+          if (trimmed.startsWith('•')) {
+            doc.text(trimmed, margin + 3, y);
+            y += 5;
+            continue;
+          }
+
+          if (trimmed.startsWith('Prepared by') || trimmed.startsWith('amworxx@gmail.com')) {
+            doc.setFontSize(8);
+            doc.setTextColor(140, 140, 140);
+            doc.text(trimmed, margin, y);
+            doc.setFontSize(10);
+            doc.setTextColor(50, 50, 50);
+            y += 5;
+            continue;
+          }
+
+          if (trimmed) {
+            doc.text(trimmed, margin, y);
+            y += 5;
+          } else {
+            y += 3;
+          }
+        }
+
+        // Footer
+        doc.setFontSize(7);
+        doc.setTextColor(170, 170, 170);
+        doc.text('Generated by ' + (this.settingsForm.studio_name || 'AM Worx'), margin, 290);
+
+        const fileName = 'Proposal_' + (this.proposalData?.full_name || 'Client').replace(/\s+/g, '_') + '.pdf';
+        doc.save(fileName);
+        this.showToast('Proposal PDF downloaded', 'ok');
+      } catch (e) {
+        this.showToast('Failed to generate PDF: ' + e.message, 'error');
+      } finally {
+        this.proposalExporting = false;
+      }
     }
   }));
 });
