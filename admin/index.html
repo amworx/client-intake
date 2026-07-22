@@ -1690,11 +1690,13 @@ document.addEventListener('alpine:init', () => {
             smtp_password: data.smtp_password || '',
             PRICES: JSON.parse(JSON.stringify(data.prices || {})),
             SECTIONS: secs,
-            BUNDLES: JSON.parse(JSON.stringify(data.bundles || [
-              { id: 'essential', name: 'Essential', price: 19, icon: 'rocket', color: '#22c55e', features: ['Web hosting', 'SSL certificate', 'Weekly backups', 'Security updates', 'Email support', '1 hour/month minor edits'] },
-              { id: 'growth', name: 'Growth', price: 49, icon: 'trending-up', color: '#6366f1', features: ['Everything in Essential', 'Faster hosting', 'Daily backups', 'Priority support', 'Up to 5 business emails', '3 hours/month content updates', 'Performance monitoring', 'Basic SEO monitoring'] },
-              { id: 'scale', name: 'Scale', price: 89, icon: 'award', color: '#ec4899', features: ['Everything in Growth', 'Premium hosting', 'Unlimited business emails', 'Advanced security monitoring', 'Monthly SEO report', 'Analytics report', 'Up to 8 hours/month updates', 'Emergency support', 'Consultation calls'] }
-            ]))
+            BUNDLES: (data.bundles && data.bundles.length > 0)
+              ? JSON.parse(JSON.stringify(data.bundles))
+              : [
+                  { id: 'essential', name: 'Essential', price: 19, icon: 'rocket', color: '#22c55e', features: ['Web hosting', 'SSL certificate', 'Weekly backups', 'Security updates', 'Email support', '1 hour/month minor edits'] },
+                  { id: 'growth', name: 'Growth', price: 49, icon: 'trending-up', color: '#6366f1', features: ['Everything in Essential', 'Faster hosting', 'Daily backups', 'Priority support', 'Up to 5 business emails', '3 hours/month content updates', 'Performance monitoring', 'Basic SEO monitoring'] },
+                  { id: 'scale', name: 'Scale', price: 89, icon: 'award', color: '#ec4899', features: ['Everything in Growth', 'Premium hosting', 'Unlimited business emails', 'Advanced security monitoring', 'Monthly SEO report', 'Analytics report', 'Up to 8 hours/month updates', 'Emergency support', 'Consultation calls'] }
+                ]
           };
         }
       } catch (e) {
