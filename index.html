@@ -2183,7 +2183,7 @@ body {
   </div>
   <div class="welcome-inner">
     <div class="welcome-badge">Web Design &amp; Development</div>
-    <h1>Let's build the right <span class="flip-words" id="flipWordsHero" data-words='["website","brand","presence","platform","storefront"]'>website</span> for your business</h1>
+    <h1>Let's build the right <span class="flip-words" id="flipWordsHero" data-words='["website","brand","presence","platform","storefront"]'>website</span><br>for your business</h1>
     <p class="welcome-sub">Answer a few smart questions and we'll prepare a tailored recommendation with pricing, timeline, and a project outline — no commitment required.</p>
     <div class="welcome-grid">
       <div class="welcome-item"><i data-lucide="file-text" style="width:16px;height:16px"></i> Project estimate</div>
@@ -2385,7 +2385,7 @@ body {
         </div>
 
         <div class="pricing-screen-action" style="margin-top:4px">
-          <button class="btn-start" id="btnSubmitBundle" style="width:100%;justify-content:center">
+          <button type="button" class="btn-start" id="btnSubmitBundle" style="width:100%;justify-content:center">
             <span class="btn-start-text">Submit Request</span>
             <i data-lucide="arrow-right" style="width:16px;height:16px;stroke-width:2.5"></i>
           </button>
@@ -2857,7 +2857,7 @@ body {
   </div>
   <div style="display:flex;align-items:center;gap:8px">
     <button class="btn-breakdown" id="btnBreakdown">View Breakdown</button>
-    <button class="btn-submit" id="btnSubmit" disabled>Submit Request</button>
+    <button type="button" class="btn-submit" id="btnSubmit" disabled>Submit Request</button>
   </div>
 </div>
 
@@ -3439,7 +3439,10 @@ body {
     });
 
     // ── Bundle confirmation submit ──
-    document.getElementById('btnSubmitBundle').addEventListener('click', submitBundleForm);
+    document.getElementById('btnSubmitBundle').addEventListener('click', function(e) {
+      e.preventDefault();
+      submitBundleForm();
+    });
 
     // ── Init ──
     setMode('per-item');
@@ -4728,7 +4731,8 @@ body {
     updateEmailTotal();
 
     // Submit
-    document.getElementById('btnSubmit').addEventListener('click', function() {
+    document.getElementById('btnSubmit').addEventListener('click', function(e) {
+      e.preventDefault();
       if (!validate()) {
         document.getElementById('s-review').scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
