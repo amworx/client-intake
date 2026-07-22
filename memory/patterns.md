@@ -39,3 +39,15 @@ When `db.{ref}.supabase.co` only resolves to IPv6:
 - Username format: `postgres.{project-ref}`
 - Probe regions to find the correct one
 - Use `pg` npm module for running SQL scripts
+
+## Intake Flow — Question Order Pattern
+
+When designing intake forms that serve both qualification and proposal generation:
+
+1. **Welcome screen first** — set expectations (duration, what they'll receive), reduce abandonment
+2. **Goal before features** — ask primary business goal first, then map features as enablers
+3. **Need vs Want separation** — distinguish "required at launch" from "nice to have later"
+4. **Business context** — maturity stage, timeline urgency, budget confidence, existing assets
+5. **Complexity scoring** — every feature contributes points; score maps to recommended package
+6. **Recommendation page** — show projected package, timeline, investment before submit
+7. **Proposal generation** — admin clicks to produce a 90% complete proposal from submitted data

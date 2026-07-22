@@ -117,3 +117,24 @@
 - **Errors**: None
 - **Lessons**: Alpine `x-bind:class` must be on the same element as `x-data` or a child element — never on a parent of `x-data`.
 - **Tags**: share-link, dark-mode, fix
+
+## EVT-20260722-0005
+- **Timestamp**: 2026-07-22T~14:00
+- **Mode**: BUILD
+- **Action**: Dual-path pricing — Per-Item + Managed Bundles (Essential/Growth/Scale)
+- **Summary**: Added pricing mode toggle at top of intake form. Bundle mode offers 3 tiers (Essential $19/mo, Growth $49/mo, Scale $89/mo) with "Help me choose" option. Bundle mode hides per-item sections (Domain, Maintenance) and price labels on visible sections. Dynamic SECTIONS_CONFIG renumbering and timeline rebuild on mode switch. PDF generation supports bundle summary. Admin dashboard shows Bundle badge + tier details. Created migration SQL for new pricing_mode and bundle_tier columns + updated submit_submission RPC.
+- **Result**: Dual pricing flow working end-to-end. Migration SQL pending manual application via Supabase SQL editor.
+- **Files**: index.html, admin/index.html, supabase/migrations/20260722_bundle_pricing.sql
+- **Errors**: Section hiding relied on JS inline style only — added CSS-level !important rules as fallback
+- **Tags**: pricing, bundles, migration, dual-path
+
+## EVT-20260722-0006
+- **Timestamp**: 2026-07-22T~15:00
+- **Mode**: REVIEW
+- **Action**: External expert project review
+- **Summary**: Shared complete project files (intake form, admin dashboard, schema, migrations, functions) with external expert for architectural and UX review. Received comprehensive 10-point analysis with scores (Business Concept: 10/10, UX Flow: 8/10, Technical Architecture: 9.5/10, Scalability: 9/10, Freelancer Value: 10/10). Key suggestions: Welcome screen, goal-first questioning, complexity scoring, need-vs-want separation, business maturity tier, timeline urgency, budget confidence, existing assets checklist, proposal recommendation page, and proposal generator feature.
+- **Result**: 10 concrete improvement suggestions received. Assessment validates current architecture and identifies UX/sales conversion as primary growth area.
+- **Files**: (external review — no files changed)
+- **Errors**: None
+- **Lessons**: The biggest opportunity is shifting from "survey" to "intelligent sales, qualification, and proposal-generation system." Technical foundation is strong enough to support the vision.
+- **Tags**: review, architecture, ux, strategy, sales

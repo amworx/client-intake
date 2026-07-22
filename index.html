@@ -328,14 +328,157 @@ html.dark {
 /* ---- Hidden / show helpers ---- */
 .pricing-per-item-only,
 .pricing-bundle-only {
-  display: none;
+  display: none !important;
 }
 .mode-per-item .pricing-per-item-only {
-  display: block;
+  display: block !important;
 }
 .mode-bundle .pricing-bundle-only {
-  display: block;
+  display: block !important;
 }
+
+/* Bundle mode: hide per-item sections and price labels */
+.mode-bundle #s-domain,
+.mode-bundle #s-maintenance {
+  display: none !important;
+}
+.mode-bundle .card-price,
+.mode-bundle [class*="price-tag"],
+.mode-bundle .price-tag {
+  display: none !important;
+}
+
+/* ---- Need vs Want - Feature Priority Toggle ---- */
+.card-priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  margin-top: 4px;
+}
+.card-priority.priority-required {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.card-priority.priority-nice {
+  background: #fef3c7;
+  color: #92400e;
+}
+.card-priority .pri-toggle-icon {
+  font-size: 9px;
+  transition: transform 0.2s;
+}
+.card-priority:hover .pri-toggle-icon {
+  transform: rotate(180deg);
+}
+.card-option input:not(:checked) ~ label .card-priority {
+  display: none;
+}
+.mode-bundle .card-priority {
+  display: none !important;
+}
+
+/* ---- Recommendation Card ---- */
+.recommendation-card {
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.recommendation-card.rec-hidden {
+  display: none;
+}
+.rec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+.rec-badge.rec-essential {
+  background: #dcfce7;
+  color: #15803d;
+}
+.rec-badge.rec-growth {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+.rec-badge.rec-scale {
+  background: #fce7f3;
+  color: #be185d;
+}
+.rec-badge.rec-custom {
+  background: #fef3c7;
+  color: #92400e;
+}
+.rec-header {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.rec-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.rec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+.rec-item {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+.rec-item .rec-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+.rec-item .rec-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.rec-item .rec-value.rec-value-green {
+  color: var(--success);
+}
+.rec-item .rec-value.rec-value-brand {
+  color: var(--accent);
+}
+.rec-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+.mode-bundle .recommendation-card {
+  border-color: #22c55e;
+}
+
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -598,6 +741,102 @@ body {
 .main-content {
   margin: 100px 20px 0 300px;
   padding: 0 0 40px;
+  position: relative;
+}
+
+/* ---- Welcome Screen ---- */
+.welcome-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  padding: 60px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  min-height: 500px;
+}
+.welcome-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.welcome-screen h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+.welcome-screen .welcome-sub {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin: 0 0 32px;
+  line-height: 1.6;
+  max-width: 540px;
+}
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  max-width: 480px;
+  width: 100%;
+  margin-bottom: 36px;
+}
+.welcome-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--text);
+  text-align: left;
+  transition: background 0.2s, border-color 0.2s;
+}
+.welcome-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.welcome-item svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+.btn-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 40px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  font-family: inherit;
+}
+.btn-start:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.btn-start:active {
+  transform: translateY(0);
+}
+.welcome-meta {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 20px;
 }
 
 /* Sections */
@@ -1273,6 +1512,22 @@ body {
 </div>
 
 <div class="main-content" id="mainContent">
+  <!-- Welcome Screen -->
+  <div class="welcome-screen" id="welcomeScreen">
+    <h1>Let's build the right website for your business</h1>
+    <div class="welcome-sub">Answer a few questions and we'll prepare a tailored recommendation with pricing, timeline, and a project outline — no commitment required.</div>
+    <div class="welcome-grid">
+      <div class="welcome-item"><i data-lucide="file-text" style="width:18px;height:18px"></i> Project estimate</div>
+      <div class="welcome-item"><i data-lucide="gift" style="width:18px;height:18px"></i> Recommended package</div>
+      <div class="welcome-item"><i data-lucide="calendar" style="width:18px;height:18px"></i> Timeline estimate</div>
+      <div class="welcome-item"><i data-lucide="send" style="width:18px;height:18px"></i> Custom proposal (optional)</div>
+    </div>
+    <button class="btn-start" id="btnStartSurvey">
+      <i data-lucide="arrow-right" style="width:20px;height:20px"></i> Start Survey
+    </button>
+    <div class="welcome-meta">Takes about 5–8 minutes</div>
+  </div>
+
   <!-- Pricing Mode Selector -->
   <div class="pricing-mode-selector" id="pricingModeSelector">
     <div class="pricing-mode-label">How would you like to price your project?</div>
@@ -1302,8 +1557,8 @@ body {
     <div class="bundle-not-sure" id="bundleNotSure">
       <div class="bns-icon"><i data-lucide="help-circle" style="width:18px;height:18px"></i></div>
       <div>
-        <div class="bns-text">Not sure yet — recommend the best option for me</div>
-        <div class="bns-sub">We'll assess your needs and suggest the ideal plan.</div>
+        <div class="bns-text">Help me choose the right plan</div>
+        <div class="bns-sub">I'm not sure which package fits my needs. Please review my requirements and recommend the best option.</div>
       </div>
       <div class="bns-check"></div>
     </div>
@@ -1346,8 +1601,26 @@ body {
       </div>
     </section>
 
-    <!-- Section 2: Domain & Hosting -->
-    <section class="form-section" data-section="2" id="s-domain">
+    <!-- Section 2: Primary Goal -->
+    <section class="form-section" data-section="2" id="s-goal">
+      <div class="section-title"><span class="section-icon"><i data-lucide="target" style="width:22px;height:22px"></i></span> What's Your Primary Goal?</div>
+      <div class="section-desc">Tell us the main purpose of your website. This helps us recommend the right package and features for you.</div>
+      <div class="form-group">
+        <div class="card-grid" id="goal-group">
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_leads" value="generate-leads"><label for="goal_leads"><span class="card-icon">📈</span><span class="card-title">Generate Leads</span><span class="card-desc">Attract new clients and grow your business</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_sell" value="sell-online"><label for="goal_sell"><span class="card-icon">🛒</span><span class="card-title">Sell Online</span><span class="card-desc">Ecommerce — sell products or services directly</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_portfolio" value="portfolio"><label for="goal_portfolio"><span class="card-icon">🎨</span><span class="card-title">Showcase Portfolio</span><span class="card-desc">Display your work, projects, or creations</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_booking" value="booking"><label for="goal_booking"><span class="card-icon">📅</span><span class="card-title">Booking &amp; Appointments</span><span class="card-desc">Let clients book time with you online</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_brand" value="personal-brand"><label for="goal_brand"><span class="card-icon">⭐</span><span class="card-title">Personal Brand</span><span class="card-desc">Build your online presence and reputation</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_company" value="company-site"><label for="goal_company"><span class="card-icon">🏢</span><span class="card-title">Company Website</span><span class="card-desc">Professional site for an established business</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_restaurant" value="restaurant"><label for="goal_restaurant"><span class="card-icon">🍽️</span><span class="card-title">Restaurant / Menu</span><span class="card-desc">Showcase your menu, hours, and location</span><span class="card-check"></span></label></div>
+          <div class="card-option radio-card"><input type="radio" name="primary_goal" id="goal_other" value="other"><label for="goal_other"><span class="card-icon">⚙️</span><span class="card-title">Something Else</span><span class="card-desc">A different goal not listed here</span><span class="card-check"></span></label></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Domain & Hosting -->
+    <section class="form-section" data-section="3" id="s-domain">
       <div class="section-title"><span class="section-icon"><i data-lucide="globe" style="width:22px;height:22px"></i></span> Domain &amp; Hosting</div>
       <div class="section-desc">Tell us about your domain and hosting requirements.</div>
       <div class="form-group">
@@ -1623,6 +1896,30 @@ body {
         </div>
         <div class="file-list" id="fileList"></div>
       </div>
+      <!-- Recommendation Card -->
+      <div class="recommendation-card rec-hidden" id="recCard">
+        <div class="rec-header">Based on your answers</div>
+        <div class="rec-sub">Here's our preliminary recommendation. Adjust your selections above and it will update automatically.</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+          <span class="rec-badge" id="recBadge">—</span>
+        </div>
+        <div class="rec-grid">
+          <div class="rec-item">
+            <div class="rec-label">Recommended Package</div>
+            <div class="rec-value rec-value-brand" id="recPackage">—</div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-label">Estimated Timeline</div>
+            <div class="rec-value rec-value-green" id="recTimeline">—</div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-label">Estimated Investment</div>
+            <div class="rec-value" id="recInvestment">—</div>
+          </div>
+        </div>
+        <div class="rec-note">This is a preliminary estimate. Final pricing will be confirmed after our consultation.</div>
+      </div>
+
       <div class="form-group" id="reviewSummary">
         <label class="form-label">Summary of Selections</label>
         <div style="font-size:13px;color:var(--text-muted)">Complete the form above to see a summary here.</div>
@@ -1758,6 +2055,7 @@ body {
     if (window._pricingMode === 'bundle') {
       return [
         { id: 'contact', icon: 'user', title: 'Contact', short: 'Contact' },
+        { id: 'goal', icon: 'target', title: 'Primary Goal', short: 'Goal' },
         { id: 'bundle', icon: 'package', title: 'Bundle', short: 'Bundle' },
         { id: 'website', icon: 'layout', title: 'Website Details', short: 'Website' },
         { id: 'branding', icon: 'palette', title: 'Branding & Content', short: 'Branding' },
@@ -1767,6 +2065,7 @@ body {
     }
     return [
       { id: 'contact', icon: 'user', title: 'Contact', short: 'Contact' },
+      { id: 'goal', icon: 'target', title: 'Primary Goal', short: 'Goal' },
       { id: 'domain', icon: 'globe', title: 'Domain & Hosting', short: 'Domain' },
       { id: 'website', icon: 'layout', title: 'Website Details', short: 'Website' },
       { id: 'branding', icon: 'palette', title: 'Branding & Content', short: 'Branding' },
@@ -1798,6 +2097,7 @@ body {
     setupBreakdownModal();
     setupFormListeners();
     setupProfileUpload();
+    setupFeaturePriority();
     // Initialize scramble effect on title
     setTimeout(function() { initScrambleTitle(); }, 600);
     // Initialize Lucide icons
@@ -1806,6 +2106,16 @@ body {
     var initialDomain = document.querySelector('[name="domain"]:checked');
     if (initialDomain) updateSslRequirement(initialDomain.value);
     loadOverrides();
+
+    // Welcome screen — Start Survey button
+    document.getElementById('btnStartSurvey').addEventListener('click', function() {
+      document.getElementById('welcomeScreen').classList.add('hidden');
+      setTimeout(function() {
+        document.getElementById('welcomeScreen').style.display = 'none';
+        var firstSection = document.querySelector('.form-section');
+        if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 500);
+    });
   }
 
   // ---- Dark Mode ----
@@ -2473,6 +2783,39 @@ body {
     return (bytes / 1048576).toFixed(1) + ' MB';
   }
 
+  // ---- Need vs Want - Feature Priority Toggle ----
+  function setupFeaturePriority() {
+    document.querySelectorAll('#features-group .card-option').forEach(function(card) {
+      var checkbox = card.querySelector('input[type="checkbox"]');
+      var label = card.querySelector('label');
+      if (!checkbox || !label) return;
+
+      // Don't add if already has one
+      if (card.querySelector('.card-priority')) return;
+
+      var badge = document.createElement('span');
+      badge.className = 'card-priority priority-required';
+      badge.setAttribute('data-priority', 'required');
+      badge.innerHTML = '<span class="pri-toggle-icon">↻</span> Required';
+
+      badge.addEventListener('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if (badge.getAttribute('data-priority') === 'required') {
+          badge.setAttribute('data-priority', 'nice');
+          badge.className = 'card-priority priority-nice';
+          badge.innerHTML = '<span class="pri-toggle-icon">↻</span> Nice to have';
+        } else {
+          badge.setAttribute('data-priority', 'required');
+          badge.className = 'card-priority priority-required';
+          badge.innerHTML = '<span class="pri-toggle-icon">↻</span> Required';
+        }
+      });
+
+      label.appendChild(badge);
+    });
+  }
+
   // ---- Price Calculation ----
   function calculate() {
     window._priceItems = [];
@@ -2641,8 +2984,114 @@ body {
     }
     btn.disabled = !hasContent;
 
+    updateRecommendation();
     updateReviewSummary();
     saveDraft();
+  }
+
+  function updateRecommendation() {
+    var card = document.getElementById('recCard');
+    var badge = document.getElementById('recBadge');
+    var packageEl = document.getElementById('recPackage');
+    var timelineEl = document.getElementById('recTimeline');
+    var investEl = document.getElementById('recInvestment');
+    if (!card) return;
+
+    // Collect current answers
+    var data = collectFormData();
+    var hasAnswers = data.website_type || data.pages.length > 0 || data.features.length > 0;
+
+    if (!hasAnswers) {
+      card.classList.add('rec-hidden');
+      return;
+    }
+    card.classList.remove('rec-hidden');
+
+    // ---- Complexity scoring ----
+    var score = 0;
+
+    // Website type complexity
+    var typeScores = {
+      'simple': 0, 'blog': 1, 'portfolio': 2, 'business': 3,
+      'booking': 4, 'directory': 4, 'ecommerce-small': 5,
+      'ecommerce-large': 8, 'membership': 8
+    };
+    score += typeScores[data.website_type] || 2;
+
+    // Pages: each page +1
+    score += (data.pages || []).length;
+
+    // Feature complexity
+    var featScores = {
+      'contact-form': 1, 'social-media': 1, 'google-maps': 1,
+      'image-optimization': 1, 'backup': 1, 'ssl': 1,
+      'newsletter': 2, 'live-chat': 2, 'analytics': 2,
+      'seo-basic': 2, 'search': 2, 'speed-optimization': 2, 'cms': 2,
+      'seo-advanced': 3, 'booking-system': 3, 'membership-area': 3,
+      'ecommerce': 3, 'payment-gateway': 3, 'multi-language': 3, 'custom-feature': 3
+    };
+    (data.features || []).forEach(function(f) {
+      score += featScores[f] || 2;
+    });
+
+    // Bundle mode: if a bundle is selected, use that directly
+    var recommendedTier = null;
+    if (window._pricingMode === 'bundle' && window._selectedBundle && window._selectedBundle !== 'not-sure') {
+      recommendedTier = window._selectedBundle;
+    } else {
+      // Map score to tier
+      if (score <= 5) recommendedTier = 'essential';
+      else if (score <= 12) recommendedTier = 'growth';
+      else recommendedTier = 'scale';
+    }
+
+    // Determine bundle name
+    var tierNames = { essential: 'Essential', growth: 'Growth', scale: 'Scale' };
+    var tierName = tierNames[recommendedTier] || 'Custom';
+
+    // Badge class
+    badge.className = 'rec-badge rec-' + recommendedTier;
+    badge.textContent = tierName + ' Package';
+
+    // Package name
+    var prices = { essential: '$19/mo', growth: '$49/mo', scale: '$89/mo' };
+    if (window._pricingMode === 'bundle' && recommendedTier) {
+      packageEl.textContent = tierName + ' (' + (prices[recommendedTier] || '') + ')';
+    } else {
+      packageEl.textContent = tierName;
+    }
+
+    // Timeline estimate based on urgency
+    var tlMap = {
+      '1-week': '1 week',
+      '2-weeks': '2 weeks',
+      '1-month': '3–4 weeks',
+      'flexible': '3–5 weeks'
+    };
+    var selectedTl = document.querySelector('[name="timeline"]:checked');
+    if (selectedTl && tlMap[selectedTl.value]) {
+      timelineEl.textContent = tlMap[selectedTl.value];
+    } else if (score <= 5) {
+      timelineEl.textContent = '2–3 weeks';
+    } else if (score <= 12) {
+      timelineEl.textContent = '3–4 weeks';
+    } else {
+      timelineEl.textContent = '4–6 weeks';
+    }
+
+    // Investment estimate
+    if (window._pricingMode === 'bundle') {
+      var monthlyPrices = { essential: 19, growth: 49, scale: 89 };
+      var monthly = monthlyPrices[recommendedTier] || 0;
+      investEl.textContent = '$' + monthly + '/mo × 12 months';
+    } else {
+      var total = window._priceItems.reduce(function(sum, item) { return sum + item.lineTotal; }, 0);
+      if (total > 0) {
+        investEl.textContent = '$' + total.toLocaleString();
+      } else {
+        investEl.textContent = 'Complete the form';
+      }
+    }
   }
 
   function updateReviewSummary() {
@@ -2659,6 +3108,10 @@ body {
       if (data.business_name) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Business</td><td style="padding:3px 0">' + escapeHtml(data.business_name) + '</td></tr>';
       if (data.client_email) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Email</td><td style="padding:3px 0">' + escapeHtml(data.client_email) + '</td></tr>';
       if (data.pricing_mode) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Pricing</td><td style="padding:3px 0">' + (data.pricing_mode === 'bundle' ? 'Managed Bundle' : 'Per-Item') + (data.bundle_tier && data.bundle_tier !== 'not-sure' ? ' — ' + data.bundle_tier.charAt(0).toUpperCase() + data.bundle_tier.slice(1) : data.bundle_tier === 'not-sure' ? ' — TBD' : '') + '</td></tr>';
+      if (data.primary_goal) {
+        var goalLabels = { 'generate-leads': 'Generate Leads', 'sell-online': 'Sell Online', 'portfolio': 'Showcase Portfolio', 'booking': 'Booking & Appointments', 'personal-brand': 'Personal Brand', 'company-site': 'Company Website', 'restaurant': 'Restaurant / Menu', 'other': 'Other' };
+        html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Primary Goal</td><td style="padding:3px 0">' + (goalLabels[data.primary_goal] || data.primary_goal) + '</td></tr>';
+      }
       if (data.domain === 'need' && data.domain_years) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Domain</td><td style="padding:3px 0">' + data.domain_years + ' year' + (data.domain_years > 1 ? 's' : '') + '</td></tr>';
       if (data.hosting === 'need' && data.hosting_months) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Hosting</td><td style="padding:3px 0">' + data.hosting_months + ' months</td></tr>';
       if (data.website_type === 'other' && data.other_website_type) html += '<tr><td style="padding:3px 8px 3px 0;color:var(--text-muted)">Website Type</td><td style="padding:3px 0">Custom: ' + escapeHtml(data.other_website_type) + '</td></tr>';
@@ -2685,7 +3138,7 @@ body {
           html += '</div>';
         } else if (window._selectedBundle === 'not-sure') {
           html += '<div style="font-weight:600;margin-bottom:6px">Bundle Selection</div>';
-          html += '<div style="padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e">Not sure yet — we\'ll recommend the best option after reviewing your needs.</div>';
+          html += '<div style="padding:8px 10px;background:#fef3c7;border-radius:6px;font-size:12px;color:#92400e">Help me choose the right plan — we\'ll review your requirements and recommend the best option.</div>';
         }
         html += '</div>';
       } else {
@@ -2727,7 +3180,7 @@ body {
     var data = {};
     data.pricing_mode = window._pricingMode;
     data.bundle_tier = window._pricingMode === 'bundle' ? window._selectedBundle : null;
-    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'extra_notes'];
+    var fields = ['full_name', 'business_name', 'client_email', 'client_phone', 'primary_goal', 'domain', 'domain_idea', 'domain_years', 'hosting', 'hosting_months', 'email', 'email_plan', 'setup_help', 'business_desc', 'website_type', 'other_pages', 'logo', 'content_text', 'content_photos', 'brand_colors', 'inspiration_links', 'timeline', 'maintenance', 'budget', 'extra_notes'];
 
     fields.forEach(function(f) {
       var el = document.querySelector('[name="' + f + '"]');
