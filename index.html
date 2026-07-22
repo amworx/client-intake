@@ -3038,7 +3038,7 @@ body {
   window._pricingMode = 'per-item'; // 'per-item' | 'bundle'
   window._selectedBundle = null;    // bundle tier id or 'not-sure'
 
-  const BUNDLE_TIERS = [
+  let BUNDLE_TIERS = [
     {
       id: 'essential',
       name: 'Essential',
@@ -3119,12 +3119,29 @@ body {
   // Current active sections config
   var SECTIONS_CONFIG = getSectionsConfig();
 
+  // ---- Load bundle tiers from DB (overrides hard-coded defaults) ----
+  async function loadBundleTiers() {
+    try {
+      var { data, error } = await supabaseClient
+        .from('settings')
+        .select('bundles')
+        .eq('id', 1)
+        .single();
+      if (!error && data && data.bundles && data.bundles.length > 0) {
+        BUNDLE_TIERS = data.bundles;
+      }
+    } catch (_) {
+      // Silent fallback — keep hard-coded defaults
+    }
+  }
+
   // ---- Init ----
   document.addEventListener('DOMContentLoaded', function() {
     initApp();
   });
 
-  function initApp() {
+  async function initApp() {
+    await loadBundleTiers();
     setupDarkMode();
     setupPricingMode();
     renderBundleCards();
