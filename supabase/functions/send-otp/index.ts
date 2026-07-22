@@ -2,14 +2,14 @@
 // AM Worx Intake — OTP Email Edge Function
 // Called by the intake form when user clicks "Send Code"
 //
-// Reads SMTP settings from the `settings` table (configured
-// via admin dashboard Settings → Email Notifications).
-// If SMTP is not enabled, the OTP is still stored in the DB
-// and can be retrieved from the Supabase Table Editor.
+// Uses npm:nodemailer (compatible with Deno 2) to send via
+// Gmail SMTP. SMTP credentials are stored in the `settings`
+// table (configured via admin dashboard → Email Notifications).
 // ============================================================
 
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import nodemailer from 'npm:nodemailer@6.9.14'
 
 serve(async (req: Request) => {
   try {
@@ -42,12 +42,19 @@ serve(async (req: Request) => {
       return new Response(JSON.stringify({ error: 'Failed to read settings' }), { status: 500 })
     }
 
-    // If SMTP is enabled, send the OTP via email
-    if (settings.smtp_enabled && settings.smtp_password) {
-      const smtpUser = settings.smtp_email || 'amworxx@gmail.com'
-      const smtpPass = settings.smtp_password
+    // If SMTP is not enabled, tell the frontend to skip
+    if (!settings.smtp_enabled || !settings.smtp_password) {
+      console.log(`SMTP not enabled — OTP for ${email}: ${code} (not emailed)`)
+      return new Response(JSON.stringify({ success: true, skipped: true, message: 'SMTP email delivery not configured. Contact the admin to set up email notifications.' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
 
-      const html = `
+    const smtpUser = settings.smtp_email || 'amworxx@gmail.com'
+    const smtpPass = settings.smtp_password
+
+    const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,31 +87,26 @@ serve(async (req: Request) => {
 </body>
 </html>`
 
-      const { SmtpClient } = await import('https://deno.land/x/smtp@v0.7.0/mod.ts')
-      const client = new SmtpClient()
-      await client.connectTLS({
-        hostname: 'smtp.gmail.com',
-        port: 465,
-        username: smtpUser,
-        password: smtpPass,
-      })
+    // Send via Gmail SMTP using nodemailer
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass,
+      },
+    })
 
-      await client.send({
-        from: `"${studioName}" <${smtpUser}>`,
-        to: email,
-        subject: `Your verification code: ${code}`,
-        html: html,
-      })
+    await transporter.sendMail({
+      from: `"${studioName}" <${smtpUser}>`,
+      to: email,
+      subject: `Your verification code: ${code}`,
+      html: html,
+    })
 
-      await client.close()
-      console.log(`OTP sent to ${email}`)
-    } else {
-      console.log(`SMTP not enabled — OTP for ${email}: ${code} (not emailed)`)
-      return new Response(JSON.stringify({ success: true, skipped: true, message: 'SMTP email delivery not configured. Contact the admin to set up email notifications.' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
+    await transporter.close()
+    console.log(`OTP sent to ${email}`)
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
