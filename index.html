@@ -4833,6 +4833,24 @@ body {
   }
 
   // ---- Submit ----
+  // ---- Send notification emails after successful submission ----
+  function sendNotificationEmails(submissionData) {
+    // Fire-and-forget — don't block the UI, don't show errors to user
+    fetch(SUPABASE_EDGE_URL + '/send-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ submission: submissionData })
+    }).then(function(r) {
+      if (!r.ok) console.warn('Notification send returned', r.status);
+      return r.json();
+    }).then(function(d) {
+      if (d.skipped) console.log('Notification skipped:', d.reason);
+      else if (d.sent) console.log('Notifications sent to:', d.sent.join(', '));
+    }).catch(function(e) {
+      console.warn('Notification call failed (non-blocking):', e);
+    });
+  }
+
   function submitForm() {
     if (window._submitting) return;
     window._submitting = true;
@@ -4953,6 +4971,7 @@ body {
         }
         localStorage.removeItem('intake_draft');
         showThankYou(data.full_name);
+        sendNotificationEmails(submissionData);
       });
     }).catch(function(err) {
       console.error('Submit error:', err);
@@ -5026,6 +5045,7 @@ body {
         if (res.error) throw res.error;
         if (res.data && !res.data.success) throw new Error(res.data.message || 'Submission rejected');
         showThankYou(name);
+        sendNotificationEmails(submissionData);
       });
     }).catch(function(err) {
       console.error('Bundle submit error:', err);
