@@ -2937,7 +2937,7 @@ body {
       if (window._pricingMode === 'bundle') {
         // Render bundle cards if not already rendered
         var bsg = document.getElementById('bundleScreenGrid');
-        if (bsg && !bsg.hasChildNodes()) renderBundleScreenCards();
+        if (bsg && bsg.children.length === 0) renderBundleScreenCards();
         showScreen(bundleScreen);
       } else {
         showScreen(perItemScreen);

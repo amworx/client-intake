@@ -182,3 +182,14 @@
 - **Errors**: Migration version conflicts required file renames and migration repair. CLI login user lacks ALTER TABLE permissions, but `supabase db push` applies migrations as database owner.
 - **Lessons**: All migrations sharing the same timestamp prefix cause version conflicts. Use unique timestamps. Policy creation without `DROP IF EXISTS` causes re-apply failures. Always verify schema changes via direct REST API calls after migration.
 - **Tags**: schema, migration, fix, bundle, tier1, tier2
+
+## EVT-20260722-0011
+- **Timestamp**: 2026-07-22T~10:00
+- **Mode**: BUILD
+- **Action**: Fixed complexity_score storage — form captures score, RPC stores it, old RPC overload dropped
+- **Summary**: Identified that `complexity_score` was calculated client-side in the complexity meter but never sent to the database. The column existed in the table (added by tier1_tier2_schema migration) but the RPC's INSERT statement didn't include it. Also discovered that the old 2-param `submit_submission(jsonb,text)` RPC overload remained from the initial OTP migration, causing "Could not choose best candidate function" errors. Fixed by: (1) adding `window._complexityScore` capture after score calculation, (2) adding `complexity_score` to submission data in `submitForm()`, (3) creating follow-up migration `202607222310` to add it to the RPC INSERT, (4) creating migration `202607222320` to drop the old 2-param overload. All 6 migrations now synced between local and remote.
+- **Result**: `complexity_score` now stored with each submission. RPC overload error eliminated.
+- **Files**: index.html, supabase/migrations/202607222310_complexity_score_rpc.sql, supabase/migrations/202607222320_drop_old_rpc_overload.sql, docs/schema.sql
+- **Errors**: Old 2-param RPC overload caused ambiguous function error; resolved by dropping it.
+- **Lessons**: `create or replace function` only works when the function signature (parameter types/count) matches. Adding a parameter with a default value creates a separate overload.
+- **Tags**: complexity_score, rpc, overload, fix
