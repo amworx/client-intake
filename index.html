@@ -883,9 +883,11 @@ body {
   inset: 0;
   z-index: 9998;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 24px;
+  padding: clamp(24px, 5vh, 60px) 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.35s ease, visibility 0.35s ease;
