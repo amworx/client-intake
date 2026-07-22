@@ -100,6 +100,10 @@ serve(async (req: Request) => {
       console.log(`OTP sent to ${email}`)
     } else {
       console.log(`SMTP not enabled — OTP for ${email}: ${code} (not emailed)`)
+      return new Response(JSON.stringify({ success: true, skipped: true, message: 'SMTP email delivery not configured. Contact the admin to set up email notifications.' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     return new Response(JSON.stringify({ success: true }), {
