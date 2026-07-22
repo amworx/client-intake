@@ -3086,35 +3086,10 @@ body {
     function setupBundlePeriodControls() {
       var monthsInput = document.getElementById('bcfMonths');
       var radios = document.querySelectorAll('.bcf-period-input');
-      if (!monthsInput) return;
+      if (!monthsInput || !radios.length) return;
       if (monthsInput.dataset.bound) return;
       monthsInput.dataset.bound = '1';
 
-      function syncRadios(val) {
-        radios.forEach(function(r) {
-          r.checked = parseInt(r.getAttribute('data-months'), 10) === val;
-        });
-      }
-
-      function recalc() {
-        var val = parseInt(monthsInput.value, 10);
-        if (isNaN(val) || val < 1) { monthsInput.value = 1; val = 1; }
-        if (val > 60) { monthsInput.value = 60; val = 60; }
-        updateBundleTotal();
-        syncRadios(val);
-      }
-
-      monthsInput.addEventListener('input', recalc);
-      var inc = document.getElementById('bcfMonthsInc');
-      var dec = document.getElementById('bcfMonthsDec');
-      if (inc) inc.addEventListener('click', function() {
-        monthsInput.value = Math.min(parseInt(monthsInput.value, 10) + 1, 60);
-        recalc();
-      });
-      if (dec) dec.addEventListener('click', function() {
-        monthsInput.value = Math.max(parseInt(monthsInput.value, 10) - 1, 1);
-        recalc();
-      });
       radios.forEach(function(r) {
         r.addEventListener('change', function() {
           if (this.checked) {
@@ -3160,38 +3135,29 @@ body {
             '<div><div style="font-weight:700;font-size:18px">' + t.name + '</div>' +
             '<div style="font-size:22px;font-weight:800;margin-top:2px">$' + t.price + '<span style="font-size:13px;font-weight:400;color:var(--text-muted)">/mo</span></div></div>' +
           '</div>' +
-          // Period selector — uiverse card-style radio design
+          // Period selector — uiverse card-style radio only (no stepper)
           '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;margin-bottom:14px">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">' +
+            '<input type="hidden" id="bcfMonths" value="12">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
               '<span style="font-size:13px;font-weight:600;color:var(--text)">Subscription Period</span>' +
-              '<div style="display:flex;align-items:center;gap:8px">' +
-                '<div style="display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden">' +
-                  '<button type="button" id="bcfMonthsDec" style="width:30px;height:32px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:background 0.15s;padding:0" aria-label="Decrease">&minus;</button>' +
-                  '<input type="number" id="bcfMonths" value="12" min="1" max="60" style="width:40px;height:32px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);background:transparent;color:var(--text);text-align:center;font-size:13px;font-weight:600;outline:none;-moz-appearance:textfield;padding:0">' +
-                  '<button type="button" id="bcfMonthsInc" style="width:30px;height:32px;border:none;background:transparent;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:background 0.15s;padding:0" aria-label="Increase">+</button>' +
-                '</div>' +
-                '<span style="font-size:13px;color:var(--text-muted)">months</span>' +
-              '</div>' +
+              '<span id="bcfTotalDisplay" style="font-size:15px;font-weight:700;color:var(--primary)">$' + total.toLocaleString() + '</span>' +
             '</div>' +
             '<div class="bcf-period-wrapper">' +
               '<div class="bcf-period-card">' +
-                '<input type="radio" class="bcf-period-input period-quick" name="bcfPeriod" value="12" data-months="12" checked>' +
+                '<input type="radio" class="bcf-period-input" name="bcfPeriod" value="12" data-months="12" checked>' +
                 '<div class="bcf-period-check"></div>' +
                 '<div class="bcf-period-label"><div class="bpl-title">12</div><div class="bpl-sub">months</div></div>' +
               '</div>' +
               '<div class="bcf-period-card">' +
-                '<input type="radio" class="bcf-period-input period-quick" name="bcfPeriod" value="24" data-months="24">' +
+                '<input type="radio" class="bcf-period-input" name="bcfPeriod" value="24" data-months="24">' +
                 '<div class="bcf-period-check"></div>' +
                 '<div class="bcf-period-label"><div class="bpl-title">24</div><div class="bpl-sub">months</div></div>' +
               '</div>' +
               '<div class="bcf-period-card">' +
-                '<input type="radio" class="bcf-period-input period-quick" name="bcfPeriod" value="48" data-months="48">' +
+                '<input type="radio" class="bcf-period-input" name="bcfPeriod" value="48" data-months="48">' +
                 '<div class="bcf-period-check"></div>' +
                 '<div class="bcf-period-label"><div class="bpl-title">48</div><div class="bpl-sub">months</div></div>' +
               '</div>' +
-            '</div>' +
-            '<div style="display:flex;justify-content:flex-end;margin-top:8px">' +
-              '<span id="bcfTotalDisplay" style="font-size:16px;font-weight:700;color:var(--primary)">$' + total.toLocaleString() + '</span>' +
             '</div>' +
           '</div>' +
           '<div style="font-size:14px;font-weight:600;margin-bottom:4px">What\'s included</div>' +
