@@ -1002,11 +1002,25 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  scrollbar-width: thin;
 }
 .pricing-screen.open {
   opacity: 1;
   visibility: visible;
 }
+
+/* Thin custom scrollbar to prevent content-width gap */
+.pricing-screen::-webkit-scrollbar {
+  width: 5px;
+}
+.pricing-screen::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pricing-screen::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
 @media (max-width: 768px) {
   .pricing-screen {
     padding: 60px 16px 40px;
