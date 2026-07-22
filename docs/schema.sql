@@ -36,13 +36,22 @@ create table if not exists public.submissions (
   email_count    int default 1 check (email_count between 1 and 100),
   setup_help     text check (setup_help in ('yes', 'no')),
 
+  -- Qualification (Tier 1 + Tier 2)
+  primary_goal         text,
+  business_maturity    text,
+  budget_confidence    text,
+  existing_assets      jsonb default '[]'::jsonb,
+  complexity_score     int,
+
   -- Website
   business_desc  text,
   website_type   text check (website_type in (
     'simple', 'business', 'portfolio', 'blog',
     'ecommerce-small', 'ecommerce-large',
-    'booking', 'membership', 'directory'
+    'booking', 'membership', 'directory', 'other'
   )),
+  other_website_type text,
+  has_company_profile boolean default false,
   pages          jsonb,
   other_pages    text,
   features       jsonb,
@@ -55,7 +64,7 @@ create table if not exists public.submissions (
   inspiration_links text,
 
   -- Timeline & Budget
-  timeline       text check (timeline in ('1-week', '2-weeks', '1-month', 'flexible')),
+  timeline       text check (timeline in ('asap', '2-weeks', '1-month', '2-3-months', 'no-deadline')),
   maintenance    text check (maintenance in ('no', 'basic', 'standard', 'premium')),
   budget         text check (budget in ('100-300', '300-500', '500-1000', '1000+', 'not-sure')),
   extra_notes    text,
@@ -373,6 +382,12 @@ begin
     client_phone,
     pricing_mode,
     bundle_tier,
+    primary_goal,
+    business_maturity,
+    budget_confidence,
+    existing_assets,
+    other_website_type,
+    has_company_profile,
     domain,
     domain_idea,
     domain_years,
@@ -407,6 +422,12 @@ begin
     p_data ->> 'client_phone',
     coalesce(p_data ->> 'pricing_mode', 'per-item'),
     p_data ->> 'bundle_tier',
+    p_data ->> 'primary_goal',
+    p_data ->> 'business_maturity',
+    p_data ->> 'budget_confidence',
+    coalesce((p_data ->> 'existing_assets')::jsonb, '[]'::jsonb),
+    p_data ->> 'other_website_type',
+    coalesce((p_data ->> 'has_company_profile')::boolean, false),
     p_data ->> 'domain',
     p_data ->> 'domain_idea',
     (p_data ->> 'domain_years')::int,

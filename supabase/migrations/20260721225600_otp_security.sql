@@ -15,6 +15,7 @@ drop policy if exists "Anyone can update OTP codes (mark used)" on public.otp_co
 drop policy if exists "Anyone can insert submissions" on public.submissions;
 
 -- Re-create as authenticated-only
+drop policy if exists "Authenticated users can insert submissions" on public.submissions;
 create policy "Authenticated users can insert submissions"
   on public.submissions for insert
   to authenticated

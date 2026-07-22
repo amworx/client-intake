@@ -138,3 +138,47 @@
 - **Errors**: None
 - **Lessons**: The biggest opportunity is shifting from "survey" to "intelligent sales, qualification, and proposal-generation system." Technical foundation is strong enough to support the vision.
 - **Tags**: review, architecture, ux, strategy, sales
+
+## EVT-20260722-0007
+- **Timestamp**: 2026-07-22T~16:00
+- **Mode**: BUILD
+- **Action**: Tier 1 UX implementation — Welcome screen, goal-first section, feature priority toggle, recommendation card
+- **Summary**: Implemented 4 Tier 1 recommendations from expert review: (1) Welcome screen overlay with pitch, deliverables grid, and "Start Survey" button; (2) Primary Goal section (s-goal) inserted between Contact and Domain with 8 radio options covering business outcomes; (3) Feature priority toggle — each feature card shows Required (blue) / Nice-to-have (amber) state, click-to-toggle, hidden in Bundle mode; (4) Recommendation card in Review section showing recommended package + timeline + investment based on complexity scoring. Complexity scoring: website type (0-8 pts) + pages (1 pt each) + features (1-3 pts each) → Essential (0-5), Growth (6-12), Scale (13+).
+- **Result**: All 4 Tier 1 features working. Pushed as commit ce3394b.
+- **Files**: index.html
+- **Errors**: None
+- **Lessons**: Complexity scoring provides an objective recommendation that builds client trust and reduces "which package?" decision paralysis.
+- **Tags**: tier1, welcome, goals, priority, recommendation
+
+## EVT-20260722-0008
+- **Timestamp**: 2026-07-22T~17:00
+- **Mode**: BUILD
+- **Action**: Tier 2 data-collection implementation — complexity meter, business maturity, timeline tiers, budget confidence, assets checklist
+- **Summary**: Added 5 Tier 2 features: (1) Live complexity meter in price bar with progress bar + level label (Low/Medium/High/Very High) + recommended package; (2) Business maturity question — "What best describes your business?" with 5 lifecycle options; (3) Timeline replaced with 5 urgency tiers (ASAP $150, Within 2 Weeks $75, 1 Month, 2-3 Months, No Deadline); (4) Budget confidence — "How fixed is your budget?" with Fixed/Flexible/Need Advice; (5) Existing assets checklist — 8 checkboxes (Logo, Brand Guidelines, Photos, Content, Domain, Hosting, Analytics, Social Media). All new fields flow through collectFormData → review summary → Supabase submission.
+- **Result**: All 5 Tier 2 features working. Pushed as commit 7a75eb4.
+- **Files**: index.html, admin/index.html
+- **Errors**: None
+- **Lessons**: Tier 2 data (maturity, timeline urgency, budget confidence) transforms the intake from a feature checklist into a qualification tool that lets the studio assess lead quality and readiness before the first call.
+- **Tags**: tier2, complexity, maturity, timeline, budget, assets
+
+## EVT-20260722-0009
+- **Timestamp**: 2026-07-22T~18:00
+- **Mode**: BUILD
+- **Action**: Proposal Generator — admin-side proposal builder with preview, edit, and PDF export
+- **Summary**: Added full proposal generator to admin dashboard. "Proposal" button in detail footer opens modal with auto-built proposal from all submission fields including Tier 1+Tier 2 data (primary_goal, business_maturity, budget_confidence, existing_assets, feature priority). Preview mode renders proposal as formatted HTML with section headers, bullets, and labels. Edit mode shows monospace textarea for content refinement. PDF Export via jsPDF produces A4-formatted document with title, client info, scope, investment, timeline, and footer. Accent-styled "Proposal" button added to detail footer.
+- **Result**: Proposal generator operational. Pushed as commit d5cc6ab.
+- **Files**: admin/index.html
+- **Errors**: None
+- **Lessons**: jsPDF from CDN is sufficient for single-page proposal export — no build step needed. The proposal should be treated as a starting draft that the admin can refine before exporting.
+- **Tags**: tier3, proposal, pdf, export
+
+## EVT-20260722-0010
+- **Timestamp**: 2026-07-22T~12:45
+- **Mode**: BUILD
+- **Action**: Database schema fix — added missing Tier 1+2 columns, fixed CHECK constraints, updated RPC
+- **Summary**: Identified and fixed critical database schema mismatches blocking submissions. The `submissions` table was missing 7 columns (primary_goal, business_maturity, budget_confidence, existing_assets, other_website_type, has_company_profile, complexity_score). The `timeline` CHECK constraint only allowed old values ('1-week','flexible') but form sends new values ('asap','2-3-months','no-deadline'). The `website_type` CHECK constraint didn't include 'other'. The `submit_submission` RPC was an older version that didn't include pricing_mode, bundle_tier, or any Tier 1+2 fields. Created comprehensive migration `202607222300_tier1_tier2_schema.sql` adding all columns, fixing constraints, and updating the RPC. Renamed conflicting migrations to unique timestamps. Made `20260721225600_otp_security.sql` and `202607221200_share_tokens.sql` idempotent with `drop policy if exists`. Applied all migrations via `supabase db push`. All 7 columns verified writable. Timeline and website_type constraint fixes confirmed. RPC now includes all fields.
+- **Result**: All schema mismatches resolved. Bundle mode and Tier 1+2 submissions will no longer fail.
+- **Files**: supabase/migrations/202607222300_tier1_tier2_schema.sql, supabase/migrations/20260721225600_otp_security.sql, supabase/migrations/202607221200_share_tokens.sql, supabase/migrations/202607220001_bundle_pricing.sql, docs/schema.sql
+- **Errors**: Migration version conflicts required file renames and migration repair. CLI login user lacks ALTER TABLE permissions, but `supabase db push` applies migrations as database owner.
+- **Lessons**: All migrations sharing the same timestamp prefix cause version conflicts. Use unique timestamps. Policy creation without `DROP IF EXISTS` causes re-apply failures. Always verify schema changes via direct REST API calls after migration.
+- **Tags**: schema, migration, fix, bundle, tier1, tier2

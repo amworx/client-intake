@@ -51,3 +51,23 @@ When designing intake forms that serve both qualification and proposal generatio
 5. **Complexity scoring** — every feature contributes points; score maps to recommended package
 6. **Recommendation page** — show projected package, timeline, investment before submit
 7. **Proposal generation** — admin clicks to produce a 90% complete proposal from submitted data
+
+## Admin Proposal Generator Pattern
+
+When building admin-side proposal generation:
+
+1. **Build from submission data** — auto-populate scope, pricing, and timeline from the submission record. Use the `proposalContent` state variable as the source of truth.
+2. **Edit before export** — show editable monospace textarea (Edit mode) and formatted preview (Preview mode). Toggle between them without losing content.
+3. **Client-side PDF** — jsPDF CDN is sufficient. Format as A4 with title, client info, scope bullets, investment summary, timeline, and studio footer. No server needed.
+4. **Rich HTML preview** — render proposal text as formatted HTML using computed getter with regex replacements for section titles, bullets, labels, and separators.
+5. **Reuse existing data** — the proposal pulls from all submission fields including Tier 1+2 (primary_goal, business_maturity, budget_confidence, existing_assets, feature priority). No duplicate data entry needed.
+
+## Complexity Scoring Pattern
+
+When implementing package recommendation from form answers:
+
+1. **Assign points per dimension**: website type (0-8), pages (1 pt each), features (1-3 pts based on complexity)
+2. **Sum into total score**: map to tiers — Essential (0-5), Growth (6-12), Scale (13+)
+3. **Display live**: show progress bar + level label + recommended package that updates as user answers questions
+4. **Include in recommendation card**: show the recommended package with timeline and investment estimate in review section
+5. **Log in submission**: store `complexity_score` with submission for admin visibility

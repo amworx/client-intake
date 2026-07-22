@@ -22,16 +22,19 @@ create index if not exists idx_share_tokens_token on public.share_tokens (token)
 -- 2. RLS
 alter table public.share_tokens enable row level security;
 
+drop policy if exists "Authenticated users can view share_tokens" on public.share_tokens;
 create policy "Authenticated users can view share_tokens"
   on public.share_tokens for select
   to authenticated
   using (true);
 
+drop policy if exists "Authenticated users can insert share_tokens" on public.share_tokens;
 create policy "Authenticated users can insert share_tokens"
   on public.share_tokens for insert
   to authenticated
   with check (true);
 
+drop policy if exists "Authenticated users can update share_tokens" on public.share_tokens;
 create policy "Authenticated users can update share_tokens"
   on public.share_tokens for update
   to authenticated
