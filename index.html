@@ -897,7 +897,7 @@ body {
   visibility: visible;
 }
 .pricing-screen-bg {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: var(--bg);
 }
@@ -908,7 +908,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  max-width: 700px;
+  max-width: 760px;
   width: 100%;
   gap: clamp(16px, 3vh, 32px);
 }
@@ -1113,9 +1113,9 @@ body {
 .bundle-screen-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 16px;
   width: 100%;
-  max-width: 700px;
+  max-width: 760px;
 }
 .bundle-screen-not-sure {
   display: flex;
@@ -1127,7 +1127,7 @@ body {
   cursor: pointer;
   background: var(--bg);
   transition: all 0.25s ease;
-  max-width: 700px;
+  max-width: 760px;
   width: 100%;
   text-align: left;
   position: relative;
@@ -1296,7 +1296,7 @@ body {
   }
   .bundle-screen-grid {
     grid-template-columns: 1fr;
-    max-width: 360px;
+    max-width: 400px;
   }
   .screen-back-btn {
     top: 12px;
@@ -2195,7 +2195,7 @@ body {
 <!-- Bundle Confirmation Screen (shown after bundle selection, replaces full form) -->
 <div class="pricing-screen hidden" id="bundleConfirmScreen">
   <div class="pricing-screen-bg"></div>
-  <div class="pricing-screen-inner" style="max-width:560px">
+  <div class="pricing-screen-inner" style="max-width:580px">
     <div class="pricing-screen-badge" id="bundleConfirmBadge">Managed Bundle</div>
     <h2 class="pricing-screen-heading" id="bundleConfirmHeading" style="margin-bottom:4px">You're all set</h2>
     <p class="pricing-screen-sub" id="bundleConfirmSub" style="margin-bottom:20px">Here's your selected plan — just drop your contact info and we'll get started.</p>
