@@ -877,6 +877,49 @@ body {
   }
 }
 
+/* ── Flip Words Animation (Aceternity-style hero word cycling) ── */
+.flip-words {
+  position: relative;
+  display: inline-block;
+  color: var(--accent);
+  min-width: 20px;
+}
+
+.flip-words .fw-exit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: fwExit 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fwExit {
+  0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+  100% { opacity: 0; transform: translateY(-30px) translateX(24px) scale(1.6); filter: blur(8px); }
+}
+
+.flip-words .fw-enter {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.flip-words .fw-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(6px);
+}
+
+.flip-words .fw-letter.reveal {
+  animation: fwLetterIn 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fwLetterIn {
+  0% { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+}
+
 /* ── Pricing Mode Screen (fixed full-viewport overlay) ── */
 .pricing-screen {
   position: fixed;
@@ -1212,7 +1255,7 @@ body {
   min-width: 0;
 }
 .bcf-right {
-  width: 280px;
+  width: 340px;
   flex-shrink: 0;
 }
 .bundle-screen-not-sure {
@@ -2140,7 +2183,7 @@ body {
   </div>
   <div class="welcome-inner">
     <div class="welcome-badge">Web Design &amp; Development</div>
-    <h1>Let's build the right website for your business</h1>
+    <h1>Let's build the right <span class="flip-words" id="flipWordsHero" data-words='["website","brand","presence","platform","storefront"]'>website</span> for your business</h1>
     <p class="welcome-sub">Answer a few smart questions and we'll prepare a tailored recommendation with pricing, timeline, and a project outline — no commitment required.</p>
     <div class="welcome-grid">
       <div class="welcome-item"><i data-lucide="file-text" style="width:16px;height:16px"></i> Project estimate</div>
@@ -2302,7 +2345,7 @@ body {
 <!-- Bundle Confirmation Screen (two-column — no scroll needed) -->
 <div class="pricing-screen hidden" id="bundleConfirmScreen">
   <div class="pricing-screen-bg"></div>
-  <div class="pricing-screen-inner" style="max-width:720px">
+    <div class="pricing-screen-inner" style="max-width:780px">
     <div class="pricing-screen-badge" id="bundleConfirmBadge">Managed Bundle</div>
     <h2 class="pricing-screen-heading" id="bundleConfirmHeading" style="margin-bottom:4px">You're all set</h2>
     <p class="pricing-screen-sub" id="bundleConfirmSub" style="margin-bottom:12px">Here's your selected plan — just drop your contact info and we'll get started.</p>
@@ -2962,6 +3005,7 @@ body {
     setupDarkMode();
     setupPricingMode();
     renderBundleCards();
+    setupFlipWords();
     setupTimelineSidebar();
     replaceEmojiIcons();
     buildSections();
@@ -2982,8 +3026,69 @@ body {
     if (initialDomain) updateSslRequirement(initialDomain.value);
     loadOverrides();
 
+    // ── Flip Words Animation for Hero ──
+    function setupFlipWords() {
+      var el = document.getElementById('flipWordsHero');
+      if (!el) return;
+      var words;
+      try { words = JSON.parse(el.getAttribute('data-words') || '[]'); } catch(e) { words = []; }
+      if (!words.length) return;
+      var duration = parseInt(el.getAttribute('data-duration') || '2800', 10);
+      var currentIndex = 0;
+      var isAnimating = false;
+
+      function animateToWord(index) {
+        if (isAnimating) return;
+        isAnimating = true;
+        var newWord = words[index];
+        if (!newWord) { isAnimating = false; return; }
+
+        var text = el.textContent;
+        // Exit animation — old word flies out
+        var exitSpan = document.createElement('span');
+        exitSpan.className = 'fw-exit';
+        exitSpan.textContent = text;
+        el.innerHTML = '';
+        el.appendChild(exitSpan);
+
+        // After exit completes, reveal new word letter by letter
+        setTimeout(function() {
+          el.innerHTML = '';
+          var enterSpan = document.createElement('span');
+          enterSpan.className = 'fw-enter';
+
+          for (var i = 0; i < newWord.length; i++) {
+            var letter = document.createElement('span');
+            letter.className = 'fw-letter';
+            letter.textContent = newWord[i];
+            enterSpan.appendChild(letter);
+          }
+          el.appendChild(enterSpan);
+
+          // Stagger letter reveals
+          var letters = enterSpan.querySelectorAll('.fw-letter');
+          letters.forEach(function(l, idx) {
+            setTimeout(function() { l.classList.add('reveal'); }, idx * 35);
+          });
+
+          // Mark animation complete after all letters revealed
+          setTimeout(function() { isAnimating = false; }, newWord.length * 35 + 300);
+        }, 380);
+      }
+
+      function nextWord() {
+        currentIndex = (currentIndex + 1) % words.length;
+        animateToWord(currentIndex);
+      }
+
+      // Start cycling after a short initial delay
+      setTimeout(function() { window._flipInterval = setInterval(nextWord, duration); }, duration);
+    }
+
     // Welcome screen → Pricing Mode screen transition
     function dismissWelcome() {
+      // Stop flip words animation
+      if (window._flipInterval) { clearInterval(window._flipInterval); window._flipInterval = null; }
       var ws = document.getElementById('welcomeScreen');
       ws.classList.add('hidden');
       setTimeout(function() {
@@ -3708,6 +3813,13 @@ body {
               showToast('Email delivery not configured. Please contact the admin to enable SMTP.', 'error');
               return;
             }
+            // Check for function-level errors
+            if (!otpRes.ok || otpData.error) {
+              sendCooldown = false;
+              btnSend.disabled = false;
+              showToast(otpData.error || 'Failed to send verification email. Please try again.', 'error');
+              return;
+            }
           });
         }).catch(function() {
           // Edge Function failure — fail loudly, never expose the code
@@ -3804,7 +3916,12 @@ body {
             body: JSON.stringify({ email: email, code: code })
           }).then(function(otpRes) {
             return otpRes.json().then(function(otpData) {
-              if (otpData.skipped) showToast('Email delivery not configured.', 'error');
+              if (otpData.skipped) { showToast('Email delivery not configured.', 'error'); return; }
+              if (!otpRes.ok || otpData.error) {
+                bcfSendCooldown = false; bcfBtnSend.disabled = false;
+                showToast(otpData.error || 'Failed to send verification email.', 'error');
+                return;
+              }
             });
           }).catch(function() {
             bcfSendCooldown = false; bcfBtnSend.disabled = false;
@@ -4719,118 +4836,120 @@ body {
     btn.disabled = true;
     btn.textContent = 'Submitting...';
 
-    var data = collectFormData();
-    var total = window._priceItems.reduce(function(s, i) { return s + i.lineTotal; }, 0);
-    var timestamp = Date.now();
-    var fileUrls = [];
+    // Wrap everything in a promise chain so synchronous throws become rejections
+    Promise.resolve().then(function() {
+      var data = collectFormData();
+      var total = window._priceItems.reduce(function(s, i) { return s + i.lineTotal; }, 0);
+      var timestamp = Date.now();
+      var fileUrls = [];
+      var uploadPromises = [];
 
-    var uploadPromises = [];
+      // Upload files
+      window._selectedFiles.forEach(function(file, idx) {
+        if (file instanceof File) {
+          var path = 'submissions/' + timestamp + '_' + file.name;
+          var promise = supabaseClient.storage.from('submissions').upload(path, file, {
+            cacheControl: '3600',
+            upsert: false
+          }).then(function(res) {
+            if (res.error) throw res.error;
+            var url = SUPABASE_URL + '/storage/v1/object/public/submissions/' + path;
+            fileUrls.push(url);
+          });
+          uploadPromises.push(promise);
+        }
+      });
 
-    // Upload files
-    window._selectedFiles.forEach(function(file, idx) {
-      if (file instanceof File) {
-        var path = 'submissions/' + timestamp + '_' + file.name;
-        var promise = supabaseClient.storage.from('submissions').upload(path, file, {
+      // Upload company profile if provided
+      if (window._profileFile) {
+        var profilePath = 'submissions/' + timestamp + '_company_profile_' + window._profileFile.name;
+        var profilePromise = supabaseClient.storage.from('submissions').upload(profilePath, window._profileFile, {
           cacheControl: '3600',
           upsert: false
         }).then(function(res) {
           if (res.error) throw res.error;
-          var url = SUPABASE_URL + '/storage/v1/object/public/submissions/' + path;
+          var url = SUPABASE_URL + '/storage/v1/object/public/submissions/' + profilePath;
           fileUrls.push(url);
         });
-        uploadPromises.push(promise);
+        uploadPromises.push(profilePromise);
       }
-    });
 
-    // Upload company profile if provided
-    if (window._profileFile) {
-      var profilePath = 'submissions/' + timestamp + '_company_profile_' + window._profileFile.name;
-      var profilePromise = supabaseClient.storage.from('submissions').upload(profilePath, window._profileFile, {
-        cacheControl: '3600',
-        upsert: false
-      }).then(function(res) {
-        if (res.error) throw res.error;
-        var url = SUPABASE_URL + '/storage/v1/object/public/submissions/' + profilePath;
-        fileUrls.push(url);
+      var pdfBlob = null;
+      var pdfUrl = null;
+
+      return generatePdf(data, total).then(function(blob) {
+        pdfBlob = blob;
+        var pdfPath = 'submissions/' + timestamp + '_intake.pdf';
+        return supabaseClient.storage.from('submissions').upload(pdfPath, blob, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: 'application/pdf'
+        });
+      }).then(function(pdfRes) {
+        if (pdfRes.error) throw pdfRes.error;
+        var path = 'submissions/' + timestamp + '_intake.pdf';
+        pdfUrl = SUPABASE_URL + '/storage/v1/object/public/submissions/' + path;
+        return Promise.all(uploadPromises);
+      }).then(function() {
+        var submissionData = {
+          full_name: data.full_name,
+          business_name: data.business_name || null,
+          client_email: data.client_email,
+          client_phone: data.client_phone || null,
+          pricing_mode: data.pricing_mode || 'per-item',
+          bundle_tier: data.bundle_tier || null,
+          primary_goal: data.primary_goal || null,
+          business_maturity: data.business_maturity || null,
+          budget_confidence: data.budget_confidence || null,
+          domain: data.domain || null,
+          domain_idea: data.domain_idea || null,
+          domain_years: data.domain === 'need' ? (parseInt(data.domain_years) || 1) : null,
+          hosting: data.hosting || null,
+          email: data.email || null,
+          email_count: data.email === 'need' ? data.email_count : null,
+          setup_help: data.setup_help || null,
+          business_desc: data.business_desc || null,
+          website_type: data.website_type || null,
+          pages: data.pages || [],
+          other_pages: data.other_pages || null,
+          features: data.features || [],
+          existing_assets: data.existing_assets || [],
+          logo: data.logo || null,
+          content_text: data.content_text || null,
+          content_photos: data.content_photos || null,
+          brand_colors: data.brand_colors || null,
+          inspiration_links: data.inspiration_links || null,
+          timeline: data.timeline || null,
+          maintenance: data.maintenance || null,
+          budget: data.budget || null,
+          extra_notes: data.extra_notes || null,
+          hosting_months: data.hosting === 'need' ? (data.hosting_months || 12) : null,
+          other_website_type: data.website_type === 'other' ? (data.other_website_type || '') : null,
+          complexity_score: window._complexityScore || null,
+          has_company_profile: data.has_profile_file || false,
+          price_breakdown: window._priceItems,
+          estimated_total: total,
+          file_urls: fileUrls,
+          pdf_url: pdfUrl,
+          request_time: new Date().toISOString()
+        };
+
+        // Use server-side RPC that enforces OTP verification (or share token)
+        var submitEmail = window._verifiedEmail || data.client_email;
+        var rpcParams = {
+          p_data: submissionData,
+          p_email: submitEmail
+        };
+        if (_shareToken) rpcParams.p_token = _shareToken;
+        return supabaseClient.rpc('submit_submission', rpcParams);
+      }).then(function(subRes) {
+        if (subRes.error) throw subRes.error;
+        if (subRes.data && !subRes.data.success) {
+          throw new Error(subRes.data.message || 'Submission rejected');
+        }
+        localStorage.removeItem('intake_draft');
+        showThankYou(data.full_name);
       });
-      uploadPromises.push(profilePromise);
-    }
-
-    var pdfBlob = null;
-    var pdfUrl = null;
-
-    generatePdf(data, total).then(function(blob) {
-      pdfBlob = blob;
-      var pdfPath = 'submissions/' + timestamp + '_intake.pdf';
-      return supabaseClient.storage.from('submissions').upload(pdfPath, blob, {
-        cacheControl: '3600',
-        upsert: false,
-        contentType: 'application/pdf'
-      });
-    }).then(function(pdfRes) {
-      if (pdfRes.error) throw pdfRes.error;
-      var path = 'submissions/' + timestamp + '_intake.pdf';
-      pdfUrl = SUPABASE_URL + '/storage/v1/object/public/submissions/' + path;
-      return Promise.all(uploadPromises);
-    }).then(function() {
-      var submissionData = {
-        full_name: data.full_name,
-        business_name: data.business_name || null,
-        client_email: data.client_email,
-        client_phone: data.client_phone || null,
-        pricing_mode: data.pricing_mode || 'per-item',
-        bundle_tier: data.bundle_tier || null,
-        primary_goal: data.primary_goal || null,
-        business_maturity: data.business_maturity || null,
-        budget_confidence: data.budget_confidence || null,
-        domain: data.domain || null,
-        domain_idea: data.domain_idea || null,
-        domain_years: data.domain === 'need' ? (parseInt(data.domain_years) || 1) : null,
-        hosting: data.hosting || null,
-        email: data.email || null,
-        email_count: data.email === 'need' ? data.email_count : null,
-        setup_help: data.setup_help || null,
-        business_desc: data.business_desc || null,
-        website_type: data.website_type || null,
-        pages: data.pages || [],
-        other_pages: data.other_pages || null,
-        features: data.features || [],
-        existing_assets: data.existing_assets || [],
-        logo: data.logo || null,
-        content_text: data.content_text || null,
-        content_photos: data.content_photos || null,
-        brand_colors: data.brand_colors || null,
-        inspiration_links: data.inspiration_links || null,
-        timeline: data.timeline || null,
-        maintenance: data.maintenance || null,
-        budget: data.budget || null,
-        extra_notes: data.extra_notes || null,
-        hosting_months: data.hosting === 'need' ? (data.hosting_months || 12) : null,
-        other_website_type: data.website_type === 'other' ? (data.other_website_type || '') : null,
-        complexity_score: window._complexityScore || null,
-        has_company_profile: data.has_profile_file || false,
-        price_breakdown: window._priceItems,
-        estimated_total: total,
-        file_urls: fileUrls,
-        pdf_url: pdfUrl,
-        request_time: new Date().toISOString()
-      };
-
-      // Use server-side RPC that enforces OTP verification (or share token)
-      var submitEmail = window._verifiedEmail || data.client_email;
-      var rpcParams = {
-        p_data: submissionData,
-        p_email: submitEmail
-      };
-      if (_shareToken) rpcParams.p_token = _shareToken;
-      return supabaseClient.rpc('submit_submission', rpcParams);
-    }).then(function(subRes) {
-      if (subRes.error) throw subRes.error;
-      if (subRes.data && !subRes.data.success) {
-        throw new Error(subRes.data.message || 'Submission rejected');
-      }
-      localStorage.removeItem('intake_draft');
-      showThankYou(data.full_name);
     }).catch(function(err) {
       console.error('Submit error:', err);
       showToast('Submission failed: ' + (err.message || 'Unknown error'), 'error');
@@ -4866,41 +4985,44 @@ body {
     btn.disabled = true;
     btn.querySelector('.btn-start-text').textContent = 'Submitting...';
 
-    var tier = window._selectedBundle;
-    var tierData = tier && tier !== 'not-sure' ? BUNDLE_TIERS.find(function(t) { return t.id === tier; }) : null;
-    var monthlyPrice = tierData ? tierData.price : 0;
-    var monthsEl = document.getElementById('bcfMonths');
-    var months = monthsEl ? parseInt(monthsEl.value, 10) : 12;
-    if (isNaN(months) || months < 1) months = 12;
-    var total = monthlyPrice * months;
-    var priceBreakdown = tierData ? [{
-      label: tierData.name + ' Bundle (\u00D7' + months + ' months)',
-      price: monthlyPrice,
-      qty: months,
-      lineTotal: total,
-      isBundle: true,
-      bundleMonthly: monthlyPrice
-    }] : [];
+    // Wrap async work in promise chain so any synchronous throw becomes a rejection
+    Promise.resolve().then(function() {
+      var tier = window._selectedBundle;
+      var tierData = tier && tier !== 'not-sure' ? BUNDLE_TIERS.find(function(t) { return t.id === tier; }) : null;
+      var monthlyPrice = tierData ? tierData.price : 0;
+      var monthsEl = document.getElementById('bcfMonths');
+      var months = monthsEl ? parseInt(monthsEl.value, 10) : 12;
+      if (isNaN(months) || months < 1) months = 12;
+      var total = monthlyPrice * months;
+      var priceBreakdown = tierData ? [{
+        label: tierData.name + ' Bundle (\u00D7' + months + ' months)',
+        price: monthlyPrice,
+        qty: months,
+        lineTotal: total,
+        isBundle: true,
+        bundleMonthly: monthlyPrice
+      }] : [];
 
-    var submissionData = {
-      full_name: name,
-      client_email: email,
-      client_phone: phone || null,
-      pricing_mode: 'bundle',
-      bundle_tier: tier === 'not-sure' ? 'not-sure' : tier,
-      price_breakdown: priceBreakdown,
-      estimated_total: total,
-      file_urls: [],
-      request_time: new Date().toISOString()
-    };
+      var submissionData = {
+        full_name: name,
+        client_email: email,
+        client_phone: phone || null,
+        pricing_mode: 'bundle',
+        bundle_tier: tier === 'not-sure' ? 'not-sure' : tier,
+        price_breakdown: priceBreakdown,
+        estimated_total: total,
+        file_urls: [],
+        request_time: new Date().toISOString()
+      };
 
-    var submitEmail = window._verifiedEmail || email;
-    var rpcParams = { p_data: submissionData, p_email: submitEmail };
+      var submitEmail = window._verifiedEmail || email;
+      var rpcParams = { p_data: submissionData, p_email: submitEmail };
 
-    supabaseClient.rpc('submit_submission', rpcParams).then(function(res) {
-      if (res.error) throw res.error;
-      if (res.data && !res.data.success) throw new Error(res.data.message || 'Submission rejected');
-      showThankYou(name);
+      return supabaseClient.rpc('submit_submission', rpcParams).then(function(res) {
+        if (res.error) throw res.error;
+        if (res.data && !res.data.success) throw new Error(res.data.message || 'Submission rejected');
+        showThankYou(name);
+      });
     }).catch(function(err) {
       console.error('Bundle submit error:', err);
       errEl.textContent = '\u26A0 ' + (err.message || 'Submission failed');
@@ -5083,6 +5205,7 @@ body {
 
   // ---- Thank You ----
   function showThankYou(name) {
+    window._submitting = false;
     document.getElementById('thankyouName').textContent = 'Thank You, ' + escapeHtml(name) + '!';
     document.getElementById('thankyouOverlay').classList.add('open');
 

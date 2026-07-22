@@ -10,6 +10,10 @@ create extension if not exists "pgcrypto";
 -- 1. TABLES
 -- ============================================================
 
+-- Note: domain_years and hosting_months were referenced in RPC INSERTs since
+-- migration 202607220001 but never added to the table. Fixed by migrations
+-- 202607222330_add_domain_years.sql and 202607222340_add_missing_columns.sql.
+
 -- 1.1 submissions
 create table if not exists public.submissions (
   id            bigint generated always as identity primary key,

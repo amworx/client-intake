@@ -11,16 +11,35 @@ import { serve } from 'https://deno.land/std@0.208.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import nodemailer from 'npm:nodemailer@6.9.14'
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'apikey, content-type, authorization',
+  'Access-Control-Max-Age': '86400',
+}
+
+function jsonResponse(body: Record<string, unknown>, status: number) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+  })
+}
+
 serve(async (req: Request) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: CORS_HEADERS })
+  }
+
   try {
     if (req.method !== 'POST') {
-      return new Response('Method not allowed', { status: 405 })
+      return jsonResponse({ error: 'Method not allowed' }, 405)
     }
 
     const { email, code, studio_name } = await req.json()
 
     if (!email || !code) {
-      return new Response(JSON.stringify({ error: 'email and code are required' }), { status: 400 })
+      return jsonResponse({ error: 'email and code are required' }, 400)
     }
 
     const studioName = studio_name || 'AM Worx'
@@ -39,16 +58,13 @@ serve(async (req: Request) => {
 
     if (settingsError) {
       console.error('Failed to read settings:', settingsError.message)
-      return new Response(JSON.stringify({ error: 'Failed to read settings' }), { status: 500 })
+      return jsonResponse({ error: 'Failed to read settings' }, 500)
     }
 
     // If SMTP is not enabled, tell the frontend to skip
     if (!settings.smtp_enabled || !settings.smtp_password) {
       console.log(`SMTP not enabled — OTP for ${email}: ${code} (not emailed)`)
-      return new Response(JSON.stringify({ success: true, skipped: true, message: 'SMTP email delivery not configured. Contact the admin to set up email notifications.' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return jsonResponse({ success: true, skipped: true, message: 'SMTP email delivery not configured. Contact the admin to set up email notifications.' }, 200)
     }
 
     const smtpUser = settings.smtp_email || 'amworxx@gmail.com'
@@ -108,15 +124,9 @@ serve(async (req: Request) => {
     await transporter.close()
     console.log(`OTP sent to ${email}`)
 
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return jsonResponse({ success: true }, 200)
   } catch (error) {
     console.error('Error sending OTP:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return jsonResponse({ error: error.message }, 500)
   }
 })
