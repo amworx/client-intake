@@ -3908,6 +3908,7 @@ body {
     (data.features || []).forEach(function(f) {
       score += featScores[f] || 2;
     });
+    window._complexityScore = score; // capture for submission
 
     // Bundle mode: if a bundle is selected, use that directly
     var recommendedTier = null;
@@ -4446,6 +4447,7 @@ body {
         extra_notes: data.extra_notes || null,
         hosting_months: data.hosting === 'need' ? (data.hosting_months || 12) : null,
         other_website_type: data.website_type === 'other' ? (data.other_website_type || '') : null,
+        complexity_score: window._complexityScore || null,
         has_company_profile: data.has_profile_file || false,
         price_breakdown: window._priceItems,
         estimated_total: total,

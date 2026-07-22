@@ -1,65 +1,8 @@
--- Migration: Add Tier 1+2 fields and fix CHECK constraints
+-- Migration: Add complexity_score to submit_submission RPC
 -- Date: 2026-07-22
--- 
--- This migration:
--- 1. Adds primary_goal, business_maturity, budget_confidence, existing_assets,
---    other_website_type, has_company_profile, complexity_score columns
--- 2. Fixes timeline CHECK constraint to match new form values
--- 3. Adds 'other' to website_type CHECK constraint
--- 4. Updates submit_submission RPC to include all new fields
-
--- ============================================================
--- 1. Fix CHECK constraints
--- ============================================================
-
--- Fix timeline constraint — form sends: asap, 2-weeks, 1-month, 2-3-months, no-deadline
-alter table public.submissions
-  drop constraint if exists submissions_timeline_check;
-
-alter table public.submissions
-  add constraint submissions_timeline_check
-  check (timeline in ('asap', '2-weeks', '1-month', '2-3-months', 'no-deadline'));
-
--- Fix website_type constraint — add 'other'
-alter table public.submissions
-  drop constraint if exists submissions_website_type_check;
-
-alter table public.submissions
-  add constraint submissions_website_type_check
-  check (website_type in (
-    'simple', 'business', 'portfolio', 'blog',
-    'ecommerce-small', 'ecommerce-large',
-    'booking', 'membership', 'directory', 'other'
-  ));
-
--- ============================================================
--- 2. Add Tier 1+2 columns
--- ============================================================
-
-alter table public.submissions
-  add column if not exists primary_goal text;
-
-alter table public.submissions
-  add column if not exists business_maturity text;
-
-alter table public.submissions
-  add column if not exists budget_confidence text;
-
-alter table public.submissions
-  add column if not exists existing_assets jsonb default '[]'::jsonb;
-
-alter table public.submissions
-  add column if not exists other_website_type text;
-
-alter table public.submissions
-  add column if not exists has_company_profile boolean default false;
-
-alter table public.submissions
-  add column if not exists complexity_score int;
-
--- ============================================================
--- 3. Update submit_submission RPC to include all new fields
--- ============================================================
+--
+-- The column already exists from the tier1_tier2_schema migration,
+-- but the RPC INSERT didn't include it. This fixes that oversight.
 
 create or replace function public.submit_submission(p_data jsonb, p_email text, p_token text default null)
 returns jsonb
@@ -207,6 +150,4 @@ begin
 end;
 $$;
 
--- Re-grant execute to anon (in case function was recreated)
-grant execute on function public.submit_submission(jsonb, text, text) to anon;
-grant execute on function public.submit_submission(jsonb, text, text) to authenticated;
+grant execute on function public.submit_submission(jsonb, text, text) to anon, authenticated;
