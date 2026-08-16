@@ -204,3 +204,14 @@
 - **Errors**: None
 - **Lessons**: (a) In promise chains, each `.then()` callback has its own function scope — `var` declarations don't carry across. Hoist to the outer function or pass values through the chain. (b) Never fire a success toast/toast/UI reveal before an async operation completes — wrap inside the success callback. The same bug existed in two places (main + bundle OTP). (c) For sidebar recommendation cards, single-column label-value rows work better than 3-column grids in 280px width.
 - **Tags**: bug-fix, scoping, otp, toast, async, ui, sidebar, animation
+
+## EVT-20260816-0001
+- **Timestamp**: 2026-08-16
+- **Mode**: BUILD
+- **Action**: Fixed submission failure - email_count check constraint violation
+- **Summary**: User reported "Submission failed: new row for relation "submissions" violates check constraint "submissions_email_count_check"" when submitting the form. Diagnosed by querying the live Supabase DB: inserted a throwaway test row with email_count=null (succeeded, then deleted id=42), proving NULL passes the CHECK constraint. Root cause: the main intake form sent email_count=999 when the user selects the "Unlimited" business email plan, and the DB constraint is check (email_count between 1 and 100). 999 is out of range, so every Unlimited-email submission failed. Bundle/not-sure flow was NOT the cause (it omits email_count, which becomes NULL and passes). Fixed by clamping Unlimited to 100 (max allowed). Also audited other constrained fields (domain_years 1-3, hosting_months 12/24/48) - all valid.
+- **Result**: Unlimited email plan now submits email_count=100. All email_count values within 1-100. Committed and pushed as d2ef15c.
+- **Files**: index.html (line 5115)
+- **Errors**: submissions_email_count_check violation on submit with Unlimited email plan.
+- **Lessons**: (a) PostgreSQL CHECK constraints allow NULL (NULL evaluates to NULL, not FALSE) - a NULL insert does NOT violate a check like "between 1 and 100". (b) When the client sends a value that maps to a fixed DB enum/range, always verify every possible client value satisfies the constraint - a "sentinel" value like 999 for 'unlimited' is a latent bug. (c) Verify live-DB behavior empirically (service-role REST insert with a throwaway row) instead of assuming docs match reality - the remote had a migration (202607222345) not present locally.
+- **Tags**: bug-fix, check-constraint, email_count, supabase, submissions, production

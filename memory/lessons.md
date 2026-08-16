@@ -59,3 +59,10 @@
 - **Observation**: jsPDF loaded from CDN works well for generating simple A4 PDF proposals entirely in the browser. No server-side rendering or build step is needed. The proposal content is built from submission data and can be edited before export, giving admins flexibility without leaving the dashboard.
 - **Action**: Extend proposal generation to support rich formatting (bold, links) and template customization from Settings page in a future iteration. Consider adding email-send directly from proposal modal.
 - **Severity**: Low
+
+## L-20260816-001 - PostgreSQL CHECK constraints allow NULL
+- **Context**: Submission failed with "violates check constraint submissions_email_count_check" when client sent email_count=999.
+- **Lesson**: A CHECK constraint like check (email_count between 1 and 100) does NOT reject NULL - NULL evaluates to NULL (not FALSE), so the row passes. To forbid NULL you need NOT NULL or an explicit IS NOT NULL in the check. Verify live behavior empirically with a throwaway insert rather than assuming.
+## L-20260816-002 - Sentinel values must satisfy DB constraints
+- **Context**: 'unlimited' email plan mapped to email_count=999, violating a 1-100 check.
+- **Lesson**: When a UI option maps to a numeric sentinel for storage, confirm the sentinel is inside the column's CHECK range (or relax the constraint). A value like 999 for "unlimited" is a latent submission-killing bug.

@@ -135,3 +135,8 @@ When placing a live-updating recommendation/preview card in a 280px right sideba
 5. **Hover feedback on items** — `transform: translateX(2px)` + accent border on hover creates interactivity without noise.
 6. **Entrance animation** — subtle slide-up + scale (`cubic-bezier(0.16, 1, 0.3, 1)`) when the card transitions from hidden to visible feels premium.
 7. **Dashed-border note** — adds visual rhythm between the data grid and the disclaimer, breaking the monotony of solid cards.
+
+## P-20260816-001 - Verify live-DB constraints empirically before assuming
+- **When**: A DB CHECK constraint error is reported but the client code/docs suggest the value should be valid.
+- **Pattern**: Insert a throwaway row via the service-role REST API with the suspect value (e.g., NULL or sentinel), observe pass/fail, then delete the test row by id. PostgREST needs Prefer: return=representation to return the inserted id, otherwise query by a unique marker field to delete.
+- **Why**: Docs/migrations can drift from the live schema (e.g., dashboard-applied migrations missing locally); assuming NULL/values behave as documented can send you down the wrong path.
