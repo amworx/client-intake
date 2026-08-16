@@ -1,0 +1,10 @@
+-- Placeholder to sync migration history with the remote database.
+--
+-- Version 202607222345 was applied directly through the Supabase Dashboard
+-- on 2026-07-22 and its SQL was never committed to this repo. Its changes are
+-- already live (they tightened the email_count check to "between 1 and 5",
+-- among other adjustments). This file intentionally contains no SQL: it only
+-- maps the remote migration version to a local file so `supabase db push` and
+-- `supabase migration list` see consistent history. See
+-- 20260816190000_fix_budget_maintenance_checks.sql for the correction of the
+-- email_count constraint that this dashboard migration introduced.

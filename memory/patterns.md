@@ -140,3 +140,8 @@ When placing a live-updating recommendation/preview card in a 280px right sideba
 - **When**: A DB CHECK constraint error is reported but the client code/docs suggest the value should be valid.
 - **Pattern**: Insert a throwaway row via the service-role REST API with the suspect value (e.g., NULL or sentinel), observe pass/fail, then delete the test row by id. PostgREST needs Prefer: return=representation to return the inserted id, otherwise query by a unique marker field to delete.
 - **Why**: Docs/migrations can drift from the live schema (e.g., dashboard-applied migrations missing locally); assuming NULL/values behave as documented can send you down the wrong path.
+
+## P-20260816-002 - Binary-search live DB check-constraint bounds
+- **When**: A check-constraint error message names a constraint but the local docs don't explain why a valid-looking value fails.
+- **Pattern**: Insert throwaway rows via the service-role REST API with a sweep of candidate values (e.g., 1,2,5,50,99,100 for an upper bound). PASS/FAIL boundaries reveal the exact live constraint without needing psql access. Delete each successful row immediately (PostgREST needs Prefer: return=representation to get the id).
+- **Why**: The live schema can differ from local migration files (dashboard-applied migrations), so documentation alone is unreliable.

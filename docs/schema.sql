@@ -69,8 +69,8 @@ create table if not exists public.submissions (
 
   -- Timeline & Budget
   timeline       text check (timeline in ('asap', '2-weeks', '1-month', '2-3-months', 'no-deadline')),
-  maintenance    text check (maintenance in ('no', 'basic', 'standard', 'premium')),
-  budget         text check (budget in ('100-300', '300-500', '500-1000', '1000+', 'not-sure')),
+  maintenance    text check (maintenance in ('no', 'none', 'basic', 'standard', 'premium')),
+  budget         text check (budget in ('100-300', '300-500', '500-1000', '1000+', 'not-sure', 'under-1000', '1000-2500', '2500-5000', '5000-10000', 'over-10000')),
   extra_notes    text,
 
   -- Pricing

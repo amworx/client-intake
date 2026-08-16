@@ -66,3 +66,10 @@
 ## L-20260816-002 - Sentinel values must satisfy DB constraints
 - **Context**: 'unlimited' email plan mapped to email_count=999, violating a 1-100 check.
 - **Lesson**: When a UI option maps to a numeric sentinel for storage, confirm the sentinel is inside the column's CHECK range (or relax the constraint). A value like 999 for "unlimited" is a latent submission-killing bug.
+
+## L-20260816-003 - Probe the live DB; local migrations can be wrong
+- **Context**: Third report of submissions_email_count_check. Local migrations said email_count check was between 1 and 100, but live DB (changed by a dashboard-applied migration) enforced between 1 and 5.
+- **Lesson**: The migration folder is not proof of the live schema. When a constraint error persists, binary-search the live DB by inserting rows with candidate values (1,2,5,50,99,100) to find the real bounds. A client-side value clamp only helps if the DB constraint actually accepts the clamped value.
+## L-20260816-004 - Migrations applied via Supabase Dashboard break supabase db push
+- **Context**: Remote migration history had version 202607222345 not present locally; db push refused to run.
+- **Lesson**: Apply ALL schema changes through committed migration files and supabase db push. If a dashboard-applied version already exists remotely, add a local placeholder file with the same version and NO SQL (the version is already recorded as applied remotely, so push skips it) - document the situation in the file.
