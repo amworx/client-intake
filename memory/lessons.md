@@ -73,3 +73,10 @@
 ## L-20260816-004 - Migrations applied via Supabase Dashboard break supabase db push
 - **Context**: Remote migration history had version 202607222345 not present locally; db push refused to run.
 - **Lesson**: Apply ALL schema changes through committed migration files and supabase db push. If a dashboard-applied version already exists remotely, add a local placeholder file with the same version and NO SQL (the version is already recorded as applied remotely, so push skips it) - document the situation in the file.
+
+## L-20260816-005 - Async state setters must re-run the state evaluator
+- **Context**: Submit button stayed disabled after OTP verification because the verify handler set a flag but didn't call calculate() which evaluates the button state.
+- **Lesson**: If a button's disabled state is computed in a central function (e.g., calculate()), every async state change (OTP verify, upload completion, etc.) that feeds that computation MUST call the evaluator. Never rely on the user triggering a re-evaluation through unrelated inputs.
+## L-20260816-006 - Disabled controls need inline explanation
+- **Context**: Users couldn't tell why Submit was locked or what to do.
+- **Lesson**: A disabled primary button is a dead end unless the UI explains the required action(s). Render a dynamic hint that lists each missing condition ('Verify your email...', 'Select at least one service...') and hide it once the button is enabled.

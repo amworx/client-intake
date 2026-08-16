@@ -237,3 +237,14 @@
 - **Errors**: submissions_email_count_check with email_count=100; submissions_maintenance_check with maintenance='none'.
 - **Lessons**: (a) NEVER trust local migration files to describe the live DB - a dashboard-applied migration can silently change constraints. Probe the live DB empirically (binary search the failing values). (b) A client-side clamp is not enough when the DB constraint is stricter than the UI's options - the constraint itself must match the product's plans. (c) supabase db push fails when remote history has versions absent locally; add a documented placeholder file (no SQL) to map the dashboard-applied version, since the version is already recorded as applied remotely.
 - **Tags**: check-constraint, email_count, maintenance, live-db, migration, supabase-push, root-cause
+
+## EVT-20260816-0004
+- **Timestamp**: 2026-08-16
+- **Mode**: BUILD
+- **Action**: Fixed submit button stuck disabled + no guidance for the user
+- **Summary**: User reported the Submit button stayed disabled with no explanation of how to enable it. Root cause: the main form's OTP verify success handler set window._emailVerified=true but never called calculate(), which owns the button enable/disable logic (btn.disabled = !(priceItems.length>0 && emailVerified)). So after verifying email, the button remained disabled until the user happened to change another form field. There was also no visible feedback explaining the disabled state. Fix: (1) call calculate() after OTP verify succeeds in both main and bundle OTP handlers, (2) add a dynamic .submit-hint under the Submit button that shows 'Verify your email to unlock Submit' / 'Select at least one service to unlock Submit' (hidden when enabled). Verified in browser at 375px: hint shows both blockers initially, narrows to email-only after selecting a service, button enables + hint hides once email is verified. Committed 3147232, pushed, deployed (GitHub Pages build success).
+- **Result**: Submit button now enables immediately after email verification and the UI explains exactly what the user must do while it is disabled.
+- **Files**: index.html (CSS .submit-hint, HTML hint element, calculate() hint logic, 2 OTP handler fixes)
+- **Errors**: None.
+- **Lessons**: When a button's enabled state depends on async state (OTP verification), the state-setter must re-run the state evaluator - a plain boolean flag is not enough. Also: a disabled control with no explanation is a UX dead-end; show the required action(s) inline.
+- **Tags**: bug-fix, otp, submit-button, ux, disabled-state, calculate
