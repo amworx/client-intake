@@ -2061,6 +2061,15 @@ body {
 }
 .btn-submit:hover { background: var(--accent-hover); transform: translateY(-1px); }
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.submit-hint {
+  display: none;
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  text-align: center;
+}
+.submit-hint b { color: var(--text); font-weight: 600; }
 
 /* Modal */
 .modal-overlay {
@@ -2989,6 +2998,7 @@ body {
     <button class="btn-breakdown" id="btnBreakdown">View Breakdown</button>
     <button type="button" class="btn-submit" id="btnSubmit" disabled>Submit Request</button>
   </div>
+  <div class="submit-hint" id="submitHint"></div>
 </div>
 
 <!-- Price Breakdown Modal -->
@@ -4049,6 +4059,7 @@ body {
             btnVerify.style.display = 'none';
             emailInput.readOnly = true;
             showToast('Email verified!', 'success');
+            calculate(); // re-evaluate submit button state (was stuck disabled)
           } else {
             showToast(res.data?.message || 'Invalid or expired code.', 'error');
           }
@@ -4136,6 +4147,7 @@ body {
             bcfBtnVerify.style.display = 'none';
             bcfEmailInput.readOnly = true;
             showToast('Email verified!', 'success');
+            if (typeof calculate === 'function') calculate(); // keep submit state in sync
           } else {
             showToast(res.data?.message || 'Invalid or expired code.', 'error');
           }
@@ -4512,13 +4524,27 @@ body {
       document.getElementById('totalAmount').textContent = '$' + total.toLocaleString();
     }
 
-    // Enable/disable submit
+    // Enable/disable submit + explain why it is locked
     var btn = document.getElementById('btnSubmit');
-    var hasContent = window._priceItems.length > 0 && window._emailVerified;
-    if (window._pricingMode === 'bundle' && window._selectedBundle === 'not-sure') {
-      hasContent = window._emailVerified; // allow submit even without tier chosen
-    }
+    var hint = document.getElementById('submitHint');
+    var isNotSure = window._pricingMode === 'bundle' && window._selectedBundle === 'not-sure';
+    var hasItems = window._priceItems.length > 0;
+    var verified = window._emailVerified;
+    var hasContent = hasItems && verified;
+    if (isNotSure) hasContent = verified; // allow submit even without tier chosen
     btn.disabled = !hasContent;
+
+    if (hint) {
+      var reasons = [];
+      if (!verified) reasons.push('Verify your email to unlock Submit');
+      if (!isNotSure && !hasItems) reasons.push('Select at least one service to unlock Submit');
+      if (reasons.length > 0) {
+        hint.innerHTML = 'To submit: ' + reasons.map(function(r) { return '<b>' + r + '</b>'; }).join(' &amp; ');
+        hint.style.display = 'block';
+      } else {
+        hint.style.display = 'none';
+      }
+    }
 
     updateRecommendation();
     updateReviewSummary();
