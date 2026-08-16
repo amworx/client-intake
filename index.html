@@ -5112,7 +5112,7 @@ body {
           domain_years: data.domain === 'need' ? (parseInt(data.domain_years) || 1) : null,
           hosting: data.hosting || null,
           email: data.email || null,
-          email_count: data.email === 'need' ? (data.email_plan === '2-bundle' ? 2 : data.email_plan === '100-bundle' ? 100 : data.email_plan === 'unlimited' ? 999 : 1) : null,
+          email_count: data.email === 'need' ? (data.email_plan === '2-bundle' ? 2 : data.email_plan === '100-bundle' ? 100 : data.email_plan === 'unlimited' ? 100 : 1) : null,
           setup_help: data.setup_help || null,
           business_desc: data.business_desc || null,
           website_type: data.website_type || null,
